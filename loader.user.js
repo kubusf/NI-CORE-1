@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name         NI Core - Loader
-// @version      8.0
+// @name         NI Core
+// @version      1.0
 // @description  Automatyczna paczka dodatków na NI Margonem
 // @author       Kuba
 // @match        https://*.margonem.pl/
