@@ -1,4 +1,4 @@
-// modules/showCollisions.js - Wizualizacja kolizji z wyborem koloru
+// modules/showCollisions.js - Wizualizacja wyłącznie fizycznych kolizji mapy (bez potworów/NPC)
 (function() {
     'use strict';
     const C = (typeof unsafeWindow !== 'undefined' ? unsafeWindow : window).NICore;
@@ -198,24 +198,24 @@
     makeDraggable(colMain, colMain.querySelector('.ac-header'), 'posShowCollisions', ['.ac-close-btn', '.ac-status-btn']);
     registerWindow('showCollisions', { mainEl: colMain, statusBtn: statusBtn });
 
-    // --- SPRAWDZANIE ŚCIAN I PRZESZKÓD MAPY ---
-    const isMapTileBlocked = (x, y) => {
-        if (W.Engine?.map?.col?.check) {
-            return Boolean(W.Engine.map.col.check(x, y));
-        }
-        const mapD = W.Engine?.map?.d || W.map;
-        if (mapD && mapD.col && mapD.x) {
-            return mapD.col.charAt(x + y * mapD.x) === '1';
-        }
-        return false;
+    // --- ODCZYT WYŁĄCZNIE FIZYCZNYCH ŚCIAN Z SERWERA ---
+    // Całkowicie pomijamy Engine.map.col.check, który dokładał potwory
+    const isStaticMapBlocked = (x, y, mapD) => {
+        if (!mapD || !mapD.col || !mapD.x) return false;
+        if (x < 0 || x >= mapD.x || y < 0 || y >= mapD.y) return true;
+
+        const idx = x + y * mapD.x;
+        const char = mapD.col.charAt(idx);
+        // '0' oznacza w Margonem wolne pole. Wszystko inne ('1', '2') to ściana/woda.
+        return char !== '0' && char !== '';
     };
 
-    // --- RYSOWANIE SIATKI KOLIZJI NA CANVASIE ---
+    // --- RYSOWANIE SIATKI NA CANVASIE ---
     const drawCollisions = (ctx) => {
         if (!ls.modules.showCollisions || !isNI || !W.Engine?.map?.d) return;
 
         const mapD = W.Engine.map.d;
-        if (!mapD.x || !mapD.y) return;
+        if (!mapD.x || !mapD.y || !mapD.col) return;
 
         const offset = W.Engine.map.offset || [0, 0];
         const shift = (W.Engine.mapShift?.getShift ? W.Engine.mapShift.getShift() : null) || [0, 0];
@@ -231,6 +231,20 @@
         const startY = Math.max(0, Math.floor(totalOffsetY / 32));
         const endY = Math.min(mapD.y - 1, Math.ceil((totalOffsetY + size.height) / 32));
 
+        // Zbieramy pozycje wszystkich NPC i potworów – nigdy nie nakładamy na nie kolizji
+        const npcTiles = new Set();
+        if (W.Engine?.npcs?.check) {
+            const npcs = W.Engine.npcs.check();
+            if (npcs) {
+                for (const id in npcs) {
+                    const d = npcs[id]?.d || npcs[id];
+                    if (d && typeof d.x === 'number' && typeof d.y === 'number') {
+                        npcTiles.add(`${d.x},${d.y}`);
+                    }
+                }
+            }
+        }
+
         const alpha = Math.min(Math.max((cfg.alpha || 35) / 100, 0.05), 0.95);
         const borderAlpha = Math.min(alpha + 0.3, 1);
         const rgb = hexToRgb(cfg.color);
@@ -241,7 +255,10 @@
 
         for (let y = startY; y <= endY; y++) {
             for (let x = startX; x <= endX; x++) {
-                if (isMapTileBlocked(x, y)) {
+                // Jeśli na polu stoi potwór/NPC -> BEZWZGLĘDNIE POMIJAMY
+                if (npcTiles.has(`${x},${y}`)) continue;
+
+                if (isStaticMapBlocked(x, y, mapD)) {
                     const screenX = Math.round(x * 32 - totalOffsetX);
                     const screenY = Math.round(y * 32 - totalOffsetY);
 
@@ -258,7 +275,7 @@
         ctx.restore();
     };
 
-    // --- HOOK SILNIKA RYSOWANIA MAPY NI ---
+    // --- HOOK MAPY ---
     const hookMapDraw = () => {
         if (!isNI || W._collisionDrawHooked) return;
 
