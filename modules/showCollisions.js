@@ -229,29 +229,13 @@
 
     setTimeout(attachToHub, 200);
 
-    // --- PRECYZYJNE SPRAWDZANIE ŚCIAN (BEZ POTWORÓW) ---
-    const isWallOnly = (x, y, monsterTiles) => {
-        if (monsterTiles.has(`${x},${y}`)) return false;
-
-        if (W.Engine?.map?.col?.check) {
-            const c = W.Engine.map.col.check(x, y);
-            return Boolean(c && ((c === 1) || (c & 1)));
-        }
-
-        const mapD = W.Engine?.map?.d;
-        if (mapD && mapD.col && mapD.x) {
-            const idx = y * mapD.x + x;
-            return mapD.col.charAt(idx) === '1';
-        }
-
-        return false;
-    };
-
     // --- RYSOWANIE SIATKI NA CANVASIE ---
     const drawCollisions = (ctx) => {
         if (!ls.modules.showCollisions || !isNI || !W.Engine?.map) return;
 
         const mapD = W.Engine.map.d;
+        if (!mapD || !mapD.col || !mapD.x) return;
+
         const offset = W.Engine.map.offset || [0, 0];
         const shift = (W.Engine.mapShift?.getShift ? W.Engine.mapShift.getShift() : null) || [0, 0];
         const totalOffsetX = offset[0] + shift[0];
@@ -261,27 +245,13 @@
             ? W.Engine.getCanvasViewSize()
             : { width: ctx.canvas?.width || window.innerWidth, height: ctx.canvas?.height || window.innerHeight };
 
-        const maxX = mapD?.x ? mapD.x - 1 : 999;
-        const maxY = mapD?.y ? mapD.y - 1 : 999;
+        const maxX = mapD.x - 1;
+        const maxY = mapD.y ? mapD.y - 1 : 999;
 
         const startX = Math.max(0, Math.floor(totalOffsetX / 32));
         const endX = Math.min(maxX, Math.ceil((totalOffsetX + size.width) / 32));
         const startY = Math.max(0, Math.floor(totalOffsetY / 32));
         const endY = Math.min(maxY, Math.ceil((totalOffsetY + size.height) / 32));
-
-        const monsterTiles = new Set();
-        if (W.Engine?.npcs?.check) {
-            const npcs = W.Engine.npcs.check();
-            if (npcs) {
-                for (const id in npcs) {
-                    const n = npcs[id];
-                    const d = n.d || n;
-                    if (typeof d.x === 'number' && typeof d.y === 'number') {
-                        monsterTiles.add(`${d.x},${d.y}`);
-                    }
-                }
-            }
-        }
 
         const alpha = Math.min(Math.max((cfg.alpha || 35) / 100, 0.05), 1);
         const borderAlpha = Math.min(alpha + 0.3, 1);
@@ -291,9 +261,14 @@
         ctx.fillStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alpha})`;
         ctx.strokeStyle = `rgba(${Math.min(255, rgb.r + 35)}, ${Math.min(255, rgb.g + 35)}, ${Math.min(255, rgb.b + 35)}, ${borderAlpha})`;
 
+        const colStr = mapD.col;
+        const mapWidth = mapD.x;
+
         for (let y = startY; y <= endY; y++) {
+            const rowOffset = y * mapWidth;
             for (let x = startX; x <= endX; x++) {
-                if (isWallOnly(x, y, monsterTiles)) {
+                // Bezpośrednie sprawdzenie fizycznej kolizji mapy (nie reaguje na motyle, ptaki ani potwory)
+                if (colStr.charAt(rowOffset + x) === '1') {
                     const screenX = Math.round(x * 32 - totalOffsetX);
                     const screenY = Math.round(y * 32 - totalOffsetY);
 
