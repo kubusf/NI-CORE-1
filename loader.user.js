@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         NI Core
 // @version      1.0
-// @description  Automatyczna paczka dodatków na NI Margonem
+// @description  Paczka dodatków na nowy interfejs do gry margonem
 // @author       Kuba
 // @match        https://*.margonem.pl/
 // @exclude      http*://margonem.*/*
