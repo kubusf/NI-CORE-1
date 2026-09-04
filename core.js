@@ -233,64 +233,48 @@
     const onPacket = (cb) => packetListeners.push(cb);
 
     // ==========================================
-    // DOCK IKON W PRAWYM DOLNYM ROGU OKNA GRY (NI)
+    // DOCK IKON W PRAWYM DOLNYM ROGU OKNA MAPY (NI)
     // ==========================================
     const activeDock = document.createElement('div');
     activeDock.setAttribute('id', 'AUTO_COMBO_ACTIVE_DOCK');
     activeDock.className = 'ac-active-dock';
+    document.body.appendChild(activeDock);
 
-    // Obliczenie pozycji tak, aby dock unosił się idealnie nad oryginalnymi widżetami w rogu
+    // Dynamiczne pozycjonowanie docka dokładnie przy prawej i dolnej krawędzi mapy gry (GAME_CANVAS)
     const updateDockPosition = () => {
-        const gameContainer = document.querySelector('.game-window-positioner');
-        if (!gameContainer) return;
-
-        const widgetEls = document.querySelectorAll(
-            '.main-buttons-container, [data-position="bottom-right"], [data-position="bottom-right-additional"], .widget-button'
-        );
-        const containerRect = gameContainer.getBoundingClientRect();
-
-        let maxWidgetTopFromBottom = 0;
-        widgetEls.forEach(el => {
-            const r = el.getBoundingClientRect();
-            // Sprawdzenie czy dany widżet znajduje się w prawym dolnym obszarze okna gry
-            if (r.width > 0 && r.height > 0 && r.right > containerRect.right - 180 && r.bottom > containerRect.bottom - 120) {
-                const fromBottom = containerRect.bottom - r.top + 6;
-                if (fromBottom > maxWidgetTopFromBottom) {
-                    maxWidgetTopFromBottom = fromBottom;
-                }
+        const canvas = document.getElementById('GAME_CANVAS') 
+                    || document.querySelector('.game-window-positioner canvas')
+                    || document.querySelector('.game-window-positioner');
+        if (canvas) {
+            const rect = canvas.getBoundingClientRect();
+            if (rect.width > 0 && rect.height > 0) {
+                // Odległość prawej krawędzi canvasu od prawej krawędzi ekranu + 6px marginesu w głąb mapy
+                const rightOffset = Math.round(window.innerWidth - rect.right + 6);
+                // Odległość dolnej krawędzi canvasu od dolnej krawędzi ekranu + 6px marginesu nad dolną belką
+                const bottomOffset = Math.round(window.innerHeight - rect.bottom + 6);
+                activeDock.style.right = `${rightOffset}px`;
+                activeDock.style.bottom = `${bottomOffset}px`;
+                return;
             }
-        });
-
-        activeDock.style.bottom = maxWidgetTopFromBottom > 0 ? `${Math.round(maxWidgetTopFromBottom)}px` : '52px';
-        activeDock.style.right = '10px';
-    };
-
-    // Podpinanie Docka do kontenera okna gry NI
-    const attachDock = () => {
-        const gameContainer = document.querySelector('.game-window-positioner');
-        if (gameContainer) {
-            if (activeDock.parentElement !== gameContainer) {
-                gameContainer.appendChild(activeDock);
-            }
-            updateDockPosition();
-            return true;
         }
-        if (!activeDock.parentElement) {
-            document.body.appendChild(activeDock);
-        }
-        updateDockPosition();
-        return false;
+        // Wartość awaryjna
+        activeDock.style.right = '295px';
+        activeDock.style.bottom = '52px';
     };
-
-    if (!attachDock()) {
-        const dockInterval = setInterval(() => {
-            if (attachDock()) clearInterval(dockInterval);
-        }, 200);
-    }
 
     window.addEventListener('resize', updateDockPosition);
-    setTimeout(updateDockPosition, 1000);
-    setTimeout(updateDockPosition, 2500);
+    setInterval(updateDockPosition, 1000);
+
+    // Nasłuchiwanie na zmiany rozmiaru canvasu
+    if (window.ResizeObserver) {
+        const ro = new ResizeObserver(() => updateDockPosition());
+        const observeCanvas = () => {
+            const c = document.getElementById('GAME_CANVAS') || document.querySelector('.game-window-positioner');
+            if (c) ro.observe(c);
+            else setTimeout(observeCanvas, 250);
+        };
+        observeCanvas();
+    }
 
     const modulesDefinition = [
         { key: 'autoX', title: 'AUTO X', desc: 'Automatyczne atakowanie przeciwników z szybką walką.', icon: iconAutoX },
@@ -457,7 +441,6 @@
     };
 
     const updateAllVisibilities = () => {
-        attachDock();
         updateDockPosition();
         hubMain.style.display = ls.hubVisible ? 'block' : 'none';
 
@@ -525,7 +508,6 @@
                     const existing = document.querySelector(`.widget-button[data-name="${widgetName}"], .widget-button .icon.${widgetName}`);
                     if (existing) existing.closest('.widget-button')?.remove();
                     W.Engine.widgetManager.createOneWidget(widgetName, { [widgetName]: widgetPos }, true, []);
-                    attachDock();
                     updateDockPosition();
                     updateAllVisibilities();
                 }
@@ -546,7 +528,6 @@
         addWidgetToDefaultWidgetSet();
         if (W.Engine.interfaceStart) {
             createButtonNI();
-            attachDock();
             updateDockPosition();
         } else {
             const checkStart = setInterval(() => {
@@ -554,7 +535,6 @@
                     clearInterval(checkStart);
                     addWidgetToDefaultWidgetSet();
                     createButtonNI();
-                    attachDock();
                     updateDockPosition();
                 }
             }, 250);
@@ -620,15 +600,16 @@
 }
 
 /* ==========================================
-   DOCK IKON W PRAWYM DOLNYM ROGU OKNA GRY (NI)
+   DOCK IKON W PRAWYM DOLNYM ROGU MAPY GRY (NI)
+   PIONOWA KOLUMNA PRZY PRAWEJ KRAWĘDZI MAPY
    ========================================== */
 .ac-active-dock {
-    position: absolute;
+    position: fixed;
     bottom: 52px;
-    right: 10px;
+    right: 295px;
     display: flex;
-    flex-direction: row-reverse;
-    gap: 6px;
+    flex-direction: column-reverse;
+    gap: 5px;
     z-index: 9998;
     pointer-events: auto;
     user-select: none;
@@ -662,7 +643,7 @@
 }
 
 .ac-dock-btn:hover {
-    transform: translateY(-2px);
+    transform: translateX(-2px);
     border-color: #52e385;
     background: linear-gradient(180deg, #262932 0%, #181a20 100%);
     box-shadow: 0 6px 14px rgba(0, 0, 0, 0.8), 0 0 8px rgba(56, 194, 104, 0.45);
@@ -674,7 +655,7 @@
 }
 
 .ac-dock-btn:active {
-    transform: translateY(0) scale(0.94);
+    transform: translateX(0) scale(0.94);
 }
 
 .ac-dock-btn.is-open {
@@ -683,12 +664,12 @@
     box-shadow: 0 0 8px rgba(56, 194, 104, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
-/* Dymek z nazwą modułu po najechaniu */
+/* Dymek wysuwany w lewo (w głąb mapy) aby nie nachodził na pionowe przyciski */
 .ac-dock-tooltip {
     position: absolute;
-    bottom: calc(100% + 7px);
-    left: 50%;
-    transform: translateX(-50%) translateY(4px);
+    right: calc(100% + 8px);
+    top: 50%;
+    transform: translateY(-50%) translateX(4px);
     background: #17181c;
     border: 1px solid rgba(56, 194, 104, 0.55);
     color: #e2e4e9;
@@ -712,18 +693,18 @@
 .ac-dock-tooltip::after {
     content: '';
     position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    border-width: 4px 4px 0 4px;
+    top: 50%;
+    left: 100%;
+    transform: translateY(-50%);
+    border-width: 4px 0 4px 4px;
     border-style: solid;
-    border-color: rgba(56, 194, 104, 0.55) transparent transparent transparent;
+    border-color: transparent transparent transparent rgba(56, 194, 104, 0.55);
 }
 
 .ac-dock-btn:hover .ac-dock-tooltip {
     opacity: 1;
     visibility: visible;
-    transform: translateX(-50%) translateY(0);
+    transform: translateY(-50%) translateX(0);
 }
 
 /* Styl bazowy okien */
