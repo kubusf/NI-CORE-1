@@ -161,74 +161,6 @@
     makeDraggable(colMain, colMain.querySelector('.ac-header'), 'posShowCollisions', ['.ac-close-btn', '.ac-status-btn']);
     registerWindow('showCollisions', { mainEl: colMain, statusBtn: statusBtn });
 
-    // --- INTEGRACJA Z HUBEM (GŁÓWNYM MENU) ---
-    const attachToHub = () => {
-        const hubBody = document.querySelector('#AUTO_COMBO_HUB .ac-body');
-        if (!hubBody || document.getElementById('AC_HUB_ITEM_COLLISIONS')) return;
-
-        const hubItem = document.createElement('div');
-        hubItem.setAttribute('id', 'AC_HUB_ITEM_COLLISIONS');
-        hubItem.className = `ac-hub-item ${ls.modules.showCollisions ? 'AC-ON' : 'AC-OFF'}`;
-        hubItem.setAttribute('title', 'Kliknij kafelek, aby włączyć lub wyłączyć Kolizje');
-        hubItem.addEventListener('click', () => {
-            ls.modules.showCollisions = !ls.modules.showCollisions;
-            saveLS();
-            updateAllVisibilities();
-        });
-
-        const hubRow = document.createElement('div');
-        hubRow.className = 'ac-hub-row';
-        const titleGroup = document.createElement('div');
-        titleGroup.className = 'ac-hub-title-group';
-        const dot = document.createElement('span');
-        dot.className = `ac-hub-dot ${ls.modules.showCollisions ? 'AC-ON' : 'AC-OFF'}`;
-        titleGroup.appendChild(dot);
-        const title = document.createElement('span');
-        title.className = 'ac-hub-item-title';
-        title.innerText = 'KOLIZJE';
-        titleGroup.appendChild(title);
-        hubRow.appendChild(titleGroup);
-
-        const guiBtn = document.createElement('button');
-        guiBtn.className = `ac-hub-gui-btn ${ls.guiVisible.showCollisions ? 'AC-ON' : 'AC-OFF'}`;
-        guiBtn.setAttribute('title', 'Otwórz / Ukryj okno Kolizje');
-        guiBtn.innerHTML = C.svg.guiWindowSvg;
-        guiBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            ls.guiVisible.showCollisions = !ls.guiVisible.showCollisions;
-            saveLS();
-            updateAllVisibilities();
-        });
-        rowAppend(hubRow, guiBtn);
-        hubItem.appendChild(hubRow);
-
-        const desc = document.createElement('div');
-        desc.className = 'ac-hub-desc';
-        desc.innerText = 'Podświetlanie zablokowanych pól mapy (ścian, wody i przeszkód).';
-        hubItem.appendChild(desc);
-
-        hubBody.appendChild(hubItem);
-
-        function rowAppend(p, c) { p.appendChild(c); }
-
-        const updateTile = () => {
-            const isModOn = Boolean(ls.modules.showCollisions);
-            const isGuiOn = Boolean(ls.guiVisible.showCollisions);
-            hubItem.className = `ac-hub-item ${isModOn ? 'AC-ON' : 'AC-OFF'}`;
-            dot.className = `ac-hub-dot ${isModOn ? 'AC-ON' : 'AC-OFF'}`;
-            guiBtn.className = `ac-hub-gui-btn ${isGuiOn ? 'AC-ON' : 'AC-OFF'}`;
-        };
-
-        const origUpdate = C.updateAllVisibilities;
-        C.updateAllVisibilities = () => {
-            origUpdate();
-            updateTile();
-        };
-        updateTile();
-    };
-
-    setTimeout(attachToHub, 200);
-
     // --- RYSOWANIE SIATKI NA CANVASIE ---
     const drawCollisions = (ctx) => {
         if (!ls.modules.showCollisions || !isNI || !W.Engine?.map) return;
@@ -267,7 +199,7 @@
         for (let y = startY; y <= endY; y++) {
             const rowOffset = y * mapWidth;
             for (let x = startX; x <= endX; x++) {
-                // Bezpośrednie sprawdzenie fizycznej kolizji mapy (nie reaguje na motyle, ptaki ani potwory)
+                // Bezpośrednie sprawdzenie fizycznej kolizji mapy
                 if (colStr.charAt(rowOffset + x) === '1') {
                     const screenX = Math.round(x * 32 - totalOffsetX);
                     const screenY = Math.round(y * 32 - totalOffsetY);
