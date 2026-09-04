@@ -1,4 +1,4 @@
-// modules/showCollisions.js - Wizualizacja wyłącznie fizycznych kolizji mapy (bez potworów/NPC)
+// modules/showCollisions.js - Precyzyjna siatka kolizji mapy (bez potworów)
 (function() {
     'use strict';
     const C = (typeof unsafeWindow !== 'undefined' ? unsafeWindow : window).NICore;
@@ -93,29 +93,17 @@
 
     document.body.appendChild(colMain);
 
-    // Style dla palety kolorów
+    // Style palety kolorów
     const palStyle = document.createElement('style');
     palStyle.innerHTML = `
         .ac-color-dot {
-            width: 16px;
-            height: 16px;
-            border-radius: 3px;
-            border: 1px solid rgba(255,255,255,0.3);
-            cursor: pointer;
-            padding: 0;
-            margin: 0;
-            outline: none;
-            flex: 1;
+            width: 16px; height: 16px; border-radius: 3px;
+            border: 1px solid rgba(255,255,255,0.3); cursor: pointer;
+            padding: 0; margin: 0; outline: none; flex: 1;
             transition: transform 0.12s, border-color 0.15s;
         }
-        .ac-color-dot:hover {
-            transform: scale(1.18);
-            border-color: #ffffff;
-        }
-        .ac-color-dot.active {
-            border: 1.5px solid #ffffff !important;
-            box-shadow: 0 0 5px #ffffff;
-        }
+        .ac-color-dot:hover { transform: scale(1.18); border-color: #ffffff; }
+        .ac-color-dot.active { border: 1.5px solid #ffffff !important; box-shadow: 0 0 5px #ffffff; }
     `;
     document.head.appendChild(palStyle);
 
@@ -135,7 +123,6 @@
         updateAllVisibilities();
     });
 
-    // Kontury
     const btnBorders = colMain.querySelector('.btn-borders');
     const toggleBorders = () => {
         cfg.showBorders = !cfg.showBorders;
@@ -146,7 +133,6 @@
     btnBorders.addEventListener('click', toggleBorders);
     colMain.querySelector('.lbl-borders').addEventListener('click', toggleBorders);
 
-    // Wybór koloru
     const colorDots = colMain.querySelectorAll('.ac-color-dot');
     const customColorBtn = colMain.querySelector('.ac-color-custom-btn');
     const customColorInput = colMain.querySelector('.col-picker-input');
@@ -176,7 +162,6 @@
 
     updateColorVisuals(cfg.color);
 
-    // Suwak przezroczystości
     const colSlider = colMain.querySelector('.col-slider');
     const colValText = colMain.querySelector('.col-val');
     colSlider.addEventListener('input', () => {
@@ -198,16 +183,19 @@
     makeDraggable(colMain, colMain.querySelector('.ac-header'), 'posShowCollisions', ['.ac-close-btn', '.ac-status-btn']);
     registerWindow('showCollisions', { mainEl: colMain, statusBtn: statusBtn });
 
-    // --- ODCZYT WYŁĄCZNIE FIZYCZNYCH ŚCIAN Z SERWERA ---
-    // Całkowicie pomijamy Engine.map.col.check, który dokładał potwory
-    const isStaticMapBlocked = (x, y, mapD) => {
-        if (!mapD || !mapD.col || !mapD.x) return false;
-        if (x < 0 || x >= mapD.x || y < 0 || y >= mapD.y) return true;
+    // --- DOKŁADNE SPRAWDZANIE FIZYCZNEJ ŚCIANY ---
+    const isPhysicalWall = (x, y, mapD) => {
+        if (!mapD || !mapD.x || !mapD.y) return false;
+        if (x < 0 || x >= mapD.x || y < 0 || y >= mapD.y) return false;
 
-        const idx = x + y * mapD.x;
-        const char = mapD.col.charAt(idx);
-        // '0' oznacza w Margonem wolne pole. Wszystko inne ('1', '2') to ściana/woda.
-        return char !== '0' && char !== '';
+        // 1. Sprawdzamy surowy łańcuch z mapy (wiersz x kolumna)
+        if (mapD.col) {
+            const idx = y * mapD.x + x;
+            const c = mapD.col.charAt(idx);
+            if (c === '1' || c === '2') return true;
+        }
+
+        return false;
     };
 
     // --- RYSOWANIE SIATKI NA CANVASIE ---
@@ -215,7 +203,7 @@
         if (!ls.modules.showCollisions || !isNI || !W.Engine?.map?.d) return;
 
         const mapD = W.Engine.map.d;
-        if (!mapD.x || !mapD.y || !mapD.col) return;
+        if (!mapD.x || !mapD.y) return;
 
         const offset = W.Engine.map.offset || [0, 0];
         const shift = (W.Engine.mapShift?.getShift ? W.Engine.mapShift.getShift() : null) || [0, 0];
@@ -231,15 +219,20 @@
         const startY = Math.max(0, Math.floor(totalOffsetY / 32));
         const endY = Math.min(mapD.y - 1, Math.ceil((totalOffsetY + size.height) / 32));
 
-        // Zbieramy pozycje wszystkich NPC i potworów – nigdy nie nakładamy na nie kolizji
-        const npcTiles = new Set();
+        // ZBIERAMY WSZYSTKIE MOŻLIWE WSPÓŁRZĘDNE POTWORÓW I NPC
+        const monsterTiles = new Set();
         if (W.Engine?.npcs?.check) {
             const npcs = W.Engine.npcs.check();
             if (npcs) {
                 for (const id in npcs) {
-                    const d = npcs[id]?.d || npcs[id];
-                    if (d && typeof d.x === 'number' && typeof d.y === 'number') {
-                        npcTiles.add(`${d.x},${d.y}`);
+                    const n = npcs[id];
+                    const d = n.d || n;
+                    // Pobieramy współrzędne z danych oraz pozycji silnika gry
+                    if (typeof d.x === 'number' && typeof d.y === 'number') {
+                        monsterTiles.add(`${d.x},${d.y}`);
+                    }
+                    if (typeof n.rx === 'number' && typeof n.ry === 'number') {
+                        monsterTiles.add(`${Math.round(n.rx)},${Math.round(n.ry)}`);
                     }
                 }
             }
@@ -255,10 +248,10 @@
 
         for (let y = startY; y <= endY; y++) {
             for (let x = startX; x <= endX; x++) {
-                // Jeśli na polu stoi potwór/NPC -> BEZWZGLĘDNIE POMIJAMY
-                if (npcTiles.has(`${x},${y}`)) continue;
+                // JEŚLI NA KAFELKU JEST JAKIKOLWIEK POTWÓR -> POMIJAMY
+                if (monsterTiles.has(`${x},${y}`)) continue;
 
-                if (isStaticMapBlocked(x, y, mapD)) {
+                if (isPhysicalWall(x, y, mapD)) {
                     const screenX = Math.round(x * 32 - totalOffsetX);
                     const screenY = Math.round(y * 32 - totalOffsetY);
 
