@@ -10,17 +10,15 @@
     if (!ls.party) ls.party = { enabled: true, autoMob: false, hotkey: 'B' };
     if (typeof ls.party.invEnabled === 'undefined') ls.party.invEnabled = true;
     if (typeof ls.party.invHotkey === 'undefined') ls.party.invHotkey = 'V';
+    if (typeof ls.party.onlyClan === 'undefined') ls.party.onlyClan = false;
     if (typeof ls.party.autoAccept === 'undefined') ls.party.autoAccept = false;
-    if (typeof ls.party.inviteClan === 'undefined') ls.party.inviteClan = true;
-    if (typeof ls.party.inviteAlly === 'undefined') ls.party.inviteAlly = true;
-    if (typeof ls.party.inviteOther === 'undefined') ls.party.inviteOther = false;
     if (typeof ls.expandedParty === 'undefined') ls.expandedParty = false;
 
     const baseX = parseInt(ls.pos?.x, 10) || 120;
     const baseY = parseInt(ls.pos?.y, 10) || 120;
     ls.posAutoParty = C.getValidPos(ls.posAutoParty, Math.min(baseX + 230, (window.innerWidth || 1200) - 135), baseY + 120, 130);
 
-    // GUI: AUTO PARTY
+    // GUI 2: AUTO PARTY
     const autoPartyMain = document.createElement('div');
     autoPartyMain.setAttribute('id', 'AUTO_PARTY_GUI');
     autoPartyMain.className = 'ac-window';
@@ -142,45 +140,18 @@
     const partyExpanded = document.createElement('div');
     partyExpanded.className = 'ac-expanded-container';
 
-    const filterRow = document.createElement('div');
-    filterRow.className = 'ac-filter-row';
-
-    const clanBtn = document.createElement('button');
-    clanBtn.className = `ac-filter-btn ${ls.party.inviteClan ? 'AC-ON' : 'AC-OFF'}`;
-    clanBtn.innerText = 'KLAN';
-    clanBtn.setAttribute('title', 'Zapraszaj członków klanu');
-    clanBtn.addEventListener('click', (e) => {
+    // Przycisk filtru TYLKO KLAN
+    const clanOnlyBtn = document.createElement('button');
+    clanOnlyBtn.className = `ac-wide-btn ${ls.party.onlyClan ? 'AC-ON' : 'AC-OFF'}`;
+    clanOnlyBtn.setAttribute('title', 'Włącz, aby zapraszać wyłącznie klanowiczów. Wyłącz, aby zapraszać wszystkich na mapie.');
+    clanOnlyBtn.innerText = 'TYLKO KLAN';
+    clanOnlyBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        ls.party.inviteClan = !ls.party.inviteClan;
-        clanBtn.className = `ac-filter-btn ${ls.party.inviteClan ? 'AC-ON' : 'AC-OFF'}`;
+        ls.party.onlyClan = !ls.party.onlyClan;
+        clanOnlyBtn.className = `ac-wide-btn ${ls.party.onlyClan ? 'AC-ON' : 'AC-OFF'}`;
         saveLS();
     });
-    filterRow.appendChild(clanBtn);
-
-    const allyBtn = document.createElement('button');
-    allyBtn.className = `ac-filter-btn ${ls.party.inviteAlly ? 'AC-ON' : 'AC-OFF'}`;
-    allyBtn.innerText = 'SOJ';
-    allyBtn.setAttribute('title', 'Zapraszaj sojuszników i przyjaciół spoza klanu');
-    allyBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        ls.party.inviteAlly = !ls.party.inviteAlly;
-        allyBtn.className = `ac-filter-btn ${ls.party.inviteAlly ? 'AC-ON' : 'AC-OFF'}`;
-        saveLS();
-    });
-    filterRow.appendChild(allyBtn);
-
-    const otherBtn = document.createElement('button');
-    otherBtn.className = `ac-filter-btn ${ls.party.inviteOther ? 'AC-ON' : 'AC-OFF'}`;
-    otherBtn.innerText = 'INNI';
-    otherBtn.setAttribute('title', 'Zapraszaj innych / nieznajomych');
-    otherBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        ls.party.inviteOther = !ls.party.inviteOther;
-        otherBtn.className = `ac-filter-btn ${ls.party.inviteOther ? 'AC-ON' : 'AC-OFF'}`;
-        saveLS();
-    });
-    filterRow.appendChild(otherBtn);
-    partyExpanded.appendChild(filterRow);
+    partyExpanded.appendChild(clanOnlyBtn);
 
     const autoAcceptBtn = document.createElement('button');
     autoAcceptBtn.className = `ac-wide-btn ${ls.party.autoAccept ? 'AC-ON' : 'AC-OFF'}`;
@@ -241,10 +212,6 @@
                         inParty = true;
                         const me = m.find(x => (x.id || x.d?.id) === myId);
                         if (me?.r == 1 || me?.leader) isLeader = true;
-                    } else if (typeof m === 'object' && m !== null && Object.keys(m).length > 0) {
-                        inParty = true;
-                        const me = m[myId] || m[String(myId)];
-                        if (me?.r == 1 || me?.leader) isLeader = true;
                     }
                 } catch (e) {}
             }
@@ -257,9 +224,8 @@
             try {
                 if (typeof W.Engine.party.getMembers === 'function') {
                     const m = W.Engine.party.getMembers();
-                    if (m instanceof Map) return m.has(targetId) || m.has(String(targetId));
-                    if (Array.isArray(m)) return m.some(x => parseInt(x?.id || x?.d?.id, 10) === targetId);
-                    if (typeof m === 'object' && m !== null) return Boolean(m[targetId] || m[String(targetId)]);
+                    if (m instanceof Map && m.has(targetId)) return true;
+                    if (Array.isArray(m) && m.some(x => parseInt(x?.id || x?.d?.id, 10) === targetId)) return true;
                 }
             } catch (e) {}
         }
@@ -282,63 +248,25 @@
         setTimeout(handlePartyAction, 350);
     };
 
-    // Bezpieczne sprawdzanie klanu – wyklucza błąd, gdy gracze nie mają klanu
-    const checkSameClan = (p) => {
-        try {
-            const myClan = W.Engine?.hero?.d?.clan;
-            const otherClan = p?.clan;
-            if (myClan && otherClan) {
-                if (typeof C.isSameClan === 'function') return C.isSameClan(p);
-                const myClanName = typeof myClan === 'object' ? myClan.name : myClan;
-                const otherClanName = typeof otherClan === 'object' ? otherClan.name : otherClan;
-                return Boolean(myClanName && otherClanName && myClanName === otherClanName);
-            }
-        } catch (e) {}
-        return false;
-    };
-
-    const shouldInvitePlayer = (p) => {
-        const rel = String(p.relation || p.rel || '').toLowerCase().trim();
-
-        // 1. Wrogi klan / wrogowie na liście - nigdy nie zapraszaj
-        if (['clan-enemies', 'enemy', 'enemies', 'cl-en', 'en', 'fr-en', '1', '3', '6'].includes(rel)) {
-            return false;
-        }
-
-        // 2. Członkowie naszego klanu
-        const isClanMember = ['clan-members', 'cl', 'clan', '2'].includes(rel) || checkSameClan(p);
-        if (isClanMember) {
-            return Boolean(ls.party.inviteClan);
-        }
-
-        // 3. Przyjaciele i sojusznicy klanowi
-        const isAlly = ['clan-friends', 'friends', 'friend', 'cl-fr', 'fr', 'fr-fr', '4', '5'].includes(rel);
-        if (isAlly) {
-            return Boolean(ls.party.inviteAlly);
-        }
-
-        // 4. Każdy inny (obcy / neutralny gracz)
-        return Boolean(ls.party.inviteOther);
+    const isClanMember = (p) => {
+        const rel = String(p.relation || '').toLowerCase();
+        return Boolean((typeof C.isSameClan === 'function' && C.isSameClan(p)) || ['clan-members', 'cl', 'clan', '2'].includes(rel));
     };
 
     const inviteAllOnMap = () => {
         if (!ls.modules.autoParty) return;
         const { myId } = getPartyInfo();
         let players = [];
-
-        // Pobieramy wszystkich graczy z całej mapy
-        if (isNI) {
-            if (W.Engine?.others?.check) {
-                const othersObj = W.Engine.others.check();
-                players = Object.values(othersObj).filter(o => o?.d).map(o => o.d);
-            } else if (W.Engine?.others?.getDrawableList) {
-                players = W.Engine.others.getDrawableList().filter(o => o?.d).map(o => o.d);
-            }
+        if (isNI && W.Engine?.others?.getDrawableList) {
+            players = W.Engine.others.getDrawableList().filter(o => o?.d).map(o => o.d);
         }
 
         const targets = players.filter(p => {
             const pId = parseInt(p.id, 10);
-            return pId && pId !== myId && !isHeInParty(pId) && shouldInvitePlayer(p);
+            if (!pId || pId === myId || isHeInParty(pId)) return false;
+            // Jeśli opcja "TYLKO KLAN" jest włączona, sprawdzaj przynależność klanową
+            if (ls.party.onlyClan && !isClanMember(p)) return false;
+            return true;
         });
 
         targets.forEach((t, idx) => setTimeout(() => sendCmd(`party&a=inv&id=${t.id}`), idx * 110));
