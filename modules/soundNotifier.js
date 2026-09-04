@@ -33,7 +33,7 @@
         }
     }
 
-    // Automatyczna korekta pamięci przeglądarki
+    // Korekta pamięci przeglądarki
     if (ls.soundNotifier.enemy && ls.soundNotifier.enemy.url === DEFAULT_ALLY_SOUND) {
         ls.soundNotifier.enemy.url = DEFAULT_ENEMY_SOUND;
     }
@@ -332,211 +332,37 @@
         return false;
     };
 
-    const getTargetClan = (rawOther, d) => {
-        let id = '';
-        let name = '';
-
-        const c = d?.clan || rawOther?.clan;
-        if (c && typeof c === 'object') {
-            id = c.id ? String(c.id) : '';
-            name = c.name ? String(c.name).toLowerCase().trim() : '';
-        } else if (typeof c === 'string' && c.trim() !== '') {
-            name = c.toLowerCase().trim();
-        } else if (typeof c === 'number' && c > 0) {
-            id = String(c);
-        }
-
-        const cInfo = d?.clanInfo || rawOther?.clanInfo;
-        if (cInfo && typeof cInfo === 'object') {
-            if (!id && cInfo.id) id = String(cInfo.id);
-            if (!name && cInfo.name) name = String(cInfo.name).toLowerCase().trim();
-        }
-
-        if (!name && (d?.clanName || rawOther?.clanName)) {
-            name = String(d?.clanName || rawOther?.clanName).toLowerCase().trim();
-        }
-        if (!id && (d?.clanId || rawOther?.clanId)) {
-            id = String(d?.clanId || rawOther?.clanId);
-        }
-
-        return { id, name, hasClan: Boolean((id && id !== '0') || (name && name !== '')) };
-    };
-
+    // Pobieranie relacji bezpośrednio z oficjalnego modułu Engine.whoIsHere
     const getFullPlayerRelation = (rawOther, d) => {
         const id = d?.id || rawOther?.id;
         const numId = parseInt(id, 10);
 
-        if (isNI && W.Engine?.whoIsHere) {
-            const wih = W.Engine.whoIsHere;
+        if (isNI && W.Engine?.whoIsHere?.getList) {
             try {
-                if (typeof wih.getRelation === 'function') {
-                    const r = wih.getRelation(numId);
-                    if (r) return String(r).toLowerCase().trim();
-                }
-                if (typeof wih.getList === 'function') {
-                    const list = wih.getList();
-                    const entry = list && (list[numId] || list[String(numId)]);
-                    if (entry?.relation) return String(entry.relation).toLowerCase().trim();
-                }
-                if (typeof wih.getById === 'function') {
-                    const entry = wih.getById(numId);
-                    if (entry?.relation) return String(entry.relation).toLowerCase().trim();
+                const list = W.Engine.whoIsHere.getList();
+                const entry = list && (list[numId] || list[String(numId)]);
+                if (entry && entry.relation) {
+                    return String(entry.relation).toLowerCase().trim();
                 }
             } catch (e) {}
         }
 
-        if (typeof rawOther?.getRelation === 'function') {
+        if (isNI && typeof W.Engine?.whoIsHere?.getRelation === 'function') {
             try {
-                const r = rawOther.getRelation();
-                if (r) return String(r).toLowerCase().trim();
-            } catch (e) {}
-        }
-        if (typeof rawOther?.getClanRelation === 'function') {
-            try {
-                const r = rawOther.getClanRelation();
+                const r = W.Engine.whoIsHere.getRelation(numId);
                 if (r) return String(r).toLowerCase().trim();
             } catch (e) {}
         }
 
-        const rel = d?.relation || rawOther?.relation || '';
-        if (rel) return String(rel).toLowerCase().trim();
-
-        const ctip = String(d?.ctip || rawOther?.ctip || '').toLowerCase();
-        if (ctip.includes('t_cl-en') || ctip.includes('cl-en') || ctip.includes('clan-enemies')) return 'cl-en';
-        if (ctip.includes('t_en') || ctip.includes('enemy')) return 'en';
-        if (ctip.includes('t_cl-fr') || ctip.includes('cl-fr') || ctip.includes('clan-friends')) return 'cl-fr';
-        if (ctip.includes('t_cl') || ctip.includes('clan-members')) return 'cl';
-        if (ctip.includes('t_fr') || ctip.includes('friends')) return 'fr';
+        const directRel = d?.relation || rawOther?.relation;
+        if (directRel) {
+            return String(directRel).toLowerCase().trim();
+        }
 
         return '';
     };
 
-    const checkClanDiplomacyLive = (targetClan) => {
-        if (!targetClan || !targetClan.hasClan) return null;
-        const engineClan = isNI ? W.Engine?.clan : W.g?.clan;
-        if (!engineClan || typeof engineClan !== 'object') return null;
-
-        const tId = targetClan.id ? String(targetClan.id) : null;
-        const tName = targetClan.name ? targetClan.name.toLowerCase().trim() : null;
-
-        if (typeof engineClan.getRelationWithClan === 'function' && tId) {
-            try {
-                const r = String(engineClan.getRelationWithClan(tId)).toLowerCase();
-                if (['ally', 'allies', 'friend', 'friends', 'cl-fr', 'clan-friends', '4', '5'].includes(r)) return 'ally';
-                if (['war', 'enemy', 'enemies', 'clan-enemies', 'cl-en', '3'].includes(r)) return 'clanEnemy';
-            } catch (e) {}
-        }
-
-        const matchesClan = (item) => {
-            if (!item) return false;
-            if (typeof item === 'object') {
-                const iId = String(item.id || item.clan_id || item.clanId || '');
-                const iName = String(item.name || item.clan_name || item.clanName || '').toLowerCase().trim();
-                if (tId && iId && tId === iId) return true;
-                if (tName && iName && tName === iName) return true;
-            } else if (typeof item === 'string') {
-                const clean = item.toLowerCase().trim();
-                if (tName && tName === clean) return true;
-                if (tId && tId === clean) return true;
-            } else if (typeof item === 'number') {
-                if (tId && tId === String(item)) return true;
-            }
-            return false;
-        };
-
-        const allyLists = [
-            engineClan.allies, engineClan.friends, engineClan.clanFriends, engineClan.alliances,
-            engineClan.d?.allies, engineClan.d?.friends, engineClan.d?.clanFriends, engineClan.d?.alliances
-        ];
-        for (const list of allyLists) {
-            if (!list) continue;
-            if (Array.isArray(list)) {
-                for (const item of list) {
-                    if (matchesClan(item)) return 'ally';
-                }
-            } else if (typeof list === 'object') {
-                for (const [k, v] of Object.entries(list)) {
-                    if (tId && String(k) === tId) return 'ally';
-                    if (matchesClan(v)) return 'ally';
-                }
-            }
-        }
-
-        const relationsList = [engineClan.relations, engineClan.diplomacy, engineClan.d?.relations, engineClan.d?.diplomacy];
-        for (const relObj of relationsList) {
-            if (!relObj || typeof relObj !== 'object') continue;
-            if (Array.isArray(relObj)) {
-                for (const r of relObj) {
-                    if (!r || typeof r !== 'object') continue;
-                    const rRel = String(r.relation || r.type || r.status || '').toLowerCase();
-                    const rId = String(r.id || r.clan_id || r.clanId || '');
-                    const rName = String(r.name || r.clan_name || r.clanName || '').toLowerCase().trim();
-                    const isMatch = (tId && rId && tId === rId) || (tName && rName && tName === rName);
-                    if (isMatch) {
-                        if (['ally', 'allies', 'friend', 'friends', 'cl-fr', 'clan-friends', '2', '4', '5'].includes(rRel)) return 'ally';
-                        if (['war', 'enemy', 'enemies', 'clan-enemies', 'cl-en', '3'].includes(rRel)) return 'clanEnemy';
-                    }
-                }
-            } else {
-                for (const [k, v] of Object.entries(relObj)) {
-                    const rRel = String(typeof v === 'object' ? (v?.relation || v?.type || '') : v).toLowerCase();
-                    const vName = typeof v === 'object' ? String(v?.name || v?.clanName || '').toLowerCase().trim() : '';
-                    const isMatch = (tId && String(k) === tId) || (tName && vName && tName === vName);
-                    if (isMatch) {
-                        if (['ally', 'allies', 'friend', 'friends', 'cl-fr', 'clan-friends', '2', '4', '5'].includes(rRel)) return 'ally';
-                        if (['war', 'enemy', 'enemies', 'clan-enemies', 'cl-en', '3'].includes(rRel)) return 'clanEnemy';
-                    }
-                }
-            }
-        }
-
-        return null;
-    };
-
-    const isClanMemberLive = (rawOther, d, rel) => {
-        if (C.isSameClan(d)) return true;
-        if (typeof rawOther?.isClanMember === 'function' && rawOther.isClanMember()) return true;
-        if (['cl', 'clan', 'clan-members', 'clan-member'].includes(rel)) return true;
-        const ctip = String(d?.ctip || rawOther?.ctip || '').toLowerCase();
-        if (ctip.includes('t_cl') && !ctip.includes('t_cl-fr') && !ctip.includes('t_cl-en')) return true;
-        return false;
-    };
-
-    const isClanEnemyLive = (rawOther, d, rel, targetClan) => {
-        if (typeof rawOther?.isClanEnemy === 'function' && rawOther.isClanEnemy()) return true;
-        if (['3', 'clan-enemies', 'clan-enemy', 'cl-enemies', 'cl-enemy', 'cl-en', 'cl_en'].includes(rel)) return true;
-        const ctip = String(d?.ctip || rawOther?.ctip || '').toLowerCase();
-        if (ctip.includes('t_cl-en') || ctip.includes('cl-en') || ctip.includes('clan-enemies')) return true;
-        if (checkClanDiplomacyLive(targetClan) === 'clanEnemy') return true;
-        return false;
-    };
-
-    const isEnemyLive = (rawOther, d, rel) => {
-        if (typeof rawOther?.isEnemy === 'function' && rawOther.isEnemy()) return true;
-        if (['1', '6', 'enemy', 'enemies', 'en', 'fr-en'].includes(rel)) return true;
-        const ctip = String(d?.ctip || rawOther?.ctip || '').toLowerCase();
-        if ((ctip.includes('t_en') || ctip.includes('enemy')) && !ctip.includes('t_cl-en') && !ctip.includes('clan-enemies')) return true;
-        return false;
-    };
-
-    const isAllyLive = (rawOther, d, rel, targetClan) => {
-        if (typeof rawOther?.isClanFriend === 'function' && rawOther.isClanFriend()) return true;
-        if (typeof rawOther?.isAlly === 'function' && rawOther.isAlly()) return true;
-        if (typeof rawOther?.isFriend === 'function' && rawOther.isFriend()) return true;
-        const allyKeywords = [
-            'clan-friends', 'clan-friend', 'cl-fr', 'cl_fr',
-            'clan-allies', 'cl-allies', 'clan-ally', 'ally', 'allies',
-            'friends', 'friend', 'fr', 'fr-fr',
-            '2', '4', '5'
-        ];
-        if (allyKeywords.includes(rel)) return true;
-        const ctip = String(d?.ctip || rawOther?.ctip || '').toLowerCase();
-        if (ctip.includes('t_cl-fr') || ctip.includes('cl-fr') || ctip.includes('clan-friends')) return true;
-        if (checkClanDiplomacyLive(targetClan) === 'ally') return true;
-        return false;
-    };
-
-    // --- 3. KLASYFIKACJA GRACZA ---
+    // --- 3. ŚCISŁA KLASYFIKACJA GRACZA (BEZ FAŁSZYWYCH WROGÓW) ---
     const detectPlayerCategory = (rawOther) => {
         const d = rawOther?.d || rawOther;
         if (!d || !d.id) return null;
@@ -546,39 +372,45 @@
         const targetId = parseInt(d.id, 10);
         if (myId && targetId === myId) return null;
 
+        // Członkowie drużyny są zawsze ignorowani
+        if (isInMyParty(targetId)) return null;
+
         const rel = getFullPlayerRelation(rawOther, d);
-        const targetClan = getTargetClan(rawOther, d);
 
-        // 1. Wróg klanowy
-        if (isClanEnemyLive(rawOther, d, rel, targetClan)) {
-            return 'clanEnemy';
-        }
-
-        // 2. Wróg osobisty
-        if (isEnemyLive(rawOther, d, rel)) {
-            return 'enemy';
-        }
-
-        // 3. Członek naszego klanu
-        if (isClanMemberLive(rawOther, d, rel)) {
+        // 1. KLANOWICZE (Nasz własny klan)
+        if (C.isSameClan(d) || ['clan-members', 'clan-member', 'cl', 'clan'].includes(rel)) {
             return 'clanMember';
         }
 
-        // 4. Sojusznik lub przyjaciel
-        if (isAllyLive(rawOther, d, rel, targetClan)) {
+        // 2. SOJUSZNICY I PRZYJACIELE (Musi być sprawdzane przed wrogami!)
+        if (['clan-friends', 'clan-friend', 'cl-fr', 'clan-allies', 'cl-allies', 'ally', 'allies', 'friends', 'friend', 'fr'].includes(rel)) {
             return 'ally';
         }
 
-        // Członkowie drużyny niesklasyfikowani wyżej są ignorowani
-        if (isInMyParty(targetId)) {
-            return null;
+        // 3. WROGIE KLANY
+        if (['clan-enemies', 'clan-enemy', 'cl-en', 'cl-enemies', '3'].includes(rel)) {
+            return 'clanEnemy';
         }
 
-        // 5. Każdy inny gracz na mapie to NIEZNAJOMY
+        // 4. WROGOWIE OSOBIŚCI
+        if (['enemies', 'enemy', 'en', '1', '6'].includes(rel)) {
+            return 'enemy';
+        }
+
+        // 5. Jeśli gracz nie ma jeszcze wpisanej relacji w whoIsHere (np. wchodzi na mapę w tej milisekundzie),
+        // wstrzymujemy się przed klasyfikacją jako obcy, aż gra przypisze relację
+        if (!rel) {
+            const inWih = isNI && W.Engine?.whoIsHere?.getList && Boolean(W.Engine.whoIsHere.getList()[targetId] || W.Engine.whoIsHere.getList()[String(targetId)]);
+            if (!inWih) {
+                return null;
+            }
+        }
+
+        // 6. Zwykły, neutralny gracz (NIEZNAJOMY)
         return 'stranger';
     };
 
-    // --- 4. POBIERANIE WSZYSTKICH GRACZY NA MAPIE ---
+    // --- 4. POBIERANIE GRACZY NA MAPIE ---
     const getAllPlayersOnMap = () => {
         const allPlayers = [];
         const seenIds = new Set();
@@ -593,22 +425,23 @@
             }
         };
 
-        if (isNI && W.Engine?.others?.check) {
-            try {
-                const othersObj = W.Engine.others.check();
-                if (othersObj && typeof othersObj === 'object') {
-                    for (const o of Object.values(othersObj)) addPlayer(o);
-                }
-            } catch (e) {}
-        }
-
+        // Główna lista graczy z relacjami w silniku NI
         if (isNI && W.Engine?.whoIsHere?.getList) {
             try {
                 const wihList = W.Engine.whoIsHere.getList();
                 if (wihList && typeof wihList === 'object') {
                     for (const [id, entry] of Object.entries(wihList)) {
-                        addPlayer(entry.d ? entry : { d: entry, id: id });
+                        if (entry) addPlayer(entry.d ? entry : { d: entry, id: id });
                     }
+                }
+            } catch (e) {}
+        }
+
+        if (isNI && W.Engine?.others?.check) {
+            try {
+                const othersObj = W.Engine.others.check();
+                if (othersObj && typeof othersObj === 'object') {
+                    for (const o of Object.values(othersObj)) addPlayer(o);
                 }
             } catch (e) {}
         }
@@ -630,20 +463,12 @@
     };
 
     const alertedPlayerIds = new Set();
-    const scanMapForPlayers = (incomingOtherPacket = null) => {
+    const scanMapForPlayers = () => {
         if (!ls.modules.soundNotifier) return;
 
-        let players = getAllPlayersOnMap();
-
-        if (incomingOtherPacket && typeof incomingOtherPacket === 'object') {
-            for (const [id, pData] of Object.entries(incomingOtherPacket)) {
-                if (pData && typeof pData === 'object' && !pData.del) {
-                    players.push({ d: pData, id: id });
-                }
-            }
-        }
-
+        const players = getAllPlayersOnMap();
         const currentOtherIds = new Set();
+
         for (const o of players) {
             const d = o.d || o;
             const numId = parseInt(d?.id, 10);
@@ -663,10 +488,15 @@
     };
 
     // --- REAKCJA NA PAKIETY I PĘTLA SKANOWANIA ---
+    let packetScanTimeout = null;
     C.onPacket((d) => {
         if (!d) return;
         if (d.npc) scanMapForMonsters();
-        if (d.other) scanMapForPlayers(d.other);
+        if (d.other) {
+            // 50ms bufora na przetworzenie relacji gracza przez silnik Margonem
+            if (packetScanTimeout) clearTimeout(packetScanTimeout);
+            packetScanTimeout = setTimeout(scanMapForPlayers, 50);
+        }
         if (d.town) {
             alertedNpcIds.clear();
             alertedPlayerIds.clear();
@@ -676,5 +506,5 @@
     setInterval(() => {
         scanMapForMonsters();
         scanMapForPlayers();
-    }, 300);
+    }, 250);
 })();
