@@ -16,7 +16,7 @@
     }
 
     const cfg = ls.showCollisions;
-    cfg.alpha = Math.min(Math.max(parseInt(cfg.alpha, 10) || 35, 10), 80);
+    cfg.alpha = Math.min(Math.max(parseInt(cfg.alpha, 10) || 35, 10), 100);
     if (typeof cfg.showBorders === 'undefined') cfg.showBorders = true;
     if (!cfg.color || typeof cfg.color !== 'string' || !cfg.color.startsWith('#') || cfg.color.length !== 7) {
         cfg.color = '#ff2828';
@@ -79,7 +79,7 @@
                 <span>WIDOCZNOŚĆ</span>
                 <span class="ac-range-val col-val">${cfg.alpha}%</span>
             </div>
-            <input class="ac-range-slider col-slider" type="range" min="10" max="80" step="5" value="${cfg.alpha}">
+            <input class="ac-range-slider col-slider" type="range" min="10" max="100" step="5" value="${cfg.alpha}">
         </div>
     `;
 
@@ -283,7 +283,7 @@
             }
         }
 
-        const alpha = Math.min(Math.max((cfg.alpha || 35) / 100, 0.05), 0.95);
+        const alpha = Math.min(Math.max((cfg.alpha || 35) / 100, 0.05), 1);
         const borderAlpha = Math.min(alpha + 0.3, 1);
         const rgb = hexToRgb(cfg.color);
 
