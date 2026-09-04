@@ -188,10 +188,18 @@
         return false;
     };
 
-    // UI Helpers
+    // UI Helpers & Icons
     const checkmarkSvg = `<svg class="ac-checkmark-svg" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#38c268" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="3,8.5 6.5,12 13,3.5"/></svg>`;
     const plusMinusSvg = `<svg class="ac-plus-minus-svg" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="1" y1="5" x2="9" y2="5"></line><line class="ac-vertical-bar" x1="5" y1="1" x2="5" y2="9"></line></svg>`;
     const guiWindowSvg = `<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2.5" width="12" height="11" rx="2"/><line x1="2" y1="6.5" x2="14" y2="6.5"/><circle cx="4.5" cy="4.5" r="0.75" fill="currentColor"/></svg>`;
+
+    // Dedykowane ikony dla kafelków w Hubie
+    const iconAutoX = `<svg class="ac-item-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="13" y1="3" x2="5.5" y2="10.5"/><polyline points="10 3 13 3 13 6"/><line x1="4.5" y1="9.5" x2="6.5" y2="11.5"/><line x1="3" y1="13" x2="4.5" y2="11.5"/><line x1="3" y1="13" x2="1.5" y2="14.5"/><line x1="3" y1="3" x2="10.5" y2="10.5"/><polyline points="6 3 3 3 3 6"/><line x1="9.5" y1="11.5" x2="11.5" y2="9.5"/><line x1="13" y1="13" x2="11.5" y2="11.5"/><line x1="13" y1="13" x2="14.5" y2="14.5"/></svg>`;
+    const iconAutoParty = `<svg class="ac-item-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 13.5v-1a2.5 2.5 0 0 0-2.5-2.5h-4A2.5 2.5 0 0 0 2 12.5v1"/><circle cx="6.5" cy="5" r="2.2"/><path d="M13.5 13.5v-1a2.3 2.3 0 0 0-1.7-2.2"/><path d="M10 2.8a2.2 2.2 0 0 1 0 4.4"/></svg>`;
+    const iconDarkMap = `<svg class="ac-item-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 9.2A5.5 5.5 0 1 1 6.8 2.5 4.5 4.5 0 0 0 13.5 9.2Z"/></svg>`;
+    const iconMobHighlight = `<svg class="ac-item-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="5.5"/><line x1="8" y1="1" x2="8" y2="3.5"/><line x1="8" y1="12.5" x2="8" y2="15"/><line x1="1" y1="8" x2="3.5" y2="8"/><line x1="12.5" y1="8" x2="15" y2="8"/><circle cx="8" cy="8" r="1.5" fill="currentColor"/></svg>`;
+    const iconSound = `<svg class="ac-item-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="2 5.5 5.5 5.5 9 2.5 9 13.5 5.5 10.5 2 10.5 2 5.5" stroke-linejoin="round"/><path d="M11.5 5.5a3.8 3.8 0 0 1 0 5"/><path d="M13.5 3.5a6.5 6.5 0 0 1 0 9"/></svg>`;
+    const iconCollisions = `<svg class="ac-item-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2.5" width="12" height="11" rx="1.5"/><line x1="2" y1="8" x2="14" y2="8"/><line x1="8" y1="2.5" x2="8" y2="8"/><line x1="5" y1="8" x2="5" y2="13.5"/><line x1="11" y1="8" x2="11" y2="13.5"/></svg>`;
 
     let highestZ = 10000;
     const bringToFront = (el) => { if (!el) return; highestZ += 1; el.style.zIndex = String(highestZ); };
@@ -269,7 +277,7 @@
         hubBody.scrollTop += e.deltaY;
     }, { passive: false });
 
-    function createHubItem(modKey, titleText, descText) {
+    function createHubItem(modKey, titleText, descText, iconSvg) {
         const item = document.createElement('div');
         item.className = `ac-hub-item ${ls.modules[modKey] ? 'AC-ON' : 'AC-OFF'}`;
         item.setAttribute('title', `Kliknij kafelek, aby włączyć lub wyłączyć ${titleText}`);
@@ -283,9 +291,19 @@
         row.className = 'ac-hub-row';
         const titleGroup = document.createElement('div');
         titleGroup.className = 'ac-hub-title-group';
+        
         const dot = document.createElement('span');
         dot.className = `ac-hub-dot ${ls.modules[modKey] ? 'AC-ON' : 'AC-OFF'}`;
         titleGroup.appendChild(dot);
+
+        // Dodanie ikony przed nazwą dodatku
+        if (iconSvg) {
+            const iconWrapper = document.createElement('span');
+            iconWrapper.className = 'ac-hub-item-icon-wrapper';
+            iconWrapper.innerHTML = iconSvg;
+            titleGroup.appendChild(iconWrapper);
+        }
+
         const title = document.createElement('span');
         title.className = 'ac-hub-item-title';
         title.innerText = titleText;
@@ -313,23 +331,23 @@
         return { item, dot, guiBtn };
     }
 
-    // Kafelki w Hubie
-    const hAutoX = createHubItem('autoX', 'AUTO X', 'Automatyczne atakowanie przeciwników z szybką walką.');
+    // Kafelki w Hubie z przypisanymi ikonami
+    const hAutoX = createHubItem('autoX', 'AUTO X', 'Automatyczne atakowanie przeciwników z szybką walką.', iconAutoX);
     hubBody.appendChild(hAutoX.item);
 
-    const hAutoParty = createHubItem('autoParty', 'AUTO PARTY', 'Zapraszanie, auto-akceptacja oraz rozwiązywanie grupy.');
+    const hAutoParty = createHubItem('autoParty', 'AUTO PARTY', 'Zapraszanie, auto-akceptacja oraz rozwiązywanie grupy.', iconAutoParty);
     hubBody.appendChild(hAutoParty.item);
 
-    const hDarkMap = createHubItem('darkMap', 'DARK MAP', 'Przyciemnianie okna mapy i gry.');
+    const hDarkMap = createHubItem('darkMap', 'DARK MAP', 'Przyciemnianie okna mapy i gry.', iconDarkMap);
     hubBody.appendChild(hDarkMap.item);
 
-    const hMobHighlight = createHubItem('mobHighlight', 'MOB HIGHLIGHT', 'Podświetlanie grup potworów i ramki Elit II.');
+    const hMobHighlight = createHubItem('mobHighlight', 'MOB HIGHLIGHT', 'Podświetlanie grup potworów i ramki Elit II.', iconMobHighlight);
     hubBody.appendChild(hMobHighlight.item);
 
-    const hSound = createHubItem('soundNotifier', 'SOUND DETECT', 'Powiadomienia dźwiękowe o E2, Herosach, Tytanach i graczach.');
+    const hSound = createHubItem('soundNotifier', 'SOUND DETECT', 'Powiadomienia dźwiękowe o E2, Herosach, Tytanach i graczach.', iconSound);
     hubBody.appendChild(hSound.item);
 
-    const hCollisions = createHubItem('showCollisions', 'KOLIZJE', 'Podświetlanie zablokowanych pól mapy.');
+    const hCollisions = createHubItem('showCollisions', 'KOLIZJE', 'Podświetlanie zablokowanych pól mapy.', iconCollisions);
     hubBody.appendChild(hCollisions.item);
 
     hubMain.appendChild(hubBody);
@@ -563,7 +581,7 @@
 #AUTO_COMBO_HUB .ac-body {
     padding: 6px 5px 6px 6px;
     gap: 4px;
-    max-height: 185px; /* Wysokość mieszcząca ok. 3.5 kafelka, natychmiast wywołująca scroll */
+    max-height: 185px; /* Wysokość pod scroll */
     overflow-y: auto !important;
     overflow-x: hidden !important;
     background: #121316;
@@ -635,7 +653,7 @@
     box-sizing: border-box;
     cursor: pointer;
     user-select: none;
-    flex-shrink: 0 !important; /* ZAPOBIEGA ŚCISKANIU KAFELKÓW */
+    flex-shrink: 0 !important;
     transition: all 0.15s ease;
 }
 
@@ -673,7 +691,7 @@
 .ac-hub-title-group {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
     pointer-events: none;
 }
 
@@ -682,6 +700,7 @@
     height: 6px;
     border-radius: 50%;
     box-sizing: border-box;
+    flex-shrink: 0;
     transition: all 0.15s ease;
 }
 
@@ -695,8 +714,38 @@
     box-shadow: none;
 }
 
+/* Wrapper ikony dodatku */
+.ac-hub-item-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 13px;
+    height: 13px;
+    flex-shrink: 0;
+    transition: color 0.15s, filter 0.15s;
+}
+
+.ac-item-icon {
+    width: 12px;
+    height: 12px;
+    display: block;
+}
+
+.ac-hub-item.AC-ON .ac-hub-item-icon-wrapper {
+    color: #38c268;
+    filter: drop-shadow(0 0 3px rgba(56, 194, 104, 0.5));
+}
+
+.ac-hub-item.AC-OFF .ac-hub-item-icon-wrapper {
+    color: #626875;
+}
+
+.ac-hub-item.AC-OFF:hover .ac-hub-item-icon-wrapper {
+    color: #9299a6;
+}
+
 .ac-hub-item-title {
-    font-size: 9.5px;
+    font-size: 9.3px;
     font-weight: 700;
     letter-spacing: 0.5px;
     text-transform: uppercase;
