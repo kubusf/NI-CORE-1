@@ -9,8 +9,7 @@
     // --- DOMYŚLNE DŹWIĘKI ---
     const DEFAULT_E2_SOUND = 'https://cronus.margonem.com/sounds/elite2_here.mp3';
     const DEFAULT_BOSS_SOUND = 'https://kaktusdev.gitlab.io/ni-essentials/sfx/detector.mp3';
-    const DEFAULT_PLAYER_SOUND = 'https://kaktusdev.gitlab.io/ni-essentials/sfx/detector.mp3';
-    const DEFAULT_STRANGER_SOUND = 'https://actions.google.com/sounds/v1/alarms/beep_short.ogg';
+    const DEFAULT_PLAYER_SOUND = 'https://cronus.margonem.com/sounds/enemy_here.mp3';
 
     if (!ls.soundNotifier) {
         ls.soundNotifier = {
@@ -21,14 +20,21 @@
             kolos: { enabled: true, url: DEFAULT_BOSS_SOUND },
             enemy: { enabled: true, url: DEFAULT_PLAYER_SOUND },
             clanEnemy: { enabled: true, url: DEFAULT_PLAYER_SOUND },
-            stranger: { enabled: false, url: DEFAULT_STRANGER_SOUND }
+            stranger: { enabled: false, url: DEFAULT_PLAYER_SOUND }
         };
     }
 
-    // Inicjalizacja nowych opcji graczy jeśli dodatek był instalowany wcześniej
-    if (!ls.soundNotifier.enemy) ls.soundNotifier.enemy = { enabled: true, url: DEFAULT_PLAYER_SOUND };
-    if (!ls.soundNotifier.clanEnemy) ls.soundNotifier.clanEnemy = { enabled: true, url: DEFAULT_PLAYER_SOUND };
-    if (!ls.soundNotifier.stranger) ls.soundNotifier.stranger = { enabled: false, url: DEFAULT_STRANGER_SOUND };
+    // Automatyczna aktualizacja starych domyślnych linków (jeśli ktoś ich sam nie zmienił na własne)
+    const isOldTestSound = (url) => !url || (typeof url === 'string' && url.includes('actions.google.com'));
+    if (isOldTestSound(ls.soundNotifier.e2?.url)) ls.soundNotifier.e2.url = DEFAULT_E2_SOUND;
+    if (isOldTestSound(ls.soundNotifier.heros?.url)) ls.soundNotifier.heros.url = DEFAULT_BOSS_SOUND;
+    if (isOldTestSound(ls.soundNotifier.tytan?.url)) ls.soundNotifier.tytan.url = DEFAULT_BOSS_SOUND;
+    if (isOldTestSound(ls.soundNotifier.kolos?.url)) ls.soundNotifier.kolos.url = DEFAULT_BOSS_SOUND;
+
+    const isOldPlayerSound = (url) => !url || (typeof url === 'string' && (url.includes('kaktusdev.gitlab.io') || url.includes('actions.google.com')));
+    if (!ls.soundNotifier.enemy || isOldPlayerSound(ls.soundNotifier.enemy?.url)) ls.soundNotifier.enemy = { enabled: true, url: DEFAULT_PLAYER_SOUND };
+    if (!ls.soundNotifier.clanEnemy || isOldPlayerSound(ls.soundNotifier.clanEnemy?.url)) ls.soundNotifier.clanEnemy = { enabled: true, url: DEFAULT_PLAYER_SOUND };
+    if (!ls.soundNotifier.stranger || isOldPlayerSound(ls.soundNotifier.stranger?.url)) ls.soundNotifier.stranger = { enabled: false, url: DEFAULT_PLAYER_SOUND };
 
     const cfg = ls.soundNotifier;
     cfg.volume = typeof cfg.volume === 'number' ? cfg.volume : 80;
@@ -305,7 +311,6 @@
         const targetId = parseInt(d.id, 10);
         if (myId && targetId === myId) return null;
 
-        // Członkowie naszego klanu są zawsze ignorowani
         if (C.isSameClan(d)) return null;
 
         let rel = d.relation || rawOther.relation || '';
@@ -314,7 +319,6 @@
         }
         rel = String(rel).toLowerCase().trim();
 
-        // Przyjaciele i sojusznicy klanowi są ignorowani
         const isFriendOrAlly = [
             'clan-members', 'clan-friends', 'friends', 'friend',
             'cl-fr', 'cl', 'clan', 'fr', '2', '4', '5'
@@ -322,17 +326,14 @@
 
         if (isFriendOrAlly) return null;
 
-        // Wrogie klany
         if (['3', 'clan-enemies', 'clan-enemy', 'cl-enemies', 'cl-enemy', 'cl-en'].includes(rel)) {
             return 'clanEnemy';
         }
 
-        // Wrogowie osobiści
         if (['1', '6', 'enemy', 'enemies', 'en'].includes(rel)) {
             return 'enemy';
         }
 
-        // Nieznajomi (gracze neutralni)
         if (['', '0', 'other'].includes(rel) || !rel) {
             return 'stranger';
         }
