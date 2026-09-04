@@ -1,4 +1,4 @@
-// modules/soundNotifier.js - Powiadomienia dźwiękowe z automatycznym wyłączaniem
+// modules/soundNotifier.js - Powiadomienia dźwiękowe o rzadkich potworach
 (function() {
     'use strict';
     const C = (typeof unsafeWindow !== 'undefined' ? unsafeWindow : window).NICore;
@@ -10,18 +10,15 @@
     if (!ls.soundNotifier) {
         ls.soundNotifier = {
             volume: 80,
-            duration: 5,
             e2: { enabled: true, url: 'https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg' },
             heros: { enabled: true, url: 'https://actions.google.com/sounds/v1/alarms/bugle_tune.ogg' },
             tytan: { enabled: true, url: 'https://actions.google.com/sounds/v1/alarms/mechanical_clock_ring.ogg' },
             kolos: { enabled: true, url: 'https://actions.google.com/sounds/v1/alarms/medium_bell_ringing_near.ogg' }
         };
     }
-    if (typeof ls.soundNotifier.duration === 'undefined') ls.soundNotifier.duration = 5;
 
     const cfg = ls.soundNotifier;
     cfg.volume = typeof cfg.volume === 'number' ? cfg.volume : 80;
-    cfg.duration = typeof cfg.duration === 'number' ? cfg.duration : 5;
 
     const getVolumeMultiplier = () => {
         const v = typeof cfg.volume === 'number' ? cfg.volume : 80;
@@ -34,10 +31,7 @@
 
     let testingAudio = null;
     let activeTestBtn = null;
-    let testTimeout = null;
-
     let currentAlertAudio = null;
-    let alertTimeout = null;
 
     // --- BUDOWA GUI OKNA ---
     const soundMain = document.createElement('div');
@@ -60,13 +54,6 @@
                 <span class="ac-range-val sound-vol-val">${cfg.volume}%</span>
             </div>
             <input class="ac-range-slider sound-vol-slider" type="range" min="0" max="100" step="1" value="${cfg.volume}">
-
-            <!-- CZAS TRWANIA -->
-            <div class="ac-range-header" style="margin-top: 1px;">
-                <span>CZAS TRWANIA</span>
-                <span class="ac-range-val sound-dur-val">${cfg.duration}s</span>
-            </div>
-            <input class="ac-range-slider sound-dur-slider" type="range" min="1" max="20" step="1" value="${cfg.duration}">
 
             <!-- KAFELKI POTWORÓW -->
             ${createRowHtml('e2', 'ELITA II', cfg.e2)}
@@ -111,7 +98,7 @@
         updateAllVisibilities();
     });
 
-    // Regulacja głośności
+    // Płynna regulacja głośności
     const volSlider = soundMain.querySelector('.sound-vol-slider');
     const volText = soundMain.querySelector('.sound-vol-val');
     volSlider.addEventListener('input', () => {
@@ -123,16 +110,6 @@
         if (testingAudio) testingAudio.volume = currentVolMultiplier;
         if (currentAlertAudio) currentAlertAudio.volume = currentVolMultiplier;
 
-        saveLS();
-    });
-
-    // Regulacja czasu trwania dźwięku (1 - 20 sekund)
-    const durSlider = soundMain.querySelector('.sound-dur-slider');
-    const durText = soundMain.querySelector('.sound-dur-val');
-    durSlider.addEventListener('input', () => {
-        const val = parseInt(durSlider.value, 10);
-        cfg.duration = isNaN(val) ? 5 : Math.max(1, Math.min(20, val));
-        durText.innerText = `${cfg.duration}s`;
         saveLS();
     });
 
@@ -159,7 +136,6 @@
             e.stopPropagation();
 
             const stopTest = () => {
-                if (testTimeout) clearTimeout(testTimeout);
                 if (testingAudio) {
                     testingAudio.pause();
                     testingAudio.currentTime = 0;
@@ -187,10 +163,7 @@
             btnTest.className = 'ac-filter-btn btn-test AC-ON';
             activeTestBtn = btnTest;
 
-            // Automatyczne wyłączenie testu po zadanym czasie
-            const maxDurationMs = (cfg.duration || 5) * 1000;
-            testTimeout = setTimeout(stopTest, maxDurationMs);
-
+            // Kończy się dokładnie wtedy, kiedy kończy się plik dźwiękowy
             testingAudio.onended = stopTest;
 
             testingAudio.onerror = () => {
@@ -237,7 +210,6 @@
         if (!soundData || !soundData.enabled || !soundData.url) return;
 
         try {
-            if (alertTimeout) clearTimeout(alertTimeout);
             if (currentAlertAudio) {
                 currentAlertAudio.pause();
                 currentAlertAudio.currentTime = 0;
@@ -246,19 +218,6 @@
             currentAlertAudio = new Audio(soundData.url);
             currentAlertAudio.volume = getVolumeMultiplier();
             currentAlertAudio.play().catch(e => console.warn('[Sound Notifier] Błąd audio:', e));
-
-            // Zatrzymanie dźwięku po kilku sekundach
-            const maxDurationMs = (cfg.duration || 5) * 1000;
-            alertTimeout = setTimeout(() => {
-                if (currentAlertAudio) {
-                    currentAlertAudio.pause();
-                    currentAlertAudio.currentTime = 0;
-                }
-            }, maxDurationMs);
-
-            currentAlertAudio.onended = () => {
-                if (alertTimeout) clearTimeout(alertTimeout);
-            };
 
             console.log(`%c[Sound Notifier] Wykryto: ${rank.toUpperCase()} (${npcNick})`, 'color: #ff3344; font-weight: bold;');
         } catch (e) {
