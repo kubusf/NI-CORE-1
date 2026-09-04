@@ -233,24 +233,52 @@
     const onPacket = (cb) => packetListeners.push(cb);
 
     // ==========================================
-    // DOCK IKON W PRAWYM DOLNYM ROGU GRY (NI)
+    // DOCK IKON W PRAWYM DOLNYM ROGU OKNA GRY (NI)
     // ==========================================
     const activeDock = document.createElement('div');
     activeDock.setAttribute('id', 'AUTO_COMBO_ACTIVE_DOCK');
     activeDock.className = 'ac-active-dock';
 
-    // Funkcja podpinająca Dock do kontenera okna gry Margonem NI
+    // Obliczenie pozycji tak, aby dock unosił się idealnie nad oryginalnymi widżetami w rogu
+    const updateDockPosition = () => {
+        const gameContainer = document.querySelector('.game-window-positioner');
+        if (!gameContainer) return;
+
+        const widgetEls = document.querySelectorAll(
+            '.main-buttons-container, [data-position="bottom-right"], [data-position="bottom-right-additional"], .widget-button'
+        );
+        const containerRect = gameContainer.getBoundingClientRect();
+
+        let maxWidgetTopFromBottom = 0;
+        widgetEls.forEach(el => {
+            const r = el.getBoundingClientRect();
+            // Sprawdzenie czy dany widżet znajduje się w prawym dolnym obszarze okna gry
+            if (r.width > 0 && r.height > 0 && r.right > containerRect.right - 180 && r.bottom > containerRect.bottom - 120) {
+                const fromBottom = containerRect.bottom - r.top + 6;
+                if (fromBottom > maxWidgetTopFromBottom) {
+                    maxWidgetTopFromBottom = fromBottom;
+                }
+            }
+        });
+
+        activeDock.style.bottom = maxWidgetTopFromBottom > 0 ? `${Math.round(maxWidgetTopFromBottom)}px` : '52px';
+        activeDock.style.right = '10px';
+    };
+
+    // Podpinanie Docka do kontenera okna gry NI
     const attachDock = () => {
         const gameContainer = document.querySelector('.game-window-positioner');
         if (gameContainer) {
             if (activeDock.parentElement !== gameContainer) {
                 gameContainer.appendChild(activeDock);
             }
+            updateDockPosition();
             return true;
         }
         if (!activeDock.parentElement) {
             document.body.appendChild(activeDock);
         }
+        updateDockPosition();
         return false;
     };
 
@@ -259,6 +287,10 @@
             if (attachDock()) clearInterval(dockInterval);
         }, 200);
     }
+
+    window.addEventListener('resize', updateDockPosition);
+    setTimeout(updateDockPosition, 1000);
+    setTimeout(updateDockPosition, 2500);
 
     const modulesDefinition = [
         { key: 'autoX', title: 'AUTO X', desc: 'Automatyczne atakowanie przeciwników z szybką walką.', icon: iconAutoX },
@@ -426,6 +458,7 @@
 
     const updateAllVisibilities = () => {
         attachDock();
+        updateDockPosition();
         hubMain.style.display = ls.hubVisible ? 'block' : 'none';
 
         modulesDefinition.forEach(mod => {
@@ -493,6 +526,7 @@
                     if (existing) existing.closest('.widget-button')?.remove();
                     W.Engine.widgetManager.createOneWidget(widgetName, { [widgetName]: widgetPos }, true, []);
                     attachDock();
+                    updateDockPosition();
                     updateAllVisibilities();
                 }
             } catch (e) {}
@@ -513,6 +547,7 @@
         if (W.Engine.interfaceStart) {
             createButtonNI();
             attachDock();
+            updateDockPosition();
         } else {
             const checkStart = setInterval(() => {
                 if (W.Engine.interfaceStart) {
@@ -520,6 +555,7 @@
                     addWidgetToDefaultWidgetSet();
                     createButtonNI();
                     attachDock();
+                    updateDockPosition();
                 }
             }, 250);
         }
@@ -584,11 +620,11 @@
 }
 
 /* ==========================================
-   DOCK IKON W PRAWYM DOLNYM ROGU GRY (NI)
+   DOCK IKON W PRAWYM DOLNYM ROGU OKNA GRY (NI)
    ========================================== */
 .ac-active-dock {
     position: absolute;
-    bottom: 10px;
+    bottom: 52px;
     right: 10px;
     display: flex;
     flex-direction: row-reverse;
