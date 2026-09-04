@@ -9,7 +9,8 @@
     // --- DOMYŚLNE DŹWIĘKI ---
     const DEFAULT_E2_SOUND = 'https://cronus.margonem.com/sounds/elite2_here.mp3';
     const DEFAULT_BOSS_SOUND = 'https://kaktusdev.gitlab.io/ni-essentials/sfx/detector.mp3';
-    const DEFAULT_PLAYER_SOUND = 'https://cronus.margonem.com/sounds/enemy_here.mp3';
+    const DEFAULT_ENEMY_SOUND = 'https://cronus.margonem.com/sounds/enemy_here.mp3';
+    const DEFAULT_ALLY_SOUND = 'https://kaktusdev.gitlab.io/ni-essentials-core/sfx/ni-essentials-ally.mp3';
 
     if (!ls.soundNotifier) ls.soundNotifier = {};
 
@@ -19,11 +20,11 @@
         heros: { enabled: true, url: DEFAULT_BOSS_SOUND },
         tytan: { enabled: true, url: DEFAULT_BOSS_SOUND },
         kolos: { enabled: true, url: DEFAULT_BOSS_SOUND },
-        enemy: { enabled: true, url: DEFAULT_PLAYER_SOUND },
-        clanEnemy: { enabled: true, url: DEFAULT_PLAYER_SOUND },
-        clanMember: { enabled: false, url: DEFAULT_PLAYER_SOUND },
-        ally: { enabled: false, url: DEFAULT_PLAYER_SOUND },
-        stranger: { enabled: false, url: DEFAULT_PLAYER_SOUND }
+        enemy: { enabled: true, url: DEFAULT_ENEMY_SOUND },
+        clanEnemy: { enabled: true, url: DEFAULT_ENEMY_SOUND },
+        clanMember: { enabled: false, url: DEFAULT_ALLY_SOUND },
+        ally: { enabled: false, url: DEFAULT_ALLY_SOUND },
+        stranger: { enabled: false, url: DEFAULT_ENEMY_SOUND }
     };
 
     for (const [key, val] of Object.entries(defaults)) {
@@ -31,6 +32,20 @@
             ls.soundNotifier[key] = val;
         }
     }
+
+    // Automatyczna korekta pamięci przeglądarki
+    if (ls.soundNotifier.enemy && ls.soundNotifier.enemy.url === DEFAULT_ALLY_SOUND) {
+        ls.soundNotifier.enemy.url = DEFAULT_ENEMY_SOUND;
+    }
+    if (ls.soundNotifier.clanEnemy && ls.soundNotifier.clanEnemy.url === DEFAULT_ALLY_SOUND) {
+        ls.soundNotifier.clanEnemy.url = DEFAULT_ENEMY_SOUND;
+    }
+    ['clanMember', 'ally'].forEach(k => {
+        if (ls.soundNotifier[k] && (ls.soundNotifier[k].url === DEFAULT_ENEMY_SOUND || !ls.soundNotifier[k].url)) {
+            ls.soundNotifier[k].url = DEFAULT_ALLY_SOUND;
+        }
+    });
+    saveLS();
 
     const cfg = ls.soundNotifier;
     cfg.volume = typeof cfg.volume === 'number' ? cfg.volume : 80;
@@ -299,7 +314,7 @@
         }
     };
 
-    // --- 2. FUNKCJE ANALIZY GRACZA W CZASIE RZECZYWISTYM (BEZ PAMIĘCI PODRĘCZNEJ) ---
+    // --- 2. ANALIZA GRACZA W CZASIE RZECZYWISTYM ---
     const isInMyParty = (targetId) => {
         if (!targetId) return false;
         const p = isNI ? W.Engine?.party : W.g?.party;
@@ -351,7 +366,6 @@
         const id = d?.id || rawOther?.id;
         const numId = parseInt(id, 10);
 
-        // 1. Sprawdzenie w Engine.whoIsHere w danym momencie
         if (isNI && W.Engine?.whoIsHere) {
             const wih = W.Engine.whoIsHere;
             try {
@@ -371,7 +385,6 @@
             } catch (e) {}
         }
 
-        // 2. Metody na instancji obiektu
         if (typeof rawOther?.getRelation === 'function') {
             try {
                 const r = rawOther.getRelation();
@@ -385,11 +398,9 @@
             } catch (e) {}
         }
 
-        // 3. Bezpośrednia relacja
         const rel = d?.relation || rawOther?.relation || '';
         if (rel) return String(rel).toLowerCase().trim();
 
-        // 4. Analiza klas CSS z tooltipa
         const ctip = String(d?.ctip || rawOther?.ctip || '').toLowerCase();
         if (ctip.includes('t_cl-en') || ctip.includes('cl-en') || ctip.includes('clan-enemies')) return 'cl-en';
         if (ctip.includes('t_en') || ctip.includes('enemy')) return 'en';
@@ -400,7 +411,6 @@
         return '';
     };
 
-    // Sprawdzanie dyplomacji klanowej w silniku gry wyłącznie w locie (live)
     const checkClanDiplomacyLive = (targetClan) => {
         if (!targetClan || !targetClan.hasClan) return null;
         const engineClan = isNI ? W.Engine?.clan : W.g?.clan;
@@ -559,32 +569,82 @@
             return 'ally';
         }
 
-        // Członkowie drużyny niesklasyfikowani wyżej nie są traktowani jako obcy
+        // Członkowie drużyny niesklasyfikowani wyżej są ignorowani
         if (isInMyParty(targetId)) {
             return null;
         }
 
-        // 5. Nieznajomy (gracze neutralni)
-        if (['', '0', 'other', 'unknown'].includes(rel) || !rel) {
-            return 'stranger';
+        // 5. Każdy inny gracz na mapie to NIEZNAJOMY
+        return 'stranger';
+    };
+
+    // --- 4. POBIERANIE WSZYSTKICH GRACZY NA MAPIE ---
+    const getAllPlayersOnMap = () => {
+        const allPlayers = [];
+        const seenIds = new Set();
+
+        const addPlayer = (o) => {
+            if (!o) return;
+            const d = o.d || o;
+            const id = d?.id || o.id;
+            if (id && !seenIds.has(String(id))) {
+                seenIds.add(String(id));
+                allPlayers.push(o);
+            }
+        };
+
+        if (isNI && W.Engine?.others?.check) {
+            try {
+                const othersObj = W.Engine.others.check();
+                if (othersObj && typeof othersObj === 'object') {
+                    for (const o of Object.values(othersObj)) addPlayer(o);
+                }
+            } catch (e) {}
         }
 
-        return null;
+        if (isNI && W.Engine?.whoIsHere?.getList) {
+            try {
+                const wihList = W.Engine.whoIsHere.getList();
+                if (wihList && typeof wihList === 'object') {
+                    for (const [id, entry] of Object.entries(wihList)) {
+                        addPlayer(entry.d ? entry : { d: entry, id: id });
+                    }
+                }
+            } catch (e) {}
+        }
+
+        if (isNI && W.Engine?.others?.getDrawableList) {
+            try {
+                const drawList = W.Engine.others.getDrawableList();
+                if (Array.isArray(drawList)) {
+                    for (const o of drawList) addPlayer(o);
+                }
+            } catch (e) {}
+        }
+
+        if (!isNI && W.g?.other) {
+            for (const o of Object.values(W.g.other)) addPlayer(o);
+        }
+
+        return allPlayers;
     };
 
     const alertedPlayerIds = new Set();
-    const scanMapForPlayers = () => {
+    const scanMapForPlayers = (incomingOtherPacket = null) => {
         if (!ls.modules.soundNotifier) return;
 
-        let rawOthers = [];
-        if (isNI && W.Engine?.others?.getDrawableList) {
-            rawOthers = W.Engine.others.getDrawableList().filter(o => o && (o.d || o.id));
-        } else if (W.g && W.g.other) {
-            rawOthers = Object.values(W.g.other);
+        let players = getAllPlayersOnMap();
+
+        if (incomingOtherPacket && typeof incomingOtherPacket === 'object') {
+            for (const [id, pData] of Object.entries(incomingOtherPacket)) {
+                if (pData && typeof pData === 'object' && !pData.del) {
+                    players.push({ d: pData, id: id });
+                }
+            }
         }
 
         const currentOtherIds = new Set();
-        for (const o of rawOthers) {
+        for (const o of players) {
             const d = o.d || o;
             const numId = parseInt(d?.id, 10);
             if (!numId) continue;
@@ -606,7 +666,7 @@
     C.onPacket((d) => {
         if (!d) return;
         if (d.npc) scanMapForMonsters();
-        if (d.other) scanMapForPlayers();
+        if (d.other) scanMapForPlayers(d.other);
         if (d.town) {
             alertedNpcIds.clear();
             alertedPlayerIds.clear();
