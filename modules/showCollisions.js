@@ -2,7 +2,11 @@
 (function() {
     'use strict';
     const C = (typeof unsafeWindow !== 'undefined' ? unsafeWindow : window).NICore;
-    if (!C || document.getElementById('SHOW_COLLISIONS_GUI')) return;
+    if (!C) return;
+
+    // Usuwamy ewentualne stare okno przy przeładowaniu skryptu w Tampermonkey
+    const oldGui = document.getElementById('SHOW_COLLISIONS_GUI');
+    if (oldGui) oldGui.remove();
 
     const { W, isNI, ls, saveLS, makeDraggable, updateAllVisibilities, registerWindow } = C;
 
@@ -85,18 +89,21 @@
 
     document.body.appendChild(colMain);
 
-    // Style kafelka wyboru koloru
-    const palStyle = document.createElement('style');
-    palStyle.innerHTML = `
-        .ac-color-custom-btn {
-            transition: border-color 0.15s, box-shadow 0.15s;
-        }
-        .ac-color-custom-btn:hover {
-            border-color: #ffffff !important;
-            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
-        }
-    `;
-    document.head.appendChild(palStyle);
+    // Style kafelka koloru
+    if (!document.getElementById('AC_COLLISIONS_STYLE')) {
+        const palStyle = document.createElement('style');
+        palStyle.id = 'AC_COLLISIONS_STYLE';
+        palStyle.innerHTML = `
+            .ac-color-custom-btn {
+                transition: border-color 0.15s, box-shadow 0.15s;
+            }
+            .ac-color-custom-btn:hover {
+                border-color: #ffffff !important;
+                box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+            }
+        `;
+        document.head.appendChild(palStyle);
+    }
 
     // --- OBSŁUGA ZDARZEŃ GUI ---
     const statusBtn = colMain.querySelector('.ac-status-btn');
@@ -161,12 +168,80 @@
     makeDraggable(colMain, colMain.querySelector('.ac-header'), 'posShowCollisions', ['.ac-close-btn', '.ac-status-btn']);
     registerWindow('showCollisions', { mainEl: colMain, statusBtn: statusBtn });
 
-    // --- PRECYZYJNE SPRAWDZANIE ŚCIAN (BEZ POTWORÓW I BEZ WPŁYWU MOTYLI) ---
+    // --- INTEGRACJA Z HUBEM (GŁÓWNYM MENU) ---
+    const attachToHub = () => {
+        const hubBody = document.querySelector('#AUTO_COMBO_HUB .ac-body');
+        const oldHubItem = document.getElementById('AC_HUB_ITEM_COLLISIONS');
+        if (oldHubItem) oldHubItem.remove();
+
+        if (!hubBody) return;
+
+        const hubItem = document.createElement('div');
+        hubItem.setAttribute('id', 'AC_HUB_ITEM_COLLISIONS');
+        hubItem.className = `ac-hub-item ${ls.modules.showCollisions ? 'AC-ON' : 'AC-OFF'}`;
+        hubItem.setAttribute('title', 'Kliknij kafelek, aby włączyć lub wyłączyć Kolizje');
+        hubItem.addEventListener('click', () => {
+            ls.modules.showCollisions = !ls.modules.showCollisions;
+            saveLS();
+            updateAllVisibilities();
+        });
+
+        const hubRow = document.createElement('div');
+        hubRow.className = 'ac-hub-row';
+        const titleGroup = document.createElement('div');
+        titleGroup.className = 'ac-hub-title-group';
+        const dot = document.createElement('span');
+        dot.className = `ac-hub-dot ${ls.modules.showCollisions ? 'AC-ON' : 'AC-OFF'}`;
+        titleGroup.appendChild(dot);
+        const title = document.createElement('span');
+        title.className = 'ac-hub-item-title';
+        title.innerText = 'KOLIZJE';
+        titleGroup.appendChild(title);
+        hubRow.appendChild(titleGroup);
+
+        const guiBtn = document.createElement('button');
+        guiBtn.className = `ac-hub-gui-btn ${ls.guiVisible.showCollisions ? 'AC-ON' : 'AC-OFF'}`;
+        guiBtn.setAttribute('title', 'Otwórz / Ukryj okno Kolizje');
+        guiBtn.innerHTML = C.svg.guiWindowSvg;
+        guiBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            ls.guiVisible.showCollisions = !ls.guiVisible.showCollisions;
+            saveLS();
+            updateAllVisibilities();
+        });
+        hubRow.appendChild(guiBtn);
+        hubItem.appendChild(hubRow);
+
+        const desc = document.createElement('div');
+        desc.className = 'ac-hub-desc';
+        desc.innerText = 'Podświetlanie zablokowanych pól mapy (ścian, wody i przeszkód).';
+        hubItem.appendChild(desc);
+
+        hubBody.appendChild(hubItem);
+
+        const updateTile = () => {
+            const isModOn = Boolean(ls.modules.showCollisions);
+            const isGuiOn = Boolean(ls.guiVisible.showCollisions);
+            hubItem.className = `ac-hub-item ${isModOn ? 'AC-ON' : 'AC-OFF'}`;
+            dot.className = `ac-hub-dot ${isModOn ? 'AC-ON' : 'AC-OFF'}`;
+            guiBtn.className = `ac-hub-gui-btn ${isGuiOn ? 'AC-ON' : 'AC-OFF'}`;
+        };
+
+        const origUpdate = C.updateAllVisibilities;
+        C.updateAllVisibilities = () => {
+            origUpdate();
+            updateTile();
+        };
+        updateTile();
+    };
+
+    setTimeout(attachToHub, 200);
+
+    // --- PRECYZYJNE SPRAWDZANIE ŚCIAN (BEZ WPŁYWU MOTYLI I POTWORÓW) ---
     const isWallOnly = (x, y) => {
-        // 1. Sprawdzenie w silniku Margonem NI
+        // 1. Sprawdzenie w silniku Margonem NI (bit 1 to fizyczna ściana)
         if (W.Engine?.map?.col?.check) {
             const c = W.Engine.map.col.check(x, y);
-            // c === 1 lub (c & 1) to ściana. Potwory to 4 (nie spełniają warunku).
             return Boolean(c && ((c === 1) || (c & 1)));
         }
 
@@ -182,7 +257,8 @@
 
     // --- RYSOWANIE SIATKI NA CANVASIE ---
     const drawCollisions = (ctx) => {
-        if (!ls.modules.showCollisions || !isNI || !W.Engine?.map) return;
+        const isModActive = Boolean(ls.modules?.showCollisions || ls.modules?.collisions);
+        if (!isModActive || !W.Engine?.map) return;
 
         const mapD = W.Engine.map.d;
         const offset = W.Engine.map.offset || [0, 0];
@@ -229,31 +305,30 @@
         ctx.restore();
     };
 
-    // Przechowujemy referencję w obiekcie okna, by hook wywoływał zawsze najnowszą funkcję
-    W._drawCollisionsFn = drawCollisions;
+    // Zawsze podpinamy najnowszą funkcję pod obiekt window
+    W._ac_drawCollisions = drawCollisions;
 
     // --- HOOK MAPY ---
     const hookMapDraw = () => {
-        if (!isNI) return;
-
         const tryHook = () => {
             if (W.Engine?.map && typeof W.Engine.map.draw === 'function') {
-                if (W._collisionDrawHooked) return true;
-                W._collisionDrawHooked = true;
-                const origDraw = W.Engine.map.draw;
+                if (!W._collisionDrawHooked) {
+                    W._collisionDrawHooked = true;
+                    const origDraw = W.Engine.map.draw;
 
-                W.Engine.map.draw = function(ctx) {
-                    const res = origDraw.apply(this, arguments);
-                    try {
-                        if (ls.modules.showCollisions && ctx && typeof W._drawCollisionsFn === 'function') {
-                            W._drawCollisionsFn(ctx);
+                    W.Engine.map.draw = function(ctx) {
+                        const res = origDraw.apply(this, arguments);
+                        try {
+                            if (typeof W._ac_drawCollisions === 'function' && ctx) {
+                                W._ac_drawCollisions(ctx);
+                            }
+                        } catch (e) {
+                            console.error('[ShowCollisions Error]', e);
                         }
-                    } catch (e) {
-                        console.error('[ShowCollisions Error]', e);
-                    }
-                    return res;
-                };
-                console.log('%c[NI Core] Kolizje podpięte pomyślnie!', 'color: #4de64d; font-weight: bold;');
+                        return res;
+                    };
+                    console.log('%c[NI Core] Kolizje podpięte pomyślnie!', 'color: #4de64d; font-weight: bold;');
+                }
                 return true;
             }
             return false;
