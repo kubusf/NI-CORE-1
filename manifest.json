@@ -3,6 +3,5 @@
     "modules/darkMap.js",
     "modules/autoParty.js",
     "modules/autoX.js",
-    "modules/soundNotifier.js",
-    "modules/itemRenamer.js"
+    "modules/soundNotifier.js"
 ]
