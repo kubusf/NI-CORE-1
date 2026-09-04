@@ -201,7 +201,7 @@
     const iconSound = `<svg class="ac-item-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="2 5.5 5.5 5.5 9 2.5 9 13.5 5.5 10.5 2 10.5 2 5.5" stroke-linejoin="round"/><path d="M11.5 5.5a3.8 3.8 0 0 1 0 5"/><path d="M13.5 3.5a6.5 6.5 0 0 1 0 9"/></svg>`;
     const iconCollisions = `<svg class="ac-item-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2.5" width="12" height="11" rx="1.5"/><line x1="2" y1="8" x2="14" y2="8"/><line x1="8" y1="2.5" x2="8" y2="8"/><line x1="5" y1="8" x2="5" y2="13.5"/><line x1="11" y1="8" x2="11" y2="13.5"/></svg>`;
 
-    // Nowa, wyrazista ikona herbu z rdzeniem dla przycisku otwierającego HUB
+    // Nowa ikona herbu dla głównego przycisku
     const iconHubDock = `<svg class="ac-hub-dock-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
         <defs>
             <linearGradient id="acHubGrad" x1="0" y1="0" x2="0" y2="1">
@@ -289,16 +289,21 @@
         observeCanvas();
     }
 
-    // Wyróżniony główny przycisk otwierający HUB z nazwą "NI CORE"
+    // Główny przycisk HUB-a o szerokości obu kolumn (58px) na samym dole
     const hubDockBtn = document.createElement('button');
     hubDockBtn.className = 'ac-dock-btn ac-dock-hub-btn';
     hubDockBtn.setAttribute('aria-label', 'NI CORE');
-    hubDockBtn.innerHTML = `${iconHubDock}<span class="ac-dock-tooltip">NI CORE</span>`;
+    hubDockBtn.innerHTML = `${iconHubDock}<span class="ac-hub-dock-text">NI CORE</span><span class="ac-dock-tooltip">NI CORE</span>`;
     hubDockBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         toggleHub();
     });
     activeDock.appendChild(hubDockBtn);
+
+    // Kontener na kafelki modułów w 2 kolumnach idących w górę
+    const modulesGrid = document.createElement('div');
+    modulesGrid.className = 'ac-dock-modules-grid';
+    activeDock.appendChild(modulesGrid);
 
     const modulesDefinition = [
         { key: 'autoX', title: 'AUTO X', desc: 'Automatyczne atakowanie przeciwników z szybką walką.', icon: iconAutoX },
@@ -321,7 +326,7 @@
             saveLS();
             updateAllVisibilities();
         });
-        activeDock.appendChild(btn);
+        modulesGrid.appendChild(btn);
         dockButtons[mod.key] = btn;
     });
 
@@ -470,7 +475,7 @@
         // Podświetlenie przycisku Huba w docku, gdy menu jest otwarte
         hubDockBtn.classList.toggle('is-open', Boolean(ls.hubVisible));
 
-        // Wyświetlanie przycisków w docku tylko dla włączonych modułów
+        // Wyświetlanie przycisków w siatce tylko dla włączonych modułów
         modulesDefinition.forEach(mod => {
             const isModActive = Boolean(ls.modules[mod.key]);
             const isGuiOpen = Boolean(ls.guiVisible[mod.key]);
@@ -563,10 +568,19 @@
     right: 295px;
     display: flex;
     flex-direction: column-reverse;
-    gap: 5px;
+    gap: 4px;
+    width: 58px;
     z-index: 9998;
     pointer-events: auto;
     user-select: none;
+}
+
+/* Siatka 2 kolumn modułów rosnąca w górę */
+.ac-dock-modules-grid {
+    display: flex;
+    flex-wrap: wrap-reverse;
+    gap: 4px;
+    width: 58px;
 }
 
 .ac-dock-btn {
@@ -597,7 +611,7 @@
 }
 
 .ac-dock-btn:hover {
-    transform: translateX(-2px);
+    transform: translateY(-2px);
     border-color: #52e385;
     background: linear-gradient(180deg, #262932 0%, #181a20 100%);
     box-shadow: 0 6px 14px rgba(0, 0, 0, 0.8), 0 0 8px rgba(56, 194, 104, 0.45);
@@ -609,7 +623,7 @@
 }
 
 .ac-dock-btn:active {
-    transform: translateX(0) scale(0.94);
+    transform: translateY(0) scale(0.94);
 }
 
 .ac-dock-btn.is-open {
@@ -619,35 +633,51 @@
 }
 
 /* ==========================================
-   SPECJALNY WYGLĄD GŁÓWNEGO PRZYCISKU HUB-A
+   SZEROKI GŁÓWNY PRZYCISK HUB-A (58px)
    ========================================== */
 .ac-dock-hub-btn {
-    width: 29px;
-    height: 29px;
-    margin-bottom: 2px;
-    border-radius: 6px;
+    width: 58px;
+    height: 26px;
+    border-radius: 5px;
     background: linear-gradient(180deg, #1e3626 0%, #101e15 100%);
     border: 1.5px solid #38c268;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.85), 0 0 9px rgba(56, 194, 104, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 0 4px;
 }
 
 .ac-hub-dock-icon {
-    width: 18px !important;
-    height: 18px !important;
+    width: 14px !important;
+    height: 14px !important;
     display: block;
+    flex-shrink: 0;
     filter: drop-shadow(0 0 3px rgba(56, 194, 104, 0.65));
     transition: transform 0.15s ease, filter 0.15s ease;
 }
 
+.ac-hub-dock-text {
+    font-size: 8px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    color: #e5fbee;
+    line-height: 1;
+    pointer-events: none;
+    white-space: nowrap;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
 .ac-dock-hub-btn:hover {
-    transform: translateX(-3px) scale(1.05);
+    transform: translateY(-2px);
     border-color: #55f78b;
     background: linear-gradient(180deg, #274832 0%, #14281c 100%);
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.9), 0 0 14px rgba(85, 247, 139, 0.7);
 }
 
 .ac-dock-hub-btn:hover .ac-hub-dock-icon {
-    transform: scale(1.12);
+    transform: scale(1.1);
     filter: drop-shadow(0 0 5px rgba(85, 247, 139, 0.9));
 }
 
