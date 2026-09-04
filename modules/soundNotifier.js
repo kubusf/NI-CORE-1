@@ -1,4 +1,4 @@
-// modules/soundNotifier.js - Powiadomienia dźwiękowe o rzadkich potworach
+// modules/soundNotifier.js - Powiadomienia dźwiękowe z integracją z Hubem
 (function() {
     'use strict';
     const C = (typeof unsafeWindow !== 'undefined' ? unsafeWindow : window).NICore;
@@ -6,7 +6,7 @@
 
     const { W, isNI, ls, saveLS, makeDraggable, updateAllVisibilities, registerWindow } = C;
 
-    // --- USTAWIENIA I DOMYŚLNE DŹWIĘKI ---
+    // --- USTAWIENIA I DŹWIĘKI ---
     if (!ls.soundNotifier) {
         ls.soundNotifier = {
             volume: 80,
@@ -22,11 +22,20 @@
     const cfg = ls.soundNotifier;
     cfg.volume = typeof cfg.volume === 'number' ? cfg.volume : 80;
 
+    const getVolumeMultiplier = () => {
+        const v = typeof cfg.volume === 'number' ? cfg.volume : 80;
+        return Math.max(0, Math.min(100, v)) / 100;
+    };
+
     const baseX = parseInt(ls.pos?.x, 10) || 120;
     const baseY = parseInt(ls.pos?.y, 10) || 120;
     ls.posSoundNotifier = C.getValidPos(ls.posSoundNotifier, baseX, baseY + 360, 210);
 
-    // --- BUDOWA GUI ---
+    let testingAudio = null;
+    let activeTestBtn = null;
+    let currentAlertAudio = null;
+
+    // --- BUDOWA GUI OKNA ---
     const soundMain = document.createElement('div');
     soundMain.setAttribute('id', 'SOUND_NOTIFIER_GUI');
     soundMain.className = 'ac-window';
@@ -41,14 +50,12 @@
             <button class="ac-close-btn" title="Schowaj okno">&#215;</button>
         </div>
         <div class="ac-body" style="gap: 6px;">
-            <!-- GŁOŚNOŚĆ -->
             <div class="ac-range-header">
                 <span>GŁOŚNOŚĆ</span>
                 <span class="ac-range-val sound-vol-val">${cfg.volume}%</span>
             </div>
-            <input class="ac-range-slider sound-vol-slider" type="range" min="0" max="100" step="5" value="${cfg.volume}">
+            <input class="ac-range-slider sound-vol-slider" type="range" min="0" max="100" step="1" value="${cfg.volume}">
 
-            <!-- KAFELKI POTWORÓW -->
             ${createRowHtml('e2', 'ELITA II', cfg.e2)}
             ${createRowHtml('heros', 'HEROS', cfg.heros)}
             ${createRowHtml('tytan', 'TYTAN', cfg.tytan)}
@@ -61,7 +68,7 @@
             <div class="ac-sound-block" data-key="${key}" style="display: flex; flex-direction: column; gap: 3px; background: #0c0c0c; padding: 4px; border-radius: 4px; border: 1px solid rgba(255, 255, 255, 0.12);">
                 <div class="ac-row" style="justify-content: space-between;">
                     <div style="display: flex; align-items: center; gap: 5px;">
-                        <button class="ac-square-btn btn-toggle ${data.enabled ? 'AC-ON' : 'AC-OFF'}" title="Włącz / Wyłącz dźwięk dla tego potwora">
+                        <button class="ac-square-btn btn-toggle ${data.enabled ? 'AC-ON' : 'AC-OFF'}" title="Włącz / Wyłącz powiadomienie">
                             ${data.enabled ? C.svg.checkmarkSvg : ''}
                         </button>
                         <span class="ac-toggle-label">${label}</span>
@@ -75,7 +82,7 @@
 
     document.body.appendChild(soundMain);
 
-    // --- ZDARZENIA GUI ---
+    // --- ZDARZENIA OKNA ---
     const statusBtn = soundMain.querySelector('.ac-status-btn');
     statusBtn.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -91,26 +98,28 @@
         updateAllVisibilities();
     });
 
-    // Regulacja głośności
+    // Płynna regulacja głośności w czasie rzeczywistym
     const volSlider = soundMain.querySelector('.sound-vol-slider');
     const volText = soundMain.querySelector('.sound-vol-val');
     volSlider.addEventListener('input', () => {
-        cfg.volume = parseInt(volSlider.value, 10) || 0;
+        const val = parseInt(volSlider.value, 10);
+        cfg.volume = isNaN(val) ? 80 : Math.max(0, Math.min(100, val));
         volText.innerText = `${cfg.volume}%`;
+
+        const currentVolMultiplier = getVolumeMultiplier();
+        if (testingAudio) testingAudio.volume = currentVolMultiplier;
+        if (currentAlertAudio) currentAlertAudio.volume = currentVolMultiplier;
+
         saveLS();
     });
 
-    // Obsługa wierszy potworów (Checkbox, Input, Przycisk Test)
-    let testingAudio = null;
-    let activeTestBtn = null;
-
+    // Obsługa wierszy z linkami i testem
     soundMain.querySelectorAll('.ac-sound-block').forEach(block => {
         const key = block.getAttribute('data-key');
         const btnToggle = block.querySelector('.btn-toggle');
         const btnTest = block.querySelector('.btn-test');
         const inputUrl = block.querySelector('.sound-input');
 
-        // Włącznik potwora
         btnToggle.addEventListener('click', () => {
             cfg[key].enabled = !cfg[key].enabled;
             btnToggle.className = `ac-square-btn btn-toggle ${cfg[key].enabled ? 'AC-ON' : 'AC-OFF'}`;
@@ -118,13 +127,11 @@
             saveLS();
         });
 
-        // Wpisywanie linku
         inputUrl.addEventListener('input', () => {
             cfg[key].url = inputUrl.value.trim();
             saveLS();
         });
 
-        // Testowanie dźwięku
         btnTest.addEventListener('click', (e) => {
             e.stopPropagation();
             if (testingAudio) {
@@ -145,7 +152,7 @@
             if (!url) return;
 
             testingAudio = new Audio(url);
-            testingAudio.volume = (cfg.volume || 80) / 100;
+            testingAudio.volume = getVolumeMultiplier();
             btnTest.innerText = 'STOP';
             btnTest.className = 'ac-filter-btn btn-test AC-ON';
             activeTestBtn = btnTest;
@@ -176,6 +183,75 @@
     makeDraggable(soundMain, soundMain.querySelector('.ac-header'), 'posSoundNotifier', ['.ac-close-btn', '.ac-status-btn']);
     registerWindow('soundNotifier', { mainEl: soundMain, statusBtn: statusBtn });
 
+    // --- INTEGRACJA Z GŁÓWNYM HUBEM (NI CORE) ---
+    const attachToHub = () => {
+        const hubBody = document.querySelector('#AUTO_COMBO_HUB .ac-body');
+        if (!hubBody || document.getElementById('AC_HUB_ITEM_SOUND')) return;
+
+        const hubItem = document.createElement('div');
+        hubItem.setAttribute('id', 'AC_HUB_ITEM_SOUND');
+        hubItem.className = `ac-hub-item ${ls.modules.soundNotifier ? 'AC-ON' : 'AC-OFF'}`;
+        hubItem.setAttribute('title', 'Kliknij kafelek, aby włączyć lub wyłączyć Sound Notifier');
+        hubItem.addEventListener('click', () => {
+            ls.modules.soundNotifier = !ls.modules.soundNotifier;
+            saveLS();
+            updateAllVisibilities();
+        });
+
+        const hubRow = document.createElement('div');
+        hubRow.className = 'ac-hub-row';
+
+        const titleGroup = document.createElement('div');
+        titleGroup.className = 'ac-hub-title-group';
+
+        const dot = document.createElement('span');
+        dot.className = `ac-hub-dot ${ls.modules.soundNotifier ? 'AC-ON' : 'AC-OFF'}`;
+        titleGroup.appendChild(dot);
+
+        const title = document.createElement('span');
+        title.className = 'ac-hub-item-title';
+        title.innerText = 'SOUND DETECT';
+        titleGroup.appendChild(title);
+        hubRow.appendChild(titleGroup);
+
+        const guiBtn = document.createElement('button');
+        guiBtn.className = `ac-hub-gui-btn ${ls.guiVisible.soundNotifier ? 'AC-ON' : 'AC-OFF'}`;
+        guiBtn.setAttribute('title', 'Otwórz / Ukryj okno Sound Notifier');
+        guiBtn.innerHTML = C.svg.guiWindowSvg;
+        guiBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            ls.guiVisible.soundNotifier = !ls.guiVisible.soundNotifier;
+            saveLS();
+            updateAllVisibilities();
+        });
+        hubRow.appendChild(guiBtn);
+        hubItem.appendChild(hubRow);
+
+        const desc = document.createElement('div');
+        desc.className = 'ac-hub-desc';
+        desc.innerText = 'Powiadomienia dźwiękowe o Elitach II, Herosach, Tytanach i Kolosach na mapie.';
+        hubItem.appendChild(desc);
+
+        hubBody.appendChild(hubItem);
+
+        const updateTile = () => {
+            const isModOn = Boolean(ls.modules.soundNotifier);
+            const isGuiOn = Boolean(ls.guiVisible.soundNotifier);
+            hubItem.className = `ac-hub-item ${isModOn ? 'AC-ON' : 'AC-OFF'}`;
+            dot.className = `ac-hub-dot ${isModOn ? 'AC-ON' : 'AC-OFF'}`;
+            guiBtn.className = `ac-hub-gui-btn ${isGuiOn ? 'AC-ON' : 'AC-OFF'}`;
+        };
+
+        const origUpdate = C.updateAllVisibilities;
+        C.updateAllVisibilities = () => {
+            origUpdate();
+            updateTile();
+        };
+        updateTile();
+    };
+
+    attachToHub();
+
     // --- LOGIKA WYKRYWANIA POTWORÓW ---
     const detectRank = (npc) => {
         if (!npc) return null;
@@ -188,22 +264,14 @@
         }
         const mapMode = W.Engine?.map?.d?.mode || W.map?.mode;
 
-        // 1. Kolos: waga > 99 na mapie o trybie 5 (instancja kolosa) lub w nazwie/tipie
-        if (/kolos/i.test(tip) || /kolos/i.test(nick) || (wt > 99 && mapMode == 5)) {
-            return 'kolos';
-        }
-        // 2. Tytan: waga > 99 poza instancją kolosa lub w nazwie/tipie
-        if (/tytan/i.test(tip) || /tytan/i.test(nick) || (wt > 99 && mapMode != 5)) {
-            return 'tytan';
-        }
-        // 3. Heros: waga 80-99 lub 30-39 lub w nazwie/tipie
-        if (/heros/i.test(tip) || /heros/i.test(nick) || (wt > 79 && wt <= 99) || (wt >= 30 && wt <= 39)) {
-            return 'heros';
-        }
-        // 4. Elita II: waga 20-29 lub w nazwie/tipie
-        if (/elita\s*ii/i.test(tip) || /elita\s*ii/i.test(nick) || (wt >= 20 && wt <= 29)) {
-            return 'e2';
-        }
+        // Kolos
+        if (/kolos/i.test(tip) || /kolos/i.test(nick) || (wt > 99 && mapMode == 5)) return 'kolos';
+        // Tytan
+        if (/tytan/i.test(tip) || /tytan/i.test(nick) || (wt > 99 && mapMode != 5)) return 'tytan';
+        // Heros
+        if (/heros/i.test(tip) || /heros/i.test(nick) || (wt > 79 && wt <= 99) || (wt >= 30 && wt <= 39)) return 'heros';
+        // Elita II
+        if (/elita\s*ii/i.test(tip) || /elita\s*ii/i.test(nick) || (wt >= 20 && wt <= 29)) return 'e2';
 
         return null;
     };
@@ -215,9 +283,13 @@
         if (!soundData || !soundData.enabled || !soundData.url) return;
 
         try {
-            const audio = new Audio(soundData.url);
-            audio.volume = (cfg.volume || 80) / 100;
-            audio.play().catch(e => console.warn('[Sound Notifier] Błąd odtwarzania:', e));
+            if (currentAlertAudio) {
+                currentAlertAudio.pause();
+                currentAlertAudio.currentTime = 0;
+            }
+            currentAlertAudio = new Audio(soundData.url);
+            currentAlertAudio.volume = getVolumeMultiplier();
+            currentAlertAudio.play().catch(e => console.warn('[Sound Notifier] Błąd audio:', e));
             console.log(`%c[Sound Notifier] Wykryto: ${rank.toUpperCase()} (${npcNick})`, 'color: #ff3344; font-weight: bold;');
         } catch (e) {
             console.error('[Sound Notifier] Audio Error:', e);
@@ -230,7 +302,6 @@
         if (!npcs) return;
 
         const currentNpcIds = new Set();
-
         for (const id in npcs) {
             const npc = npcs[id];
             const numId = parseInt(id, 10);
@@ -243,16 +314,14 @@
             }
         }
 
-        // Czyszczenie potworów, które już zniknęły lub zginęły
         for (const id of alertedNpcIds) {
             if (!currentNpcIds.has(id)) alertedNpcIds.delete(id);
         }
     };
 
-    // Reagowanie na nowe potwory z pakietów
     C.onPacket((d) => {
         if (d.npc) scanMapForMonsters();
-        if (d.town) alertedNpcIds.clear(); // Po zmianie mapy czyścimy pamięć
+        if (d.town) alertedNpcIds.clear();
     });
 
     if (isNI && W.API?.addCallbackToEvent) {
