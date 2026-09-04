@@ -1,14 +1,16 @@
-// modules/soundNotifier.js - Powiadomienia dźwiękowe o rzadkich potworach
+// modules/soundNotifier.js - Powiadomienia dźwiękowe o potworach i graczach
 (function() {
     'use strict';
     const C = (typeof unsafeWindow !== 'undefined' ? unsafeWindow : window).NICore;
     if (!C || document.getElementById('SOUND_NOTIFIER_GUI')) return;
 
-    const { W, isNI, ls, saveLS, makeDraggable, updateAllVisibilities, registerWindow } = C;
+    const { W, isNI, ls, getHero, saveLS, makeDraggable, updateAllVisibilities, registerWindow } = C;
 
     // --- DOMYŚLNE DŹWIĘKI ---
     const DEFAULT_E2_SOUND = 'https://cronus.margonem.com/sounds/elite2_here.mp3';
     const DEFAULT_BOSS_SOUND = 'https://kaktusdev.gitlab.io/ni-essentials/sfx/detector.mp3';
+    const DEFAULT_PLAYER_SOUND = 'https://kaktusdev.gitlab.io/ni-essentials/sfx/detector.mp3';
+    const DEFAULT_STRANGER_SOUND = 'https://actions.google.com/sounds/v1/alarms/beep_short.ogg';
 
     if (!ls.soundNotifier) {
         ls.soundNotifier = {
@@ -16,20 +18,21 @@
             e2: { enabled: true, url: DEFAULT_E2_SOUND },
             heros: { enabled: true, url: DEFAULT_BOSS_SOUND },
             tytan: { enabled: true, url: DEFAULT_BOSS_SOUND },
-            kolos: { enabled: true, url: DEFAULT_BOSS_SOUND }
+            kolos: { enabled: true, url: DEFAULT_BOSS_SOUND },
+            enemy: { enabled: true, url: DEFAULT_PLAYER_SOUND },
+            clanEnemy: { enabled: true, url: DEFAULT_PLAYER_SOUND },
+            stranger: { enabled: false, url: DEFAULT_STRANGER_SOUND }
         };
     }
 
-    const isOldTestSound = (url) => !url || (typeof url === 'string' && url.includes('actions.google.com'));
-    if (isOldTestSound(ls.soundNotifier.e2?.url)) ls.soundNotifier.e2.url = DEFAULT_E2_SOUND;
-    if (isOldTestSound(ls.soundNotifier.heros?.url)) ls.soundNotifier.heros.url = DEFAULT_BOSS_SOUND;
-    if (isOldTestSound(ls.soundNotifier.tytan?.url)) ls.soundNotifier.tytan.url = DEFAULT_BOSS_SOUND;
-    if (isOldTestSound(ls.soundNotifier.kolos?.url)) ls.soundNotifier.kolos.url = DEFAULT_BOSS_SOUND;
+    // Inicjalizacja nowych opcji graczy jeśli dodatek był instalowany wcześniej
+    if (!ls.soundNotifier.enemy) ls.soundNotifier.enemy = { enabled: true, url: DEFAULT_PLAYER_SOUND };
+    if (!ls.soundNotifier.clanEnemy) ls.soundNotifier.clanEnemy = { enabled: true, url: DEFAULT_PLAYER_SOUND };
+    if (!ls.soundNotifier.stranger) ls.soundNotifier.stranger = { enabled: false, url: DEFAULT_STRANGER_SOUND };
 
     const cfg = ls.soundNotifier;
     cfg.volume = typeof cfg.volume === 'number' ? cfg.volume : 80;
 
-    // Bezpieczny przelicznik głośności 0.0 - 1.0
     const getVolumeMultiplier = () => {
         const num = parseFloat(cfg.volume);
         const v = (!isNaN(num) && num >= 0 && num <= 100) ? num : 80;
@@ -38,7 +41,7 @@
 
     const baseX = parseInt(ls.pos?.x, 10) || 120;
     const baseY = parseInt(ls.pos?.y, 10) || 120;
-    ls.posSoundNotifier = C.getValidPos(ls.posSoundNotifier, baseX, baseY + 360, 210);
+    ls.posSoundNotifier = C.getValidPos(ls.posSoundNotifier, baseX, baseY + 360, 215);
 
     let testingAudio = null;
     let activeTestBtn = null;
@@ -50,7 +53,7 @@
     const soundMain = document.createElement('div');
     soundMain.setAttribute('id', 'SOUND_NOTIFIER_GUI');
     soundMain.className = 'ac-window';
-    soundMain.style.width = '210px';
+    soundMain.style.width = '215px';
     soundMain.style.left = `${ls.posSoundNotifier.x}px`;
     soundMain.style.top = `${ls.posSoundNotifier.y}px`;
 
@@ -60,7 +63,7 @@
             <span class="ac-title" style="left: 20px; right: 20px;">SOUND DETECT</span>
             <button class="ac-close-btn" title="Schowaj okno">&#215;</button>
         </div>
-        <div class="ac-body" style="gap: 6px;">
+        <div class="ac-body" style="gap: 5px; max-height: 75vh; overflow-y: auto; overflow-x: hidden; padding-right: 4px;">
             <!-- GŁOŚNOŚĆ -->
             <div class="ac-range-header">
                 <span>GŁOŚNOŚĆ</span>
@@ -68,11 +71,18 @@
             </div>
             <input class="ac-range-slider sound-vol-slider" type="range" min="0" max="100" step="1" value="${cfg.volume}">
 
-            <!-- KAFELKI POTWORÓW -->
+            <!-- SEKCJA POTWORÓW -->
+            <div style="font-size: 8px; font-weight: 800; color: #4de64d; letter-spacing: 0.6px; margin-top: 2px;">POTWORY</div>
             ${createRowHtml('e2', 'ELITA II', cfg.e2)}
             ${createRowHtml('heros', 'HEROS', cfg.heros)}
             ${createRowHtml('tytan', 'TYTAN', cfg.tytan)}
             ${createRowHtml('kolos', 'KOLOS', cfg.kolos)}
+
+            <!-- SEKCJA GRACZY -->
+            <div style="font-size: 8px; font-weight: 800; color: #ff4d4d; letter-spacing: 0.6px; margin-top: 4px;">GRACZE (PVP)</div>
+            ${createRowHtml('enemy', 'WROGOWIE', cfg.enemy)}
+            ${createRowHtml('clanEnemy', 'WROGIE KLANY', cfg.clanEnemy)}
+            ${createRowHtml('stranger', 'NIEZNAJOMI', cfg.stranger)}
         </div>
     `;
 
@@ -111,7 +121,6 @@
         updateAllVisibilities();
     });
 
-    // Płynna regulacja głośności
     const volSlider = soundMain.querySelector('.sound-vol-slider');
     const volText = soundMain.querySelector('.sound-vol-val');
     volSlider.addEventListener('input', () => {
@@ -126,12 +135,9 @@
         saveLS();
     });
 
-    // Funkcja wymuszająca głośność na elemencie audio (odporna na resety przeglądarki)
     const attachVolumeEnforcer = (audio) => {
         const applyVol = () => {
-            try {
-                audio.volume = getVolumeMultiplier();
-            } catch (e) {}
+            try { audio.volume = getVolumeMultiplier(); } catch (e) {}
         };
         applyVol();
         audio.addEventListener('loadedmetadata', applyVol);
@@ -141,7 +147,6 @@
         audio.addEventListener('playing', applyVol);
     };
 
-    // Obsługa wierszy z linkami i przycisku TEST
     soundMain.querySelectorAll('.ac-sound-block').forEach(block => {
         const key = block.getAttribute('data-key');
         const btnToggle = block.querySelector('.btn-toggle');
@@ -186,7 +191,7 @@
             if (!url) return;
 
             const targetVol = getVolumeMultiplier();
-            if (targetVol <= 0) return; // Przy 0% nie odtwarzaj
+            if (targetVol <= 0) return;
 
             testingAudio = new Audio();
             attachVolumeEnforcer(testingAudio);
@@ -197,7 +202,6 @@
             activeTestBtn = btnTest;
 
             testingAudio.onended = stopTest;
-
             testingAudio.onerror = () => {
                 stopTest();
                 btnTest.innerText = 'BŁĄD';
@@ -215,7 +219,39 @@
     makeDraggable(soundMain, soundMain.querySelector('.ac-header'), 'posSoundNotifier', ['.ac-close-btn', '.ac-status-btn']);
     registerWindow('soundNotifier', { mainEl: soundMain, statusBtn: statusBtn });
 
-    // --- LOGIKA WYKRYWANIA POTWORÓW ---
+    // --- SYSTEM DŹWIĘKÓW ---
+    const playAlert = (category, name) => {
+        const soundData = cfg[category];
+        if (!soundData || !soundData.enabled || !soundData.url) return;
+
+        const targetVol = getVolumeMultiplier();
+        if (targetVol <= 0) return;
+
+        const now = Date.now();
+        if (now - lastAlertTime < 800 && lastAlertRank === category) return;
+        lastAlertTime = now;
+        lastAlertRank = category;
+
+        try {
+            if (currentAlertAudio) {
+                currentAlertAudio.pause();
+                currentAlertAudio.currentTime = 0;
+                currentAlertAudio = null;
+            }
+
+            const audio = new Audio();
+            currentAlertAudio = audio;
+            attachVolumeEnforcer(audio);
+            audio.src = soundData.url;
+
+            audio.play().catch(e => console.warn('[Sound Notifier] Błąd audio:', e));
+            console.log(`%c[Sound Notifier] Wykryto: ${category.toUpperCase()} (${name}) | Głośność: ${Math.round(targetVol * 100)}%`, 'color: #ff3344; font-weight: bold;');
+        } catch (e) {
+            console.error('[Sound Notifier] Audio Error:', e);
+        }
+    };
+
+    // --- 1. WYKRYWANIE POTWORÓW ---
     const detectRank = (npc) => {
         if (!npc) return null;
         const d = npc.d || npc;
@@ -236,40 +272,6 @@
     };
 
     const alertedNpcIds = new Set();
-
-    const playAlert = (rank, npcNick) => {
-        const soundData = cfg[rank];
-        if (!soundData || !soundData.enabled || !soundData.url) return;
-
-        const targetVol = getVolumeMultiplier();
-        if (targetVol <= 0) return; // Przy 0% nie gramy nic
-
-        // Zabezpieczenie przed nałożeniem się dźwięków w tym samym ułamku sekundy
-        const now = Date.now();
-        if (now - lastAlertTime < 800 && lastAlertRank === rank) return;
-        lastAlertTime = now;
-        lastAlertRank = rank;
-
-        try {
-            if (currentAlertAudio) {
-                currentAlertAudio.pause();
-                currentAlertAudio.currentTime = 0;
-                currentAlertAudio = null;
-            }
-
-            const audio = new Audio();
-            currentAlertAudio = audio;
-            attachVolumeEnforcer(audio);
-            audio.src = soundData.url;
-
-            audio.play().catch(e => console.warn('[Sound Notifier] Błąd audio:', e));
-
-            console.log(`%c[Sound Notifier] Wykryto: ${rank.toUpperCase()} (${npcNick}) | Głośność: ${Math.round(targetVol * 100)}%`, 'color: #ff3344; font-weight: bold;');
-        } catch (e) {
-            console.error('[Sound Notifier] Audio Error:', e);
-        }
-    };
-
     const scanMapForMonsters = () => {
         if (!ls.modules.soundNotifier || !isNI || !W.Engine?.npcs?.check) return;
         const npcs = W.Engine.npcs.check();
@@ -293,10 +295,93 @@
         }
     };
 
+    // --- 2. WYKRYWANIE GRACZY ---
+    const detectPlayerCategory = (rawOther) => {
+        const d = rawOther?.d || rawOther;
+        if (!d || !d.id) return null;
+
+        const hero = getHero();
+        const myId = parseInt(hero?.id, 10);
+        const targetId = parseInt(d.id, 10);
+        if (myId && targetId === myId) return null;
+
+        // Członkowie naszego klanu są zawsze ignorowani
+        if (C.isSameClan(d)) return null;
+
+        let rel = d.relation || rawOther.relation || '';
+        if (!rel && typeof rawOther.getRelation === 'function') {
+            try { rel = rawOther.getRelation(); } catch (e) {}
+        }
+        rel = String(rel).toLowerCase().trim();
+
+        // Przyjaciele i sojusznicy klanowi są ignorowani
+        const isFriendOrAlly = [
+            'clan-members', 'clan-friends', 'friends', 'friend',
+            'cl-fr', 'cl', 'clan', 'fr', '2', '4', '5'
+        ].includes(rel);
+
+        if (isFriendOrAlly) return null;
+
+        // Wrogie klany
+        if (['3', 'clan-enemies', 'clan-enemy', 'cl-enemies', 'cl-enemy', 'cl-en'].includes(rel)) {
+            return 'clanEnemy';
+        }
+
+        // Wrogowie osobiści
+        if (['1', '6', 'enemy', 'enemies', 'en'].includes(rel)) {
+            return 'enemy';
+        }
+
+        // Nieznajomi (gracze neutralni)
+        if (['', '0', 'other'].includes(rel) || !rel) {
+            return 'stranger';
+        }
+
+        return null;
+    };
+
+    const alertedPlayerIds = new Set();
+    const scanMapForPlayers = () => {
+        if (!ls.modules.soundNotifier) return;
+
+        let rawOthers = [];
+        if (isNI && W.Engine?.others?.getDrawableList) {
+            rawOthers = W.Engine.others.getDrawableList().filter(o => o && (o.d || o.id));
+        } else if (W.g && W.g.other) {
+            rawOthers = Object.values(W.g.other);
+        }
+
+        const currentOtherIds = new Set();
+        for (const o of rawOthers) {
+            const d = o.d || o;
+            const numId = parseInt(d?.id, 10);
+            if (!numId) continue;
+            currentOtherIds.add(numId);
+
+            const cat = detectPlayerCategory(o);
+            if (cat && !alertedPlayerIds.has(numId)) {
+                alertedPlayerIds.add(numId);
+                playAlert(cat, d.nick || 'Gracz');
+            }
+        }
+
+        for (const id of alertedPlayerIds) {
+            if (!currentOtherIds.has(id)) alertedPlayerIds.delete(id);
+        }
+    };
+
+    // --- REAKCJA NA PAKIETY I PĘTLA SKANOWANIA ---
     C.onPacket((d) => {
         if (d.npc) scanMapForMonsters();
-        if (d.town) alertedNpcIds.clear();
+        if (d.other) scanMapForPlayers();
+        if (d.town) {
+            alertedNpcIds.clear();
+            alertedPlayerIds.clear();
+        }
     });
 
-    setInterval(scanMapForMonsters, 300);
+    setInterval(() => {
+        scanMapForMonsters();
+        scanMapForPlayers();
+    }, 300);
 })();
