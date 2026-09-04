@@ -193,14 +193,30 @@
     const plusMinusSvg = `<svg class="ac-plus-minus-svg" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="1" y1="5" x2="9" y2="5"></line><line class="ac-vertical-bar" x1="5" y1="1" x2="5" y2="9"></line></svg>`;
     const guiWindowSvg = `<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2.5" width="12" height="11" rx="2"/><line x1="2" y1="6.5" x2="14" y2="6.5"/><circle cx="4.5" cy="4.5" r="0.75" fill="currentColor"/></svg>`;
 
-    // Dedykowane ikony dla kafelków w Hubie i na mapie
+    // Dedykowane ikony modułów
     const iconAutoX = `<svg class="ac-item-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="13" y1="3" x2="5.5" y2="10.5"/><polyline points="10 3 13 3 13 6"/><line x1="4.5" y1="9.5" x2="6.5" y2="11.5"/><line x1="3" y1="13" x2="4.5" y2="11.5"/><line x1="3" y1="13" x2="1.5" y2="14.5"/><line x1="3" y1="3" x2="10.5" y2="10.5"/><polyline points="6 3 3 3 3 6"/><line x1="9.5" y1="11.5" x2="11.5" y2="9.5"/><line x1="13" y1="13" x2="11.5" y2="11.5"/><line x1="13" y1="13" x2="14.5" y2="14.5"/></svg>`;
     const iconAutoParty = `<svg class="ac-item-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 13.5v-1a2.5 2.5 0 0 0-2.5-2.5h-4A2.5 2.5 0 0 0 2 12.5v1"/><circle cx="6.5" cy="5" r="2.2"/><path d="M13.5 13.5v-1a2.3 2.3 0 0 0-1.7-2.2"/><path d="M10 2.8a2.2 2.2 0 0 1 0 4.4"/></svg>`;
     const iconDarkMap = `<svg class="ac-item-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 9.2A5.5 5.5 0 1 1 6.8 2.5 4.5 4.5 0 0 0 13.5 9.2Z"/></svg>`;
     const iconMobHighlight = `<svg class="ac-item-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="5.5"/><line x1="8" y1="1" x2="8" y2="3.5"/><line x1="8" y1="12.5" x2="8" y2="15"/><line x1="1" y1="8" x2="3.5" y2="8"/><line x1="12.5" y1="8" x2="15" y2="8"/><circle cx="8" cy="8" r="1.5" fill="currentColor"/></svg>`;
     const iconSound = `<svg class="ac-item-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="2 5.5 5.5 5.5 9 2.5 9 13.5 5.5 10.5 2 10.5 2 5.5" stroke-linejoin="round"/><path d="M11.5 5.5a3.8 3.8 0 0 1 0 5"/><path d="M13.5 3.5a6.5 6.5 0 0 1 0 9"/></svg>`;
     const iconCollisions = `<svg class="ac-item-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2.5" width="12" height="11" rx="1.5"/><line x1="2" y1="8" x2="14" y2="8"/><line x1="8" y1="2.5" x2="8" y2="8"/><line x1="5" y1="8" x2="5" y2="13.5"/><line x1="11" y1="8" x2="11" y2="13.5"/></svg>`;
-    const iconHubDock = `<svg class="ac-item-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 2.8 L27 8.2 V18.8 C27 24.2 22 28.2 16 30 C10 28.2 5 24.2 5 18.8 V8.2 Z" fill="#18241b"/><circle cx="16" cy="16" r="6" stroke="currentColor" stroke-width="1.4" stroke-dasharray="3 2"/><path d="M16 10 L19.5 16 L16 22 L12.5 16 Z" fill="currentColor"/><circle cx="16" cy="16" r="2" fill="#ffffff"/></svg>`;
+
+    // Nowa, wyrazista ikona herbu z rdzeniem dla przycisku otwierającego HUB
+    const iconHubDock = `<svg class="ac-hub-dock-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <linearGradient id="acHubGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#4ae880"/>
+                <stop offset="100%" stop-color="#1b8544"/>
+            </linearGradient>
+        </defs>
+        <path d="M16 3 L27 8 V18 C27 23.5 22 27.5 16 29.5 C10 27.5 5 23.5 5 18 V8 Z" fill="#142218" stroke="#38c268" stroke-width="1.8" stroke-linejoin="round"/>
+        <path d="M16 8.5 L21.5 16 L16 23.5 L10.5 16 Z" fill="url(#acHubGrad)"/>
+        <circle cx="16" cy="16" r="2.6" fill="#ffffff"/>
+        <line x1="16" y1="4.5" x2="16" y2="7.5" stroke="#52e385" stroke-width="1.8" stroke-linecap="round"/>
+        <line x1="16" y1="24.5" x2="16" y2="27.5" stroke="#52e385" stroke-width="1.8" stroke-linecap="round"/>
+        <circle cx="8" cy="16" r="1.3" fill="#52e385"/>
+        <circle cx="24" cy="16" r="1.3" fill="#52e385"/>
+    </svg>`;
 
     let highestZ = 10000;
     const bringToFront = (el) => { if (!el) return; highestZ += 1; el.style.zIndex = String(highestZ); };
@@ -273,11 +289,11 @@
         observeCanvas();
     }
 
-    // Główny przycisk otwierania HUB-a w dolnym docku
+    // Wyróżniony główny przycisk otwierający HUB z nazwą "NI CORE"
     const hubDockBtn = document.createElement('button');
     hubDockBtn.className = 'ac-dock-btn ac-dock-hub-btn';
-    hubDockBtn.setAttribute('aria-label', 'NI CORE HUB');
-    hubDockBtn.innerHTML = `${iconHubDock}<span class="ac-dock-tooltip">NI CORE (HUB)</span>`;
+    hubDockBtn.setAttribute('aria-label', 'NI CORE');
+    hubDockBtn.innerHTML = `${iconHubDock}<span class="ac-dock-tooltip">NI CORE</span>`;
     hubDockBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         toggleHub();
@@ -451,10 +467,10 @@
         updateDockPosition();
         hubMain.style.display = ls.hubVisible ? 'block' : 'none';
 
-        // Stan przycisku Huba w docku (podświetlony gdy HUB otwarty)
+        // Podświetlenie przycisku Huba w docku, gdy menu jest otwarte
         hubDockBtn.classList.toggle('is-open', Boolean(ls.hubVisible));
 
-        // Pokazywanie przycisków w docku tylko dla włączonych modułów
+        // Wyświetlanie przycisków w docku tylko dla włączonych modułów
         modulesDefinition.forEach(mod => {
             const isModActive = Boolean(ls.modules[mod.key]);
             const isGuiOpen = Boolean(ls.guiVisible[mod.key]);
@@ -573,22 +589,6 @@
     transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
 }
 
-.ac-dock-hub-btn {
-    border-color: rgba(56, 194, 104, 0.75);
-    background: linear-gradient(180deg, #242a26 0%, #151a17 100%);
-}
-
-.ac-dock-hub-btn:hover {
-    border-color: #52e385;
-    background: linear-gradient(180deg, #2d3630 0%, #1b241e 100%);
-}
-
-.ac-dock-hub-btn.is-open {
-    background: linear-gradient(180deg, #2e4a36 0%, #1a2a1f 100%);
-    border-color: #38c268;
-    box-shadow: 0 0 8px rgba(56, 194, 104, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-}
-
 .ac-dock-btn svg {
     width: 14px;
     height: 14px;
@@ -616,6 +616,52 @@
     background: linear-gradient(180deg, #243b2b 0%, #16241a 100%);
     border-color: #38c268;
     box-shadow: 0 0 8px rgba(56, 194, 104, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+/* ==========================================
+   SPECJALNY WYGLĄD GŁÓWNEGO PRZYCISKU HUB-A
+   ========================================== */
+.ac-dock-hub-btn {
+    width: 29px;
+    height: 29px;
+    margin-bottom: 2px;
+    border-radius: 6px;
+    background: linear-gradient(180deg, #1e3626 0%, #101e15 100%);
+    border: 1.5px solid #38c268;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.85), 0 0 9px rgba(56, 194, 104, 0.45);
+}
+
+.ac-hub-dock-icon {
+    width: 18px !important;
+    height: 18px !important;
+    display: block;
+    filter: drop-shadow(0 0 3px rgba(56, 194, 104, 0.65));
+    transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.ac-dock-hub-btn:hover {
+    transform: translateX(-3px) scale(1.05);
+    border-color: #55f78b;
+    background: linear-gradient(180deg, #274832 0%, #14281c 100%);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.9), 0 0 14px rgba(85, 247, 139, 0.7);
+}
+
+.ac-dock-hub-btn:hover .ac-hub-dock-icon {
+    transform: scale(1.12);
+    filter: drop-shadow(0 0 5px rgba(85, 247, 139, 0.9));
+}
+
+.ac-dock-hub-btn.is-open {
+    background: linear-gradient(180deg, #2b5438 0%, #183321 100%);
+    border-color: #55f78b;
+    box-shadow: 0 0 12px rgba(85, 247, 139, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.ac-dock-hub-btn .ac-dock-tooltip {
+    color: #e5fbee;
+    border-color: #38c268;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.9), 0 0 8px rgba(56, 194, 104, 0.4);
+    letter-spacing: 0.8px;
 }
 
 /* Dymek wysuwany w lewo (w głąb mapy) */
