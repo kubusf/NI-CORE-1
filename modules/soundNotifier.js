@@ -6,16 +6,27 @@
 
     const { W, isNI, ls, saveLS, makeDraggable, updateAllVisibilities, registerWindow } = C;
 
-    // --- USTAWIENIA I DŹWIĘKI ---
+    // --- DOMYŚLNE DŹWIĘKI ---
+    const DEFAULT_E2_SOUND = 'https://cronus.margonem.com/sounds/elite2_here.mp3';
+    const DEFAULT_BOSS_SOUND = 'https://kaktusdev.gitlab.io/ni-essentials/sfx/detector.mp3';
+
+    // Inicjalizacja przy pierwszym uruchomieniu
     if (!ls.soundNotifier) {
         ls.soundNotifier = {
             volume: 80,
-            e2: { enabled: true, url: 'https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg' },
-            heros: { enabled: true, url: 'https://actions.google.com/sounds/v1/alarms/bugle_tune.ogg' },
-            tytan: { enabled: true, url: 'https://actions.google.com/sounds/v1/alarms/mechanical_clock_ring.ogg' },
-            kolos: { enabled: true, url: 'https://actions.google.com/sounds/v1/alarms/medium_bell_ringing_near.ogg' }
+            e2: { enabled: true, url: DEFAULT_E2_SOUND },
+            heros: { enabled: true, url: DEFAULT_BOSS_SOUND },
+            tytan: { enabled: true, url: DEFAULT_BOSS_SOUND },
+            kolos: { enabled: true, url: DEFAULT_BOSS_SOUND }
         };
     }
+
+    // Automatyczna aktualizacja starych testowych linków Google (jeśli ktoś ich nie zmienił na własne)
+    const isOldTestSound = (url) => !url || (typeof url === 'string' && url.includes('actions.google.com'));
+    if (isOldTestSound(ls.soundNotifier.e2?.url)) ls.soundNotifier.e2.url = DEFAULT_E2_SOUND;
+    if (isOldTestSound(ls.soundNotifier.heros?.url)) ls.soundNotifier.heros.url = DEFAULT_BOSS_SOUND;
+    if (isOldTestSound(ls.soundNotifier.tytan?.url)) ls.soundNotifier.tytan.url = DEFAULT_BOSS_SOUND;
+    if (isOldTestSound(ls.soundNotifier.kolos?.url)) ls.soundNotifier.kolos.url = DEFAULT_BOSS_SOUND;
 
     const cfg = ls.soundNotifier;
     cfg.volume = typeof cfg.volume === 'number' ? cfg.volume : 80;
@@ -163,7 +174,6 @@
             btnTest.className = 'ac-filter-btn btn-test AC-ON';
             activeTestBtn = btnTest;
 
-            // Kończy się dokładnie wtedy, kiedy kończy się plik dźwiękowy
             testingAudio.onended = stopTest;
 
             testingAudio.onerror = () => {
