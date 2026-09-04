@@ -4,6 +4,9 @@
     const W = typeof unsafeWindow !== 'undefined' ? unsafeWindow : window;
     if (document.getElementById('AUTO_COMBO_HUB')) return;
 
+    // Wersja paczki dodatków
+    const CORE_VERSION = 'v1.0.0';
+
     const isNI = typeof W.Engine === 'object';
     const getHero = () => (isNI ? W.Engine.hero?.d : W.hero);
 
@@ -330,6 +333,25 @@
     hubBody.appendChild(hCollisions.item);
 
     hubMain.appendChild(hubBody);
+
+    // ==========================================
+    // DOLNY PASEK Z WERSJĄ PACZKI (FOOTER)
+    // ==========================================
+    const hubFooter = document.createElement('div');
+    hubFooter.className = 'ac-hub-footer';
+
+    const footerLabel = document.createElement('span');
+    footerLabel.className = 'ac-hub-footer-label';
+    footerLabel.innerText = 'WERSJA PACZKI';
+    hubFooter.appendChild(footerLabel);
+
+    const footerVer = document.createElement('span');
+    footerVer.className = 'ac-hub-footer-ver';
+    footerVer.innerText = CORE_VERSION;
+    hubFooter.appendChild(footerVer);
+
+    hubMain.appendChild(hubFooter);
+
     document.body.appendChild(hubMain);
     makeDraggable(hubMain, hubHeader, 'posHub', ['.ac-close-btn', '.ac-expand-btn']);
 
@@ -337,6 +359,7 @@
         expandHubBtn.classList.toggle('is-expanded', ls.expandedHub);
         expandHubBtn.setAttribute('title', ls.expandedHub ? 'Zwiń menu' : 'Rozwiń menu');
         hubBody.style.display = ls.expandedHub ? 'flex' : 'none';
+        hubFooter.style.display = ls.expandedHub ? 'flex' : 'none';
     };
     expandHubBtn.addEventListener('click', (e) => { e.stopPropagation(); ls.expandedHub = !ls.expandedHub; updateHubExpandState(); saveLS(); });
     updateHubExpandState();
@@ -569,6 +592,39 @@
     background: rgba(255, 255, 255, 0.4) !important;
 }
 
+/* Dolny pasek z wersją (Footer) */
+.ac-hub-footer {
+    height: 22px;
+    padding: 0 8px;
+    background: linear-gradient(180deg, #181a1f 0%, #121316 100%);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+    user-select: none;
+}
+
+.ac-hub-footer-label {
+    font-size: 7.8px;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    color: #6d7380;
+    text-transform: uppercase;
+}
+
+.ac-hub-footer-ver {
+    font-size: 8.5px;
+    font-weight: 800;
+    letter-spacing: 0.4px;
+    color: #38c268;
+    background: rgba(56, 194, 104, 0.12);
+    border: 1px solid rgba(56, 194, 104, 0.3);
+    border-radius: 3px;
+    padding: 1px 5px;
+    line-height: 1;
+}
+
 /* Kafelki w Hubie */
 .ac-hub-item {
     display: flex;
@@ -579,7 +635,7 @@
     box-sizing: border-box;
     cursor: pointer;
     user-select: none;
-    flex-shrink: 0 !important; /* ZAPOBIEGA ŚCISKANIU KAFELKÓW - WYMUSZA PRZEWIJANIE */
+    flex-shrink: 0 !important; /* ZAPOBIEGA ŚCISKANIU KAFELKÓW */
     transition: all 0.15s ease;
 }
 
@@ -1118,6 +1174,7 @@
         isSameClan, fetchClanMembers, parseClanData,
         makeDraggable, bringToFront, updateAllVisibilities, registerWindow,
         onPacket,
+        version: CORE_VERSION,
         svg: { checkmarkSvg, plusMinusSvg, guiWindowSvg }
     };
 
