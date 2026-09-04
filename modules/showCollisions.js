@@ -4,7 +4,7 @@
     const C = (typeof unsafeWindow !== 'undefined' ? unsafeWindow : window).NICore;
     if (!C) return;
 
-    // Usuwamy ewentualne stare okno przy przeładowaniu skryptu w Tampermonkey
+    // Usuwamy ewentualne stare okno przy przeładowaniu
     const oldGui = document.getElementById('SHOW_COLLISIONS_GUI');
     if (oldGui) oldGui.remove();
 
@@ -27,7 +27,7 @@
     }
 
     if (typeof ls.modules.showCollisions === 'undefined') ls.modules.showCollisions = true;
-    if (typeof ls.guiVisible.showCollisions === 'undefined') ls.guiVisible.showCollisions = true;
+    if (typeof ls.guiVisible.showCollisions === 'undefined') ls.guiVisible.showCollisions = false;
 
     const hexToRgb = (hex) => {
         let c = String(hex || '#ff2828').replace('#', '');
@@ -168,75 +168,6 @@
     makeDraggable(colMain, colMain.querySelector('.ac-header'), 'posShowCollisions', ['.ac-close-btn', '.ac-status-btn']);
     registerWindow('showCollisions', { mainEl: colMain, statusBtn: statusBtn });
 
-    // --- INTEGRACJA Z HUBEM (GŁÓWNYM MENU) ---
-    const attachToHub = () => {
-        const hubBody = document.querySelector('#AUTO_COMBO_HUB .ac-body');
-        const oldHubItem = document.getElementById('AC_HUB_ITEM_COLLISIONS');
-        if (oldHubItem) oldHubItem.remove();
-
-        if (!hubBody) return;
-
-        const hubItem = document.createElement('div');
-        hubItem.setAttribute('id', 'AC_HUB_ITEM_COLLISIONS');
-        hubItem.className = `ac-hub-item ${ls.modules.showCollisions ? 'AC-ON' : 'AC-OFF'}`;
-        hubItem.setAttribute('title', 'Kliknij kafelek, aby włączyć lub wyłączyć Kolizje');
-        hubItem.addEventListener('click', () => {
-            ls.modules.showCollisions = !ls.modules.showCollisions;
-            saveLS();
-            updateAllVisibilities();
-        });
-
-        const hubRow = document.createElement('div');
-        hubRow.className = 'ac-hub-row';
-        const titleGroup = document.createElement('div');
-        titleGroup.className = 'ac-hub-title-group';
-        const dot = document.createElement('span');
-        dot.className = `ac-hub-dot ${ls.modules.showCollisions ? 'AC-ON' : 'AC-OFF'}`;
-        titleGroup.appendChild(dot);
-        const title = document.createElement('span');
-        title.className = 'ac-hub-item-title';
-        title.innerText = 'KOLIZJE';
-        titleGroup.appendChild(title);
-        hubRow.appendChild(titleGroup);
-
-        const guiBtn = document.createElement('button');
-        guiBtn.className = `ac-hub-gui-btn ${ls.guiVisible.showCollisions ? 'AC-ON' : 'AC-OFF'}`;
-        guiBtn.setAttribute('title', 'Otwórz / Ukryj okno Kolizje');
-        guiBtn.innerHTML = C.svg.guiWindowSvg;
-        guiBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            ls.guiVisible.showCollisions = !ls.guiVisible.showCollisions;
-            saveLS();
-            updateAllVisibilities();
-        });
-        hubRow.appendChild(guiBtn);
-        hubItem.appendChild(hubRow);
-
-        const desc = document.createElement('div');
-        desc.className = 'ac-hub-desc';
-        desc.innerText = 'Podświetlanie zablokowanych pól mapy (ścian, wody i przeszkód).';
-        hubItem.appendChild(desc);
-
-        hubBody.appendChild(hubItem);
-
-        const updateTile = () => {
-            const isModOn = Boolean(ls.modules.showCollisions);
-            const isGuiOn = Boolean(ls.guiVisible.showCollisions);
-            hubItem.className = `ac-hub-item ${isModOn ? 'AC-ON' : 'AC-OFF'}`;
-            dot.className = `ac-hub-dot ${isModOn ? 'AC-ON' : 'AC-OFF'}`;
-            guiBtn.className = `ac-hub-gui-btn ${isGuiOn ? 'AC-ON' : 'AC-OFF'}`;
-        };
-
-        const origUpdate = C.updateAllVisibilities;
-        C.updateAllVisibilities = () => {
-            origUpdate();
-            updateTile();
-        };
-        updateTile();
-    };
-
-    setTimeout(attachToHub, 200);
-
     // --- PRECYZYJNE SPRAWDZANIE ŚCIAN (BEZ WPŁYWU MOTYLI I POTWORÓW) ---
     const isWallOnly = (x, y) => {
         // 1. Sprawdzenie w silniku Margonem NI (bit 1 to fizyczna ściana)
@@ -245,7 +176,7 @@
             return Boolean(c && ((c === 1) || (c & 1)));
         }
 
-        // 2. Sprawdzenie zapasowe
+        // 2. Zapasowe sprawdzenie w danych mapy
         const mapD = W.Engine?.map?.d;
         if (mapD && mapD.col && mapD.x) {
             const idx = y * mapD.x + x;
@@ -257,8 +188,7 @@
 
     // --- RYSOWANIE SIATKI NA CANVASIE ---
     const drawCollisions = (ctx) => {
-        const isModActive = Boolean(ls.modules?.showCollisions || ls.modules?.collisions);
-        if (!isModActive || !W.Engine?.map) return;
+        if (!ls.modules?.showCollisions || !W.Engine?.map) return;
 
         const mapD = W.Engine.map.d;
         const offset = W.Engine.map.offset || [0, 0];
