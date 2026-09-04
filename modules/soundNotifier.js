@@ -1,4 +1,4 @@
-// modules/soundNotifier.js - Powiadomienia dźwiękowe z integracją z Hubem
+// modules/soundNotifier.js - Powiadomienia dźwiękowe o rzadkich potworach
 (function() {
     'use strict';
     const C = (typeof unsafeWindow !== 'undefined' ? unsafeWindow : window).NICore;
@@ -16,8 +16,6 @@
             kolos: { enabled: true, url: 'https://actions.google.com/sounds/v1/alarms/medium_bell_ringing_near.ogg' }
         };
     }
-    if (typeof ls.modules.soundNotifier === 'undefined') ls.modules.soundNotifier = true;
-    if (typeof ls.guiVisible.soundNotifier === 'undefined') ls.guiVisible.soundNotifier = true;
 
     const cfg = ls.soundNotifier;
     cfg.volume = typeof cfg.volume === 'number' ? cfg.volume : 80;
@@ -182,75 +180,6 @@
 
     makeDraggable(soundMain, soundMain.querySelector('.ac-header'), 'posSoundNotifier', ['.ac-close-btn', '.ac-status-btn']);
     registerWindow('soundNotifier', { mainEl: soundMain, statusBtn: statusBtn });
-
-    // --- INTEGRACJA Z GŁÓWNYM HUBEM (NI CORE) ---
-    const attachToHub = () => {
-        const hubBody = document.querySelector('#AUTO_COMBO_HUB .ac-body');
-        if (!hubBody || document.getElementById('AC_HUB_ITEM_SOUND')) return;
-
-        const hubItem = document.createElement('div');
-        hubItem.setAttribute('id', 'AC_HUB_ITEM_SOUND');
-        hubItem.className = `ac-hub-item ${ls.modules.soundNotifier ? 'AC-ON' : 'AC-OFF'}`;
-        hubItem.setAttribute('title', 'Kliknij kafelek, aby włączyć lub wyłączyć Sound Notifier');
-        hubItem.addEventListener('click', () => {
-            ls.modules.soundNotifier = !ls.modules.soundNotifier;
-            saveLS();
-            updateAllVisibilities();
-        });
-
-        const hubRow = document.createElement('div');
-        hubRow.className = 'ac-hub-row';
-
-        const titleGroup = document.createElement('div');
-        titleGroup.className = 'ac-hub-title-group';
-
-        const dot = document.createElement('span');
-        dot.className = `ac-hub-dot ${ls.modules.soundNotifier ? 'AC-ON' : 'AC-OFF'}`;
-        titleGroup.appendChild(dot);
-
-        const title = document.createElement('span');
-        title.className = 'ac-hub-item-title';
-        title.innerText = 'SOUND DETECT';
-        titleGroup.appendChild(title);
-        hubRow.appendChild(titleGroup);
-
-        const guiBtn = document.createElement('button');
-        guiBtn.className = `ac-hub-gui-btn ${ls.guiVisible.soundNotifier ? 'AC-ON' : 'AC-OFF'}`;
-        guiBtn.setAttribute('title', 'Otwórz / Ukryj okno Sound Notifier');
-        guiBtn.innerHTML = C.svg.guiWindowSvg;
-        guiBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            ls.guiVisible.soundNotifier = !ls.guiVisible.soundNotifier;
-            saveLS();
-            updateAllVisibilities();
-        });
-        hubRow.appendChild(guiBtn);
-        hubItem.appendChild(hubRow);
-
-        const desc = document.createElement('div');
-        desc.className = 'ac-hub-desc';
-        desc.innerText = 'Powiadomienia dźwiękowe o Elitach II, Herosach, Tytanach i Kolosach na mapie.';
-        hubItem.appendChild(desc);
-
-        hubBody.appendChild(hubItem);
-
-        const updateTile = () => {
-            const isModOn = Boolean(ls.modules.soundNotifier);
-            const isGuiOn = Boolean(ls.guiVisible.soundNotifier);
-            hubItem.className = `ac-hub-item ${isModOn ? 'AC-ON' : 'AC-OFF'}`;
-            dot.className = `ac-hub-dot ${isModOn ? 'AC-ON' : 'AC-OFF'}`;
-            guiBtn.className = `ac-hub-gui-btn ${isGuiOn ? 'AC-ON' : 'AC-OFF'}`;
-        };
-
-        const origUpdate = C.updateAllVisibilities;
-        C.updateAllVisibilities = () => {
-            origUpdate();
-            updateTile();
-        };
-        updateTile();
-    };
-
-    attachToHub();
 
     // --- LOGIKA WYKRYWANIA POTWORÓW ---
     const detectRank = (npc) => {
