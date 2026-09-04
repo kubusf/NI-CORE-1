@@ -233,12 +233,32 @@
     const onPacket = (cb) => packetListeners.push(cb);
 
     // ==========================================
-    // DOCK IKON NA MAPIE (PRAWY DOLNY RÓG)
+    // DOCK IKON W PRAWYM DOLNYM ROGU GRY (NI)
     // ==========================================
     const activeDock = document.createElement('div');
     activeDock.setAttribute('id', 'AUTO_COMBO_ACTIVE_DOCK');
     activeDock.className = 'ac-active-dock';
-    document.body.appendChild(activeDock);
+
+    // Funkcja podpinająca Dock do kontenera okna gry Margonem NI
+    const attachDock = () => {
+        const gameContainer = document.querySelector('.game-window-positioner');
+        if (gameContainer) {
+            if (activeDock.parentElement !== gameContainer) {
+                gameContainer.appendChild(activeDock);
+            }
+            return true;
+        }
+        if (!activeDock.parentElement) {
+            document.body.appendChild(activeDock);
+        }
+        return false;
+    };
+
+    if (!attachDock()) {
+        const dockInterval = setInterval(() => {
+            if (attachDock()) clearInterval(dockInterval);
+        }, 200);
+    }
 
     const modulesDefinition = [
         { key: 'autoX', title: 'AUTO X', desc: 'Automatyczne atakowanie przeciwników z szybką walką.', icon: iconAutoX },
@@ -253,8 +273,8 @@
     modulesDefinition.forEach(mod => {
         const btn = document.createElement('button');
         btn.className = 'ac-dock-btn';
-        btn.setAttribute('title', `${mod.title} - Kliknij, aby otworzyć okno`);
-        btn.innerHTML = mod.icon;
+        btn.setAttribute('aria-label', mod.title);
+        btn.innerHTML = `${mod.icon}<span class="ac-dock-tooltip">${mod.title}</span>`;
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
             ls.guiVisible[mod.key] = !ls.guiVisible[mod.key];
@@ -325,7 +345,6 @@
         const titleGroup = document.createElement('div');
         titleGroup.className = 'ac-hub-title-group';
 
-        // Ikona dodatku bezpośrednio przed nazwą (bez zielonego kółka)
         if (iconSvg) {
             const iconWrapper = document.createElement('span');
             iconWrapper.className = 'ac-hub-item-icon-wrapper';
@@ -360,7 +379,6 @@
         return { item, guiBtn };
     }
 
-    // Generowanie kafelków w Hubie
     const hubItems = {};
     modulesDefinition.forEach(mod => {
         const hItem = createHubItem(mod.key, mod.title, mod.desc, mod.icon);
@@ -407,9 +425,9 @@
     };
 
     const updateAllVisibilities = () => {
+        attachDock();
         hubMain.style.display = ls.hubVisible ? 'block' : 'none';
 
-        // Synchronizacja stanu Hub-a oraz docka na mapie
         modulesDefinition.forEach(mod => {
             const isModActive = Boolean(ls.modules[mod.key]);
             const isGuiOpen = Boolean(ls.guiVisible[mod.key]);
@@ -474,6 +492,7 @@
                     const existing = document.querySelector(`.widget-button[data-name="${widgetName}"], .widget-button .icon.${widgetName}`);
                     if (existing) existing.closest('.widget-button')?.remove();
                     W.Engine.widgetManager.createOneWidget(widgetName, { [widgetName]: widgetPos }, true, []);
+                    attachDock();
                     updateAllVisibilities();
                 }
             } catch (e) {}
@@ -491,10 +510,17 @@
             };
         }
         addWidgetToDefaultWidgetSet();
-        if (W.Engine.interfaceStart) createButtonNI();
-        else {
+        if (W.Engine.interfaceStart) {
+            createButtonNI();
+            attachDock();
+        } else {
             const checkStart = setInterval(() => {
-                if (W.Engine.interfaceStart) { clearInterval(checkStart); addWidgetToDefaultWidgetSet(); createButtonNI(); }
+                if (W.Engine.interfaceStart) {
+                    clearInterval(checkStart);
+                    addWidgetToDefaultWidgetSet();
+                    createButtonNI();
+                    attachDock();
+                }
             }, 250);
         }
     };
@@ -558,12 +584,12 @@
 }
 
 /* ==========================================
-   DOCK IKON W PRAWYM DOLNYM ROGU MAPY
+   DOCK IKON W PRAWYM DOLNYM ROGU GRY (NI)
    ========================================== */
 .ac-active-dock {
-    position: fixed;
-    bottom: 60px;
-    right: 12px;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
     display: flex;
     flex-direction: row-reverse;
     gap: 6px;
@@ -573,6 +599,7 @@
 }
 
 .ac-dock-btn {
+    position: relative;
     width: 27px;
     height: 27px;
     border-radius: 5px;
@@ -618,6 +645,49 @@
     background: linear-gradient(180deg, #243b2b 0%, #16241a 100%);
     border-color: #38c268;
     box-shadow: 0 0 8px rgba(56, 194, 104, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+/* Dymek z nazwą modułu po najechaniu */
+.ac-dock-tooltip {
+    position: absolute;
+    bottom: calc(100% + 7px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    background: #17181c;
+    border: 1px solid rgba(56, 194, 104, 0.55);
+    color: #e2e4e9;
+    font-size: 8.5px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 3px 6px;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.85), 0 0 6px rgba(56, 194, 104, 0.25);
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
+    z-index: 10001;
+    font-family: inherit;
+    line-height: 1;
+}
+
+.ac-dock-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 4px 4px 0 4px;
+    border-style: solid;
+    border-color: rgba(56, 194, 104, 0.55) transparent transparent transparent;
+}
+
+.ac-dock-btn:hover .ac-dock-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
 }
 
 /* Styl bazowy okien */
@@ -780,7 +850,6 @@
     pointer-events: none;
 }
 
-/* Wrapper ikony dodatku w Hubie */
 .ac-hub-item-icon-wrapper {
     display: flex;
     align-items: center;
