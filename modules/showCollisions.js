@@ -183,28 +183,26 @@
     makeDraggable(colMain, colMain.querySelector('.ac-header'), 'posShowCollisions', ['.ac-close-btn', '.ac-status-btn']);
     registerWindow('showCollisions', { mainEl: colMain, statusBtn: statusBtn });
 
-    // --- DOKŁADNE SPRAWDZANIE FIZYCZNEJ ŚCIANY ---
-    const isPhysicalWall = (x, y, mapD) => {
-        if (!mapD || !mapD.x || !mapD.y) return false;
-        if (x < 0 || x >= mapD.x || y < 0 || y >= mapD.y) return false;
-
-        // 1. Sprawdzamy surowy łańcuch z mapy (wiersz x kolumna)
-        if (mapD.col) {
-            const idx = y * mapD.x + x;
-            const c = mapD.col.charAt(idx);
-            if (c === '1' || c === '2') return true;
+    // --- SPRAWDZANIE CZY POLE JEST ZABLOKOWANE ---
+    const checkCollision = (x, y) => {
+        // 1. Podstawowa metoda silnika NI
+        if (W.Engine?.map?.col?.check) {
+            return Boolean(W.Engine.map.col.check(x, y));
         }
-
+        // 2. Metoda rezerwowa
+        const mapD = W.Engine?.map?.d;
+        if (mapD && mapD.col && mapD.x) {
+            const idx = y * mapD.x + x;
+            return mapD.col.charAt(idx) === '1';
+        }
         return false;
     };
 
     // --- RYSOWANIE SIATKI NA CANVASIE ---
     const drawCollisions = (ctx) => {
-        if (!ls.modules.showCollisions || !isNI || !W.Engine?.map?.d) return;
+        if (!ls.modules.showCollisions || !isNI || !W.Engine?.map) return;
 
         const mapD = W.Engine.map.d;
-        if (!mapD.x || !mapD.y) return;
-
         const offset = W.Engine.map.offset || [0, 0];
         const shift = (W.Engine.mapShift?.getShift ? W.Engine.mapShift.getShift() : null) || [0, 0];
         const totalOffsetX = offset[0] + shift[0];
@@ -214,25 +212,23 @@
             ? W.Engine.getCanvasViewSize()
             : { width: ctx.canvas?.width || window.innerWidth, height: ctx.canvas?.height || window.innerHeight };
 
-        const startX = Math.max(0, Math.floor(totalOffsetX / 32));
-        const endX = Math.min(mapD.x - 1, Math.ceil((totalOffsetX + size.width) / 32));
-        const startY = Math.max(0, Math.floor(totalOffsetY / 32));
-        const endY = Math.min(mapD.y - 1, Math.ceil((totalOffsetY + size.height) / 32));
+        const maxX = mapD?.x ? mapD.x - 1 : 999;
+        const maxY = mapD?.y ? mapD.y - 1 : 999;
 
-        // ZBIERAMY WSZYSTKIE MOŻLIWE WSPÓŁRZĘDNE POTWORÓW I NPC
+        const startX = Math.max(0, Math.floor(totalOffsetX / 32));
+        const endX = Math.min(maxX, Math.ceil((totalOffsetX + size.width) / 32));
+        const startY = Math.max(0, Math.floor(totalOffsetY / 32));
+        const endY = Math.min(maxY, Math.ceil((totalOffsetY + size.height) / 32));
+
+        // Zbieramy pozycje potworów i NPC, aby je BEZWZGLĘDNIE wykluczyć z rysowania
         const monsterTiles = new Set();
         if (W.Engine?.npcs?.check) {
             const npcs = W.Engine.npcs.check();
             if (npcs) {
                 for (const id in npcs) {
-                    const n = npcs[id];
-                    const d = n.d || n;
-                    // Pobieramy współrzędne z danych oraz pozycji silnika gry
-                    if (typeof d.x === 'number' && typeof d.y === 'number') {
+                    const d = npcs[id]?.d || npcs[id];
+                    if (d && typeof d.x === 'number' && typeof d.y === 'number') {
                         monsterTiles.add(`${d.x},${d.y}`);
-                    }
-                    if (typeof n.rx === 'number' && typeof n.ry === 'number') {
-                        monsterTiles.add(`${Math.round(n.rx)},${Math.round(n.ry)}`);
                     }
                 }
             }
@@ -248,10 +244,10 @@
 
         for (let y = startY; y <= endY; y++) {
             for (let x = startX; x <= endX; x++) {
-                // JEŚLI NA KAFELKU JEST JAKIKOLWIEK POTWÓR -> POMIJAMY
+                // JEŚLI NA POLU STOI POTWÓR -> POMIJAMY I NIE RYSUJEMY
                 if (monsterTiles.has(`${x},${y}`)) continue;
 
-                if (isPhysicalWall(x, y, mapD)) {
+                if (checkCollision(x, y)) {
                     const screenX = Math.round(x * 32 - totalOffsetX);
                     const screenY = Math.round(y * 32 - totalOffsetY);
 
