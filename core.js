@@ -258,61 +258,80 @@
     const onPacket = (cb) => packetListeners.push(cb);
 
     // ==========================================
+    // DETEKCJA STANU WALKI
+    // ==========================================
+    const isBattle = () => {
+        if (isNI && W.Engine?.battle) {
+            if (typeof W.Engine.battle.endBattle !== 'undefined') {
+                return !W.Engine.battle.endBattle;
+            }
+            if (typeof W.Engine.battle.show !== 'undefined') {
+                return Boolean(W.Engine.battle.show);
+            }
+            return true;
+        }
+        if (W.g?.battle) return true;
+        if (document.querySelector('.battle-window, #battle, .battle-container, [data-panel="battle"]')) return true;
+        return false;
+    };
+
+    // ==========================================
     // DOCK IKON W PRAWYM DOLNYM ROGU MAPY GRY (NI)
     // ==========================================
     const activeDock = document.createElement('div');
     activeDock.setAttribute('id', 'AUTO_COMBO_ACTIVE_DOCK');
     activeDock.className = 'ac-active-dock';
-    // Natychmiastowe ustawienie pozycji z localStorage (zapobiega skokom pozycji po F5)
+    // Natychmiastowe ustawienie pozycji z pamięci (nigdy nie skacze na F5)
     activeDock.style.right = `${ls.dockRightOffset || 270}px`;
     activeDock.style.bottom = `${ls.dockBottomOffset || 52}px`;
     document.body.appendChild(activeDock);
 
-    // Dynamiczne pozycjonowanie docka dokładnie na krawędzi mapy (zarówno w walce, jak i poza nią)
+    // Dynamiczne pozycjonowanie docka dokładnie na stałej krawędzi mapy
     const updateDockPosition = () => {
+        // W trakcie walki ZAMRAŻAMY pozycję doka - nie pozwalamy na żadne przesunięcia w lewo
+        if (isBattle()) return;
+
         let detectedRight = null;
         let detectedBottom = null;
 
-        // 1. Sprawdzamy, czy canvas ma rzeczywistą krawędź mapy (np. podczas walki)
-        const canvas = document.getElementById('GAME_CANVAS') 
-                    || document.querySelector('.game-window-positioner canvas')
-                    || document.querySelector('.game-window-positioner');
-        if (canvas) {
-            const r = canvas.getBoundingClientRect();
-            // Jeśli prawa krawędź canvasu nie sięga do samego końca okna przeglądarki, to wyznacza prawą granicę mapy
-            if (r.width > 0 && r.right < window.innerWidth - 100) {
-                detectedRight = Math.round(window.innerWidth - r.right + 6);
-            }
-            if (r.height > 0 && r.bottom <= window.innerHeight) {
-                detectedBottom = Math.round(window.innerHeight - r.bottom + 6);
-            }
-        }
-
-        // 2. Poza walką canvas rozciąga się pod prawym panelem (1920px), więc pobieramy granicę z lewej krawędzi prawego panelu
-        if (detectedRight === null) {
-            const rightSidebarSelectors = [
-                '.interface-layer .right-column',
-                '.main-column.right-column',
-                '.right-column',
-                '.hud-container',
-                '.main-buttons-container',
-                '[data-position="bottom-right"]',
-                '[data-position="bottom-right-additional"]'
-            ];
-            for (const sel of rightSidebarSelectors) {
-                const el = document.querySelector(sel);
-                if (el) {
-                    const r = el.getBoundingClientRect();
-                    // Sprawdzamy czy element jest widoczny po prawej stronie ekranu
-                    if (r.width > 30 && r.left > window.innerWidth / 2 && r.left < window.innerWidth - 50) {
-                        detectedRight = Math.round(window.innerWidth - r.left + 6);
-                        break;
-                    }
+        // 1. Prawdziwa krawędź boczna: sprawdzamy lewą krawędź prawego panelu bocznego (jest stała i nie zmienia się w walce)
+        const rightSidebarSelectors = [
+            '.interface-layer .right-column',
+            '.main-column.right-column',
+            '.right-column',
+            '.hud-container',
+            '.main-buttons-container',
+            '[data-position="bottom-right"]',
+            '[data-position="bottom-right-additional"]'
+        ];
+        for (const sel of rightSidebarSelectors) {
+            const el = document.querySelector(sel);
+            if (el) {
+                const r = el.getBoundingClientRect();
+                if (r.width > 30 && r.left > window.innerWidth / 2 && r.left < window.innerWidth - 50) {
+                    detectedRight = Math.round(window.innerWidth - r.left + 6);
+                    break;
                 }
             }
         }
 
-        // 3. Sprawdzamy dolny pasek (jeśli canvas nie dał prawidłowej dolnej krawędzi)
+        // 2. Jeśli z jakiegoś powodu panel boczny nie został znaleziony, dopiero wtedy badamy canvas
+        if (detectedRight === null) {
+            const canvas = document.getElementById('GAME_CANVAS') 
+                        || document.querySelector('.game-window-positioner canvas')
+                        || document.querySelector('.game-window-positioner');
+            if (canvas) {
+                const r = canvas.getBoundingClientRect();
+                if (r.width > 0 && r.right < window.innerWidth - 100) {
+                    detectedRight = Math.round(window.innerWidth - r.right + 6);
+                }
+                if (r.height > 0 && r.bottom <= window.innerHeight) {
+                    detectedBottom = Math.round(window.innerHeight - r.bottom + 6);
+                }
+            }
+        }
+
+        // 3. Dolna krawędź: sprawdzamy dolny pasek gry
         if (detectedBottom === null || detectedBottom < 30) {
             const bottomBar = document.querySelector('.bottom-panel, .main-buttons-container, [data-position="bottom-right"], .positioner.bottom');
             if (bottomBar) {
@@ -323,7 +342,7 @@
             }
         }
 
-        // Jeśli wykryto stabilną pozycję krawędzi mapy, zapisujemy ją i stosujemy
+        // Zapisujemy pozycję i stosujemy
         if (detectedRight !== null && detectedRight >= 120 && detectedRight <= window.innerWidth / 2) {
             ls.dockRightOffset = detectedRight;
             activeDock.style.right = `${detectedRight}px`;
@@ -341,7 +360,9 @@
         saveLS();
     };
 
-    window.addEventListener('resize', updateDockPosition);
+    window.addEventListener('resize', () => {
+        if (!isBattle()) updateDockPosition();
+    });
     setInterval(updateDockPosition, 600);
 
     // Główny złoty przycisk HUB-a (58px) bez napisu, tylko z logo
