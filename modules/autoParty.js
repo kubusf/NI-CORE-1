@@ -1,1 +1,354 @@
-function _0x1d2c(){const _0x37ae96=['AxnbCNjHEq','AgvYBW','CgX1C01PBNvZu3zN','v8wcXivJEIWGywj5ihPHChjHC3PHXiCGD3NfGSsfy3PUAwuGA2XHBM93Awn6W7n3lIbxECwcXivJEIWGywj5ihPHChjHC3PHXiCGD3n6Exn0A2LJAcbUysbTyxbPzs4','DhLWzq','Dg9Nz2XL','y3jLyxrLrwXLBwvUDa','neTKzLbAtq','Bg9VDa','ywmTC3f1yxjLlwj0BIa','ywrKrxzLBNrmAxn0zw5LCG','qxv0B21HDhLJEM5PzsbVChxfM8shl3jVENDPXixfVcbNCNvWXjKGCg8GD2fSy2u','qxv0B21HDhLJEM5PzsbHA2nLChr1AIbWCNP5y2HVzhReHwnLihPHChjVC3PLBMLHigrVigrYDCw8Ew55','vgfI','mZGZmZuZsxvIueT2','C29Tzq','s2XPA25PAIbPihDJACwBBMLQigTSyxDPC3OGB3b1C3PJEMfUAweGz3j1ChK','C2L6zq','mtqYmdKWm2rzwuH5vG','zMLUza','C3zN','Dgv4Da','y29Kzq','CgfYDhKMyt1YBszPzd0','lM0TChjVBxb0lcaUywXLCNqTyM94lcaUyxnRlwjVEcWGlM1bBgvYDcWGlMfSzxj0lwLUDgvYzMfJzq','lMfJlxn0yxr1CY1IDg4','q29UDhjVBa','ywmTDgL0Bgu','mta1mJK1nwXZwev0zq','ywn0AxzLrwXLBwvUDa','Axntyw1Lq2XHBG','qvvutYbqqvjuwq','ywmTC3rHDhvZlwj0BIa','Aw5Uzxjive1m','wNDPXyqGB3bJAMu','ywmTD2LKzs1IDg4G','jImYmtu7','zhj1XBX5BG','qvvut19qqvjuwv9hvuK','BgvUz3rO','Dg9vChbLCKnHC2u','y3rYBeTLEq','CMvHzg9UBhK','CgfYDhKMyt1PBNyMAwq9','C3rVCfbYB3bHz2f0Aw9U','lMfJlwv4CgfUzc1IDg4','B2jZzxj2zq','qvvutYbbq0m','u3bHy2PH','y2XHBI1Tzw1IzxjZ','C2v0qxr0CMLIDxrL','yM9KEq','ywmTzxHWyw5KzwqTy29UDgfPBMvY','vevyvefsrue','Ag90A2v5','yxbWzw5Kq2HPBgq','ywmTyM9KEq','y2XHC3noyw1L','CgfYDhK','z2v0','CgfYDhKMyt1KAxnIyw5K','yMX1CG','lMj1DhrVBI5NCMvLBIWGlMj0BI1Hy2nLChqSic5IDg4Uz3jLzw4Sic5VAYWGlMfJy2vWDcWGw2rHDgeTyw5ZD2vYpsiXiL0','ywmTAgvHzgvY','CxvLCNLtzwXLy3rVCG','jMfUC3DLCJ0X','Dg9W','CMvSyxrPB24','ywX0s2v5','Cg9Z','B25SEunSyw4','Bwv0yuTLEq','Cg9Zqxv0B1bHCNr5','yxv0B0fJy2vWDa','CxvLCNLtzwXLy3rVCKfSBa','lMfJlwnSB3nLlwj0BG','z2v0tgvHzgvYswq','yMf0DgXL','AxmTzxHWyw5Kzwq','Aw52sg90A2v5','vfLms08Gs0XbtG','z2v0rhjHD2fIBgvmAxn0','ywmTy2XVC2uTyNrU','Aw52AxrL','CMvTB3zL','B25qywnRzxq','y2XVC2vZDa','yNv0Dg9U','zxHWyw5Kzwrqyxj0Eq','u2nOB3DHAIbVA25V','z2v0vMfSAwrqB3m','z2v0rwXLBwvUDej5swq','twv0yq','C3bHy2u','zg/fGSsfy3O','mZm4mZCZmfvTqNH2CG','mJuZndeWnKjKzejctG','z3vPvMLZAwjSzq','yxnR','B3rOzxjZ','v8wcXivJEIaVifD5XyleHwn6ihnRCSoZDcb6yxbYyxn6yw5PysbNCMfJENKGBMeGBwfWAwu','zM9YrwfJAa','BM93','ywmTAw5WDxq','Aw5UzxjxAwr0Aa','zw5KqMf0DgXL','BM9Uzq','yw5ZD2vYpq','rw5NAw5L','z3j1Ca','EMfWCMfZEMe','s2XPA25PAIbPihDJACwBBMLQigTSyxDPC3OGEMfWCMfZEMfUAweGzg8Gz3j1ChK','yxv0B01VyG','mZblzMT3zuO','DgfNtMfTzq','Aw52rw5HyMXLza','lMjVCMrLCI13Aw5KB3CSic5JB25MAwCTD2LUzg93','BgvHzgvY','A2v5','C3r5Bgu','lI4U','y2XHBG','DMfSDwu','C3bHBG','Aw5JBhvKzxm','zgL2','zMLSDgvY','mJa0ode4nvj2tMHSCq','qvvutYbrvuLu','zgLZCgXHEq','Aw5WDxq','Dhj1zq','mtK5odmXmu5QseTUEq','qumTt0zg','yxv0B1bHCNr5','B2jQzwn0','mKX6ENP2tq','u3bHy2u','BwfW','y2HLy2TTyxjRu3zN','ywmTzxHWyw5Klwj0BG','Bw9KDwXLCW','CMDIysGYntuSidi1nsWGmJu1lcaWlJu1kq','ChjLDMvUDerLzMf1Bhq','y2XHC3nmAxn0','A2v5zg93BG','zw5HyMXLza','zMXLEa','ywmTCM93','Aw5UzxjuzxH0','Dg9mB3DLCKnHC2u','BwLU','v8wcXivJEIaVifD5XyleHwn6ihnRCSoZDcbVChvZEMn6yw5PysbNCNvWEq','ywmTD2LUzg93','zNvUy3rPB24','DgL0Bgu','y2XPy2S','iZfJzMyWma','u2HPzNq','su5qvvq','Dw5KzwzPBMvK','CgfYDhKMyt1Hy2nLChq','z2v0twvTyMvYCW','ogTrqLnnCG','zgLZyMfUza','AgfZ','yM9YzgvYq29SB3i','C3bHy2PH','BgvMDa','qwX0','tKLdB3jL','qumTt04','uM96D2NfHcbVCgnQzq'];_0x1d2c=function(){return _0x37ae96;};return _0x1d2c();}(function(_0x402b73,_0x251c7d){const _0x1e8ff1=_0x402b73();while(!![]){try{const _0xdb416c=-parseInt(_0x3374(0x38))/0x1+-parseInt(_0x3374(0x5))/0x2*(-parseInt(_0x3374(0x46))/0x3)+-parseInt(_0x3374(0x31))/0x4*(-parseInt(_0x3374(0xa9))/0x5)+-parseInt(_0x3374(0x8a))/0x6+parseInt(_0x3374(0x1))/0x7*(parseInt(_0x3374(0x20))/0x8)+parseInt(_0x3374(0x89))/0x9+-parseInt(_0x3374(0x9b))/0xa*(parseInt(_0x3374(0x3c))/0xb);if(_0xdb416c===_0x251c7d){break;}else{_0x1e8ff1['push'](_0x1e8ff1['shift']());}}catch(_0x125e6){_0x1e8ff1['push'](_0x1e8ff1['shift']());}}}(_0x1d2c,0x37dea));function _0x3374(_0x44496e,_0x1d2c8b){_0x44496e=_0x44496e-0x0;const _0x3374f9=_0x1d2c();let _0x285c1f=_0x3374f9[_0x44496e];if(_0x3374['nYzigK']===undefined){var _0x1d9bca=function(_0x133626){const _0x37382a='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=';let _0x92296d='';let _0x504716='';for(let _0x1805b1=0x0,_0x15df6d,_0x692501,_0x424666=0x0;_0x692501=_0x133626['charAt'](_0x424666++);~_0x692501&&(_0x15df6d=_0x1805b1%0x4?_0x15df6d*0x40+_0x692501:_0x692501,_0x1805b1++%0x4)?_0x92296d+=String['fromCharCode'](0xff&_0x15df6d>>(-0x2*_0x1805b1&0x6)):0x0){_0x692501=_0x37382a['indexOf'](_0x692501);}for(let _0x12e464=0x0,_0x1371b3=_0x92296d['length'];_0x12e464<_0x1371b3;_0x12e464++){_0x504716+='%'+('00'+_0x92296d['charCodeAt'](_0x12e464)['toString'](0x10))['slice'](-0x2);}return decodeURIComponent(_0x504716);};_0x3374['ryhSdA']=_0x1d9bca;_0x3374['CZqCXr']={};_0x3374['nYzigK']=!![];}const _0x40a034=_0x3374f9[0x0];if(_0x3374['ZueYsX']!==_0x40a034){_0x3374['CZqCXr']={};_0x3374['ZueYsX']=_0x40a034;}const _0x326abb=_0x3374['CZqCXr'][_0x44496e];if(_0x326abb===undefined){_0x285c1f=_0x3374['ryhSdA'](_0x285c1f);_0x3374['CZqCXr'][_0x44496e]=_0x285c1f;}else{_0x285c1f=_0x326abb;}return _0x285c1f;}(function(){'use strict';const _0x92296d=(typeof unsafeWindow!==_0x3374(0x1d)?unsafeWindow:window)[_0x3374(0x27)];if(!_0x92296d||document[_0x3374(0x85)](_0x3374(0x50)))return;const {W:_0x504716,isNI:_0x1805b1,ls:_0x15df6d,saveLS:_0x692501,sendCmd:_0x424666,makeDraggable:_0x12e464,updateAllVisibilities:_0x1371b3,registerWindow:_0x56b94c}=_0x92296d;if(!_0x15df6d[_0x3374(0x64)])_0x15df6d[_0x3374(0x64)]={'enabled':!![],'autoMob':![],'hotkey':'B'};if(typeof _0x15df6d[_0x3374(0x64)][_0x3374(0x9d)]===_0x3374(0x1d))_0x15df6d[_0x3374(0x64)][_0x3374(0x9d)]=!![];if(typeof _0x15df6d[_0x3374(0x64)][_0x3374(0x79)]===_0x3374(0x1d))_0x15df6d[_0x3374(0x64)][_0x3374(0x79)]='V';if(typeof _0x15df6d[_0x3374(0x64)][_0x3374(0x70)]===_0x3374(0x1d))_0x15df6d[_0x3374(0x64)][_0x3374(0x70)]=![];if(typeof _0x15df6d[_0x3374(0x64)][_0x3374(0x73)]===_0x3374(0x1d))_0x15df6d[_0x3374(0x64)][_0x3374(0x73)]=![];if(typeof _0x15df6d[_0x3374(0x82)]===_0x3374(0x1d))_0x15df6d[_0x3374(0x82)]=![];const _0x14a8f3=parseInt(_0x15df6d[_0x3374(0x6f)]?.['x'],0xa)||0x78;const _0x39fbdc=parseInt(_0x15df6d[_0x3374(0x6f)]?.['y'],0xa)||0x78;_0x15df6d[_0x3374(0x72)]=_0x92296d[_0x3374(0x84)](_0x15df6d[_0x3374(0x72)],Math[_0x3374(0x14)](_0x14a8f3+0xe6,(window[_0x3374(0x92)]||0x4b0)-0x87),_0x39fbdc+0x78,0x82);const _0x565bd4=document[_0x3374(0x30)](_0x3374(0xa7));_0x565bd4[_0x3374(0x5c)]('id',_0x3374(0x50));_0x565bd4[_0x3374(0x63)]=_0x3374(0x16);_0x565bd4[_0x3374(0xa1)][_0x3374(0x25)]=_0x15df6d[_0x3374(0x72)]['x']+'px';_0x565bd4[_0x3374(0xa1)][_0x3374(0x6c)]=_0x15df6d[_0x3374(0x72)]['y']+'px';const _0x36e539=document[_0x3374(0x30)](_0x3374(0xa7));_0x36e539[_0x3374(0x63)]=_0x3374(0x69);const _0x57e660=document[_0x3374(0x30)](_0x3374(0x81));_0x57e660[_0x3374(0x63)]=_0x3374(0x4a)+(_0x15df6d[_0x3374(0xa)][_0x3374(0x3)]?_0x3374(0x28):_0x3374(0x2));_0x57e660[_0x3374(0x34)](_0x3374(0x19),_0x11b672=>{_0x11b672[_0x3374(0x56)]();_0x15df6d[_0x3374(0xa)][_0x3374(0x3)]=!_0x15df6d[_0x3374(0xa)][_0x3374(0x3)];_0x692501();_0x1371b3();});_0x36e539[_0x3374(0x61)](_0x57e660);const _0x2beb86=document[_0x3374(0x30)](_0x3374(0xa5));_0x2beb86[_0x3374(0x63)]=_0x3374(0x45);_0x2beb86[_0x3374(0x12)]=_0x3374(0x49);_0x36e539[_0x3374(0x61)](_0x2beb86);const _0x3b6b39=document[_0x3374(0x30)](_0x3374(0x81));_0x3b6b39[_0x3374(0x63)]=_0x3374(0x9);_0x3b6b39[_0x3374(0x4b)]=_0x92296d[_0x3374(0x3e)][_0x3374(0x2c)];_0x36e539[_0x3374(0x61)](_0x3b6b39);const _0x512002=document[_0x3374(0x30)](_0x3374(0x81));_0x512002[_0x3374(0x63)]=_0x3374(0x7c);_0x512002[_0x3374(0x4b)]=_0x3374(0x4e);_0x512002[_0x3374(0x5c)](_0x3374(0x18),_0x3374(0x83));_0x512002[_0x3374(0x34)](_0x3374(0x19),_0x18f930=>{_0x18f930[_0x3374(0x56)]();_0x15df6d[_0x3374(0x8b)][_0x3374(0x3)]=![];_0x692501();_0x1371b3();});_0x36e539[_0x3374(0x61)](_0x512002);_0x565bd4[_0x3374(0x61)](_0x36e539);const _0x397821=document[_0x3374(0x30)](_0x3374(0xa7));_0x397821[_0x3374(0x63)]=_0x3374(0x62);const _0x23ae1e=document[_0x3374(0x30)](_0x3374(0xa7));_0x23ae1e[_0x3374(0x63)]=_0x3374(0x11);const _0x3423f5=document[_0x3374(0x30)](_0x3374(0x81));_0x3423f5[_0x3374(0x63)]=_0x3374(0x33)+(_0x15df6d[_0x3374(0x64)][_0x3374(0xf)]?_0x3374(0x28):_0x3374(0x2));_0x3423f5[_0x3374(0x5c)](_0x3374(0x18),_0x3374(0x15));_0x3423f5[_0x3374(0x4b)]=_0x15df6d[_0x3374(0x64)][_0x3374(0xf)]?_0x92296d[_0x3374(0x3e)][_0x3374(0x8)]:'';_0x3423f5[_0x3374(0x34)](_0x3374(0x19),()=>{_0x15df6d[_0x3374(0x64)][_0x3374(0xf)]=!_0x15df6d[_0x3374(0x64)][_0x3374(0xf)];_0x3423f5[_0x3374(0x63)]=_0x3374(0x33)+(_0x15df6d[_0x3374(0x64)][_0x3374(0xf)]?_0x3374(0x28):_0x3374(0x2));_0x3423f5[_0x3374(0x4b)]=_0x15df6d[_0x3374(0x64)][_0x3374(0xf)]?_0x92296d[_0x3374(0x3e)][_0x3374(0x8)]:'';_0x692501();});_0x23ae1e[_0x3374(0x61)](_0x3423f5);let _0x517f63=null;const _0x595df7=document[_0x3374(0x30)](_0x3374(0xac));_0x595df7[_0x3374(0x63)]=_0x3374(0x91);_0x595df7[_0x3374(0x5c)](_0x3374(0x2e),_0x3374(0x3f));_0x595df7[_0x3374(0x5c)](_0x3374(0x54),_0x3374(0x0));_0x595df7[_0x3374(0x5c)](_0x3374(0x18),_0x3374(0x3a));_0x595df7[_0x3374(0xa4)]=(_0x15df6d[_0x3374(0x64)][_0x3374(0x60)]||'B')[_0x3374(0x52)]();_0x595df7[_0x3374(0x34)](_0x3374(0x19),()=>{_0x517f63=_0x3374(0x21);_0x595df7[_0x3374(0xa4)]=_0x3374(0xa2);_0x595df7[_0x3374(0xa1)][_0x3374(0x23)]=_0x3374(0x1a);});_0x595df7[_0x3374(0x34)](_0x3374(0x67),()=>{if(_0x517f63===_0x3374(0x21)){_0x517f63=null;_0x595df7[_0x3374(0xa4)]=(_0x15df6d[_0x3374(0x64)][_0x3374(0x60)]||'B')[_0x3374(0x52)]();_0x595df7[_0x3374(0xa1)][_0x3374(0x23)]=_0x3374(0xb);}});_0x23ae1e[_0x3374(0x61)](_0x595df7);_0x397821[_0x3374(0x61)](_0x23ae1e);const _0x335ac2=document[_0x3374(0x30)](_0x3374(0xa7));_0x335ac2[_0x3374(0x63)]=_0x3374(0x11);const _0x393b02=document[_0x3374(0x30)](_0x3374(0x81));_0x393b02[_0x3374(0x63)]=_0x3374(0x33)+(_0x15df6d[_0x3374(0x64)][_0x3374(0x9d)]?_0x3374(0x28):_0x3374(0x2));_0x393b02[_0x3374(0x5c)](_0x3374(0x18),_0x3374(0x8e));_0x393b02[_0x3374(0x4b)]=_0x15df6d[_0x3374(0x64)][_0x3374(0x9d)]?_0x92296d[_0x3374(0x3e)][_0x3374(0x8)]:'';_0x393b02[_0x3374(0x34)](_0x3374(0x19),()=>{_0x15df6d[_0x3374(0x64)][_0x3374(0x9d)]=!_0x15df6d[_0x3374(0x64)][_0x3374(0x9d)];_0x393b02[_0x3374(0x63)]=_0x3374(0x33)+(_0x15df6d[_0x3374(0x64)][_0x3374(0x9d)]?_0x3374(0x28):_0x3374(0x2));_0x393b02[_0x3374(0x4b)]=_0x15df6d[_0x3374(0x64)][_0x3374(0x9d)]?_0x92296d[_0x3374(0x3e)][_0x3374(0x8)]:'';_0x692501();});_0x335ac2[_0x3374(0x61)](_0x393b02);const _0x75896d=document[_0x3374(0x30)](_0x3374(0xac));_0x75896d[_0x3374(0x63)]=_0x3374(0x91);_0x75896d[_0x3374(0x5c)](_0x3374(0x2e),_0x3374(0x3f));_0x75896d[_0x3374(0x5c)](_0x3374(0x54),_0x3374(0x0));_0x75896d[_0x3374(0x5c)](_0x3374(0x18),_0x3374(0x99));_0x75896d[_0x3374(0xa4)]=(_0x15df6d[_0x3374(0x64)][_0x3374(0x79)]||'V')[_0x3374(0x52)]();_0x75896d[_0x3374(0x34)](_0x3374(0x19),()=>{_0x517f63=_0x3374(0x7d);_0x75896d[_0x3374(0xa4)]=_0x3374(0xa2);_0x75896d[_0x3374(0xa1)][_0x3374(0x23)]=_0x3374(0x1a);});_0x75896d[_0x3374(0x34)](_0x3374(0x67),()=>{if(_0x517f63===_0x3374(0x7d)){_0x517f63=null;_0x75896d[_0x3374(0xa4)]=(_0x15df6d[_0x3374(0x64)][_0x3374(0x79)]||'V')[_0x3374(0x52)]();_0x75896d[_0x3374(0xa1)][_0x3374(0x23)]=_0x3374(0xb);}});_0x335ac2[_0x3374(0x61)](_0x75896d);_0x397821[_0x3374(0x61)](_0x335ac2);const _0x5395b7=document[_0x3374(0x30)](_0x3374(0xa7));_0x5395b7[_0x3374(0x63)]=_0x3374(0x5e);const _0x565150=document[_0x3374(0x30)](_0x3374(0x81));_0x565150[_0x3374(0x63)]=_0x3374(0x4d)+(_0x15df6d[_0x3374(0x64)][_0x3374(0x70)]?_0x3374(0x28):_0x3374(0x2));_0x565150[_0x3374(0x5c)](_0x3374(0x18),_0x3374(0x2d));_0x565150[_0x3374(0x12)]=_0x3374(0x7a);_0x565150[_0x3374(0x34)](_0x3374(0x19),_0x5db653=>{_0x5db653[_0x3374(0x56)]();_0x15df6d[_0x3374(0x64)][_0x3374(0x70)]=!_0x15df6d[_0x3374(0x64)][_0x3374(0x70)];_0x565150[_0x3374(0x63)]=_0x3374(0x4d)+(_0x15df6d[_0x3374(0x64)][_0x3374(0x70)]?_0x3374(0x28):_0x3374(0x2));_0x692501();});_0x5395b7[_0x3374(0x61)](_0x565150);const _0x2a2e54=document[_0x3374(0x30)](_0x3374(0x81));_0x2a2e54[_0x3374(0x63)]=_0x3374(0x4d)+(_0x15df6d[_0x3374(0x64)][_0x3374(0x73)]?_0x3374(0x28):_0x3374(0x2));_0x2a2e54[_0x3374(0x5c)](_0x3374(0x18),_0x3374(0x36));_0x2a2e54[_0x3374(0x12)]=_0x3374(0x59);_0x2a2e54[_0x3374(0x34)](_0x3374(0x19),_0x451009=>{_0x451009[_0x3374(0x56)]();_0x15df6d[_0x3374(0x64)][_0x3374(0x73)]=!_0x15df6d[_0x3374(0x64)][_0x3374(0x73)];_0x2a2e54[_0x3374(0x63)]=_0x3374(0x4d)+(_0x15df6d[_0x3374(0x64)][_0x3374(0x73)]?_0x3374(0x28):_0x3374(0x2));_0x692501();});_0x5395b7[_0x3374(0x61)](_0x2a2e54);const _0x5d74f1=document[_0x3374(0x30)](_0x3374(0x81));_0x5d74f1[_0x3374(0x63)]=_0x3374(0x4d)+(_0x15df6d[_0x3374(0x64)][_0x3374(0x9a)]?_0x3374(0x28):_0x3374(0x2));_0x5d74f1[_0x3374(0x5c)](_0x3374(0x18),_0x3374(0x35));_0x5d74f1[_0x3374(0x12)]=_0x3374(0xaa);_0x5d74f1[_0x3374(0x34)](_0x3374(0x19),_0x52d325=>{_0x52d325[_0x3374(0x56)]();_0x15df6d[_0x3374(0x64)][_0x3374(0x9a)]=!_0x15df6d[_0x3374(0x64)][_0x3374(0x9a)];_0x5d74f1[_0x3374(0x63)]=_0x3374(0x4d)+(_0x15df6d[_0x3374(0x64)][_0x3374(0x9a)]?_0x3374(0x28):_0x3374(0x2));_0x692501();});_0x5395b7[_0x3374(0x61)](_0x5d74f1);_0x397821[_0x3374(0x61)](_0x5395b7);_0x565bd4[_0x3374(0x61)](_0x397821);document[_0x3374(0x5d)][_0x3374(0x61)](_0x565bd4);_0x12e464(_0x565bd4,_0x36e539,_0x3374(0x72),[_0x3374(0x75),_0x3374(0x57),_0x3374(0x43)]);const _0x38df84=()=>{_0x3b6b39[_0x3374(0xd)][_0x3374(0x2f)](_0x3374(0x78),_0x15df6d[_0x3374(0x82)]);_0x3b6b39[_0x3374(0x5c)](_0x3374(0x18),_0x15df6d[_0x3374(0x82)]?_0x3374(0x4c):_0x3374(0x29));_0x5395b7[_0x3374(0xa1)][_0x3374(0xab)]=_0x15df6d[_0x3374(0x82)]?_0x3374(0x10):_0x3374(0x94);};_0x3b6b39[_0x3374(0x34)](_0x3374(0x19),_0x248088=>{_0x248088[_0x3374(0x56)]();_0x15df6d[_0x3374(0x82)]=!_0x15df6d[_0x3374(0x82)];_0x38df84();_0x692501();});_0x38df84();_0x56b94c(_0x3374(0x3),{'mainEl':_0x565bd4,'statusBtn':_0x57e660});const _0x4802e0=()=>{const _0x7a1fe0=parseInt(_0x504716[_0x3374(0x96)]?.[_0x3374(0x2b)]?.['d']?.['id']||_0x504716['g']?.[_0x3374(0x2b)]?.['id']||_0x504716[_0x3374(0x2b)]?.['id'],0xa);let _0x228f47=![],_0x37e1de=![];const _0x3f78ca=_0x504716[_0x3374(0x96)]?.[_0x3374(0x64)];if(_0x3f78ca){if(typeof _0x3f78ca[_0x3374(0x76)]===_0x3374(0x17)){const _0x3857ee=parseInt(_0x3f78ca[_0x3374(0x76)](),0xa);if(!isNaN(_0x3857ee)&&_0x3857ee>0x0){_0x228f47=!![];if(_0x3857ee===_0x7a1fe0)_0x37e1de=!![];}}if(typeof _0x3f78ca[_0x3374(0x1f)]===_0x3374(0x17)){try{const _0x2ef3e3=_0x3f78ca[_0x3374(0x1f)]();if(_0x2ef3e3 instanceof Map&&_0x2ef3e3[_0x3374(0x3b)]>0x0){_0x228f47=!![];if(_0x2ef3e3[_0x3374(0x22)](_0x7a1fe0)){const _0x1a8323=_0x2ef3e3[_0x3374(0x65)](_0x7a1fe0);if(_0x1a8323?.['r']==0x1||_0x1a8323?.[_0x3374(0x9f)])_0x37e1de=!![];}}else if(Array[_0x3374(0x2a)](_0x2ef3e3)&&_0x2ef3e3[_0x3374(0x51)]>0x0){_0x228f47=!![];const _0x4e402b=_0x2ef3e3[_0x3374(0x3d)](_0x5546c6=>(_0x5546c6['id']||_0x5546c6['d']?.['id'])===_0x7a1fe0);if(_0x4e402b?.['r']==0x1||_0x4e402b?.[_0x3374(0x9f)])_0x37e1de=!![];}}catch(_0x56b44c){}}}return{'inParty':_0x228f47,'isLeader':_0x37e1de,'myId':_0x7a1fe0};};const _0x54efd9=_0x216a79=>{if(_0x1805b1&&_0x504716[_0x3374(0x96)]?.[_0x3374(0x64)]){try{if(typeof _0x504716[_0x3374(0x96)][_0x3374(0x64)][_0x3374(0x1f)]===_0x3374(0x17)){const _0x235c8f=_0x504716[_0x3374(0x96)][_0x3374(0x64)][_0x3374(0x1f)]();if(_0x235c8f instanceof Map&&_0x235c8f[_0x3374(0x22)](_0x216a79))return!![];if(Array[_0x3374(0x2a)](_0x235c8f)&&_0x235c8f[_0x3374(0x39)](_0x57f425=>parseInt(_0x57f425?.['id']||_0x57f425?.['d']?.['id'],0xa)===_0x216a79))return!![];}}catch(_0x3cd35b){}}return![];};const _0x532aa4=()=>{if(!_0x15df6d[_0x3374(0xa)][_0x3374(0x3)])return;const {isLeader:_0x2a4a4e,myId:_0x5b1a88}=_0x4802e0();_0x424666(_0x2a4a4e?_0x3374(0x66):_0x3374(0x41)+_0x5b1a88);};let _0x13680f=0x0;const _0x209c33=()=>{if(!_0x15df6d[_0x3374(0xa)][_0x3374(0x3)]||!_0x15df6d[_0x3374(0x64)][_0x3374(0x9a)])return;const _0x36d00b=Date[_0x3374(0x90)]();if(_0x36d00b-_0x13680f<0x708)return;_0x13680f=_0x36d00b;_0x532aa4();setTimeout(_0x532aa4,0x15e);};const _0x3b00a7=_0x3162ed=>{const _0x37bb74=String(_0x3162ed[_0x3374(0x6d)]||'')[_0x3374(0x13)]();return Boolean(typeof _0x92296d[_0x3374(0x48)]===_0x3374(0x17)&&_0x92296d[_0x3374(0x48)](_0x3162ed)||[_0x3374(0x5b),'cl',_0x3374(0xa3),'2'][_0x3374(0xa6)](_0x37bb74));};const _0x6cdc0f=()=>{if(!_0x15df6d[_0x3374(0xa)][_0x3374(0x3)])return;const {myId:_0x5ad17e}=_0x4802e0();let _0x347df4=[];if(_0x1805b1&&_0x504716[_0x3374(0x96)]?.[_0x3374(0x8d)]?.[_0x3374(0x7b)]){_0x347df4=_0x504716[_0x3374(0x96)][_0x3374(0x8d)][_0x3374(0x7b)]()[_0x3374(0xa8)](_0x5f164c=>_0x5f164c?.['d'])[_0x3374(0x7)](_0x1bc62f=>_0x1bc62f['d']);}const _0x8c676f=_0x347df4[_0x3374(0xa8)](_0x40b50a=>{const _0x5c86d9=parseInt(_0x40b50a['id'],0xa);if(!_0x5c86d9||_0x5c86d9===_0x5ad17e||_0x54efd9(_0x5c86d9))return![];if(_0x15df6d[_0x3374(0x64)][_0x3374(0x70)]&&!_0x3b00a7(_0x40b50a))return![];return!![];});_0x8c676f[_0x3374(0x8f)]((_0x174a79,_0xf87497)=>setTimeout(()=>_0x424666(_0x3374(0x55)+_0x174a79['id']),_0xf87497*0x6e));};const _0x39e52b=()=>{try{document[_0x3374(0x74)](_0x3374(0x42))[_0x3374(0x8f)](_0x1c5f05=>{if(_0x1c5f05[_0x3374(0x80)](_0x3374(0x9e)))return;const _0x132f1e=(_0x1c5f05[_0x3374(0x12)]||'')[_0x3374(0x13)]();if((_0x132f1e[_0x3374(0xa6)](_0x3374(0x4f))||_0x132f1e[_0x3374(0xa6)](_0x3374(0x97)))&&(_0x132f1e[_0x3374(0xa6)](_0x3374(0x98))||_0x132f1e[_0x3374(0xa6)](_0x3374(0x88)))){_0x1c5f05[_0x3374(0xa1)][_0x3374(0xab)]=_0x3374(0x94);_0x1c5f05[_0x3374(0x6a)](_0x3374(0x68))?.[_0x3374(0x19)]();_0x1c5f05[_0x3374(0x7e)]();}});}catch(_0x2396f7){}};try{const _0x30f6b5=new MutationObserver(()=>{if(_0x15df6d[_0x3374(0xa)][_0x3374(0x3)]&&_0x15df6d[_0x3374(0x64)][_0x3374(0x73)])_0x39e52b();});_0x30f6b5[_0x3374(0x58)](document[_0x3374(0x5d)],{'childList':!![],'subtree':!![]});}catch(_0x1583cc){}document[_0x3374(0x34)](_0x3374(0xe),_0x33ccda=>{if(_0x517f63){_0x33ccda[_0x3374(0xc)]();_0x33ccda[_0x3374(0x56)]();if([_0x3374(0x44),_0x3374(0x1b),_0x3374(0x26),_0x3374(0x86),_0x3374(0x37)][_0x3374(0xa6)](_0x33ccda[_0x3374(0xa0)]))return;const _0x39cb71=_0x33ccda[_0x3374(0xa0)]==='\x20'?_0x3374(0x5a):_0x33ccda[_0x3374(0xa0)][_0x3374(0x52)]();if(_0x517f63===_0x3374(0x21)){_0x15df6d[_0x3374(0x64)][_0x3374(0x60)]=_0x39cb71;_0x595df7[_0x3374(0xa4)]=_0x39cb71;_0x595df7[_0x3374(0xa1)][_0x3374(0x23)]=_0x3374(0xb);_0x595df7[_0x3374(0x67)]();}else if(_0x517f63===_0x3374(0x7d)){_0x15df6d[_0x3374(0x64)][_0x3374(0x79)]=_0x39cb71;_0x75896d[_0x3374(0xa4)]=_0x39cb71;_0x75896d[_0x3374(0xa1)][_0x3374(0x23)]=_0x3374(0xb);_0x75896d[_0x3374(0x67)]();}_0x517f63=null;_0x692501();return;}const _0xd53eaa=document[_0x3374(0x47)]?document[_0x3374(0x47)][_0x3374(0x9c)]:'';if([_0x3374(0x1c),_0x3374(0x5f)][_0x3374(0xa6)](_0xd53eaa)||_0x33ccda[_0x3374(0x53)]||_0x33ccda[_0x3374(0x6e)]||_0x33ccda[_0x3374(0x71)])return;const _0x13f546=_0x33ccda[_0x3374(0xa0)][_0x3374(0x13)]();const _0x511f13=(_0x15df6d[_0x3374(0x64)][_0x3374(0x60)]||'b')[_0x3374(0x13)]();const _0x32bd31=(_0x15df6d[_0x3374(0x64)][_0x3374(0x79)]||'v')[_0x3374(0x13)]();if(_0x15df6d[_0x3374(0xa)][_0x3374(0x3)]){if(_0x15df6d[_0x3374(0x64)][_0x3374(0xf)]&&(_0x13f546===_0x511f13||(_0x511f13===_0x3374(0x24)||_0x511f13===_0x3374(0x87))&&_0x33ccda[_0x3374(0x40)]===_0x3374(0x6))){_0x33ccda[_0x3374(0xc)]();_0x532aa4();return;}if(_0x15df6d[_0x3374(0x64)][_0x3374(0x9d)]&&(_0x13f546===_0x32bd31||(_0x32bd31===_0x3374(0x24)||_0x32bd31===_0x3374(0x87))&&_0x33ccda[_0x3374(0x40)]===_0x3374(0x6))){_0x33ccda[_0x3374(0xc)]();_0x6cdc0f();return;}}});_0x92296d[_0x3374(0x7f)](_0x38577b=>{if(_0x15df6d[_0x3374(0xa)][_0x3374(0x3)]&&_0x15df6d[_0x3374(0x64)][_0x3374(0x73)]&&_0x38577b[_0x3374(0x8c)]){try{const _0x3e9ad6=typeof _0x38577b[_0x3374(0x8c)]===_0x3374(0x4)?_0x38577b[_0x3374(0x8c)]['re']||'':String(_0x38577b[_0x3374(0x8c)]);if(_0x3e9ad6[_0x3374(0xa6)](_0x3374(0x1e))){_0x424666(_0x3e9ad6[_0x3374(0xa6)](_0x3374(0x95))?_0x3e9ad6+'1':_0x3e9ad6+_0x3374(0x6b));_0x39e52b();}}catch(_0x45eb23){}}const _0xde9c55=_0x38577b[_0x3374(0x32)]||_0x38577b[_0x3374(0x77)]&&_0x38577b[_0x3374(0x77)][_0x3374(0x93)]||_0x38577b['f']&&_0x38577b['f'][_0x3374(0x93)];if(_0xde9c55&&_0x15df6d[_0x3374(0xa)][_0x3374(0x3)])_0x209c33();});setInterval(()=>{if(_0x15df6d[_0x3374(0xa)][_0x3374(0x3)]&&_0x15df6d[_0x3374(0x64)][_0x3374(0x73)])_0x39e52b();},0x64);}());
+// modules/autoParty.js
+(function() {
+    'use strict';
+    const C = (typeof unsafeWindow !== 'undefined' ? unsafeWindow : window).NICore;
+    if (!C || document.getElementById('AUTO_PARTY_GUI')) return;
+
+    const { W, isNI, ls, saveLS, sendCmd, makeDraggable, updateAllVisibilities, registerWindow } = C;
+
+    // Domyślny bind pod opuszczanie grupy to klawisz 'B'
+    if (!ls.party) ls.party = { enabled: true, autoMob: false, hotkey: 'B' };
+    if (typeof ls.party.invEnabled === 'undefined') ls.party.invEnabled = true;
+    if (typeof ls.party.invHotkey === 'undefined') ls.party.invHotkey = 'V';
+    if (typeof ls.party.onlyClan === 'undefined') ls.party.onlyClan = false;
+    if (typeof ls.party.autoAccept === 'undefined') ls.party.autoAccept = false;
+    if (typeof ls.expandedParty === 'undefined') ls.expandedParty = false;
+
+    const baseX = parseInt(ls.pos?.x, 10) || 120;
+    const baseY = parseInt(ls.pos?.y, 10) || 120;
+    ls.posAutoParty = C.getValidPos(ls.posAutoParty, Math.min(baseX + 230, (window.innerWidth || 1200) - 135), baseY + 120, 130);
+
+    // GUI 2: AUTO PARTY
+    const autoPartyMain = document.createElement('div');
+    autoPartyMain.setAttribute('id', 'AUTO_PARTY_GUI');
+    autoPartyMain.className = 'ac-window';
+    autoPartyMain.style.left = `${ls.posAutoParty.x}px`;
+    autoPartyMain.style.top = `${ls.posAutoParty.y}px`;
+
+    const autoPartyHeader = document.createElement('div');
+    autoPartyHeader.className = 'ac-header';
+
+    const autoPartyStatusBtn = document.createElement('button');
+    autoPartyStatusBtn.className = `ac-status-btn ${ls.modules.autoParty ? 'AC-ON' : 'AC-OFF'}`;
+    autoPartyStatusBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        ls.modules.autoParty = !ls.modules.autoParty;
+        saveLS();
+        updateAllVisibilities();
+    });
+    autoPartyHeader.appendChild(autoPartyStatusBtn);
+
+    const autoPartyTitle = document.createElement('span');
+    autoPartyTitle.className = 'ac-title';
+    autoPartyTitle.innerText = 'AUTO PARTY';
+    autoPartyHeader.appendChild(autoPartyTitle);
+
+    const expandPartyBtn = document.createElement('button');
+    expandPartyBtn.className = 'ac-expand-btn';
+    expandPartyBtn.innerHTML = C.svg.plusMinusSvg;
+    autoPartyHeader.appendChild(expandPartyBtn);
+
+    const autoPartyCloseBtn = document.createElement('button');
+    autoPartyCloseBtn.className = 'ac-close-btn';
+    autoPartyCloseBtn.innerHTML = '&#215;';
+    autoPartyCloseBtn.setAttribute('title', 'Schowaj okno');
+    autoPartyCloseBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        ls.guiVisible.autoParty = false;
+        saveLS();
+        updateAllVisibilities();
+    });
+    autoPartyHeader.appendChild(autoPartyCloseBtn);
+    autoPartyMain.appendChild(autoPartyHeader);
+
+    const autoPartyBody = document.createElement('div');
+    autoPartyBody.className = 'ac-body';
+
+    const partyLeaveRow = document.createElement('div');
+    partyLeaveRow.className = 'ac-row';
+
+    const partyToggleBtn = document.createElement('button');
+    partyToggleBtn.className = `ac-square-btn ${ls.party.enabled ? 'AC-ON' : 'AC-OFF'}`;
+    partyToggleBtn.setAttribute('title', 'Włącz / Wyłącz skrót opuszczania grupy');
+    partyToggleBtn.innerHTML = ls.party.enabled ? C.svg.checkmarkSvg : '';
+    partyToggleBtn.addEventListener('click', () => {
+        ls.party.enabled = !ls.party.enabled;
+        partyToggleBtn.className = `ac-square-btn ${ls.party.enabled ? 'AC-ON' : 'AC-OFF'}`;
+        partyToggleBtn.innerHTML = ls.party.enabled ? C.svg.checkmarkSvg : '';
+        saveLS();
+    });
+    partyLeaveRow.appendChild(partyToggleBtn);
+
+    let bindingTarget = null;
+    const inputKey = document.createElement('input');
+    inputKey.className = 'ac-input';
+    inputKey.setAttribute('type', 'text');
+    inputKey.setAttribute('readonly', 'true');
+    inputKey.setAttribute('title', 'Kliknij i wciśnij klawisz opuszczania grupy');
+    inputKey.value = (ls.party.hotkey || 'B').toUpperCase();
+    inputKey.addEventListener('click', () => {
+        bindingTarget = 'disband';
+        inputKey.value = '...';
+        inputKey.style.borderColor = '#1cff00';
+    });
+    inputKey.addEventListener('blur', () => {
+        if (bindingTarget === 'disband') {
+            bindingTarget = null;
+            inputKey.value = (ls.party.hotkey || 'B').toUpperCase();
+            inputKey.style.borderColor = 'rgba(255, 255, 255, 0.55)';
+        }
+    });
+    partyLeaveRow.appendChild(inputKey);
+    autoPartyBody.appendChild(partyLeaveRow);
+
+    const partyInvRow = document.createElement('div');
+    partyInvRow.className = 'ac-row';
+
+    const invToggleBtn = document.createElement('button');
+    invToggleBtn.className = `ac-square-btn ${ls.party.invEnabled ? 'AC-ON' : 'AC-OFF'}`;
+    invToggleBtn.setAttribute('title', 'Włącz / Wyłącz skrót zapraszania graczy na mapie');
+    invToggleBtn.innerHTML = ls.party.invEnabled ? C.svg.checkmarkSvg : '';
+    invToggleBtn.addEventListener('click', () => {
+        ls.party.invEnabled = !ls.party.invEnabled;
+        invToggleBtn.className = `ac-square-btn ${ls.party.invEnabled ? 'AC-ON' : 'AC-OFF'}`;
+        invToggleBtn.innerHTML = ls.party.invEnabled ? C.svg.checkmarkSvg : '';
+        saveLS();
+    });
+    partyInvRow.appendChild(invToggleBtn);
+
+    const inputInvKey = document.createElement('input');
+    inputInvKey.className = 'ac-input';
+    inputInvKey.setAttribute('type', 'text');
+    inputInvKey.setAttribute('readonly', 'true');
+    inputInvKey.setAttribute('title', 'Kliknij i wciśnij klawisz zapraszania do grupy');
+    inputInvKey.value = (ls.party.invHotkey || 'V').toUpperCase();
+    inputInvKey.addEventListener('click', () => {
+        bindingTarget = 'invite';
+        inputInvKey.value = '...';
+        inputInvKey.style.borderColor = '#1cff00';
+    });
+    inputInvKey.addEventListener('blur', () => {
+        if (bindingTarget === 'invite') {
+            bindingTarget = null;
+            inputInvKey.value = (ls.party.invHotkey || 'V').toUpperCase();
+            inputInvKey.style.borderColor = 'rgba(255, 255, 255, 0.55)';
+        }
+    });
+    partyInvRow.appendChild(inputInvKey);
+    autoPartyBody.appendChild(partyInvRow);
+
+    const partyExpanded = document.createElement('div');
+    partyExpanded.className = 'ac-expanded-container';
+
+    // Przycisk filtru TYLKO KLAN
+    const clanOnlyBtn = document.createElement('button');
+    clanOnlyBtn.className = `ac-wide-btn ${ls.party.onlyClan ? 'AC-ON' : 'AC-OFF'}`;
+    clanOnlyBtn.setAttribute('title', 'Włącz, aby zapraszać wyłącznie klanowiczów. Wyłącz, aby zapraszać wszystkich na mapie.');
+    clanOnlyBtn.innerText = 'TYLKO KLAN';
+    clanOnlyBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        ls.party.onlyClan = !ls.party.onlyClan;
+        clanOnlyBtn.className = `ac-wide-btn ${ls.party.onlyClan ? 'AC-ON' : 'AC-OFF'}`;
+        saveLS();
+    });
+    partyExpanded.appendChild(clanOnlyBtn);
+
+    const autoAcceptBtn = document.createElement('button');
+    autoAcceptBtn.className = `ac-wide-btn ${ls.party.autoAccept ? 'AC-ON' : 'AC-OFF'}`;
+    autoAcceptBtn.setAttribute('title', 'Automatycznie akceptuj przychodzące zaproszenia do drużyny');
+    autoAcceptBtn.innerText = 'AUTO ACC';
+    autoAcceptBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        ls.party.autoAccept = !ls.party.autoAccept;
+        autoAcceptBtn.className = `ac-wide-btn ${ls.party.autoAccept ? 'AC-ON' : 'AC-OFF'}`;
+        saveLS();
+    });
+    partyExpanded.appendChild(autoAcceptBtn);
+
+    const mobBtn = document.createElement('button');
+    mobBtn.className = `ac-wide-btn ${ls.party.autoMob ? 'AC-ON' : 'AC-OFF'}`;
+    mobBtn.setAttribute('title', 'Automatycznie opuść/rozwiąż grupę po walce');
+    mobBtn.innerText = 'AUTO QUIT';
+    mobBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        ls.party.autoMob = !ls.party.autoMob;
+        mobBtn.className = `ac-wide-btn ${ls.party.autoMob ? 'AC-ON' : 'AC-OFF'}`;
+        saveLS();
+    });
+    partyExpanded.appendChild(mobBtn);
+
+    autoPartyBody.appendChild(partyExpanded);
+    autoPartyMain.appendChild(autoPartyBody);
+    document.body.appendChild(autoPartyMain);
+    makeDraggable(autoPartyMain, autoPartyHeader, 'posAutoParty', ['.ac-close-btn', '.ac-expand-btn', '.ac-status-btn']);
+
+    const updatePartyExpandState = () => {
+        expandPartyBtn.classList.toggle('is-expanded', ls.expandedParty);
+        expandPartyBtn.setAttribute('title', ls.expandedParty ? 'Zwiń opcje' : 'Rozwiń opcje');
+        partyExpanded.style.display = ls.expandedParty ? 'flex' : 'none';
+    };
+    expandPartyBtn.addEventListener('click', (e) => { e.stopPropagation(); ls.expandedParty = !ls.expandedParty; updatePartyExpandState(); saveLS(); });
+    updatePartyExpandState();
+
+    registerWindow('autoParty', { mainEl: autoPartyMain, statusBtn: autoPartyStatusBtn });
+
+    // Logika Auto Party
+    const getPartyInfo = () => {
+        const myId = parseInt(W.Engine?.hero?.d?.id || W.g?.hero?.id || W.hero?.id, 10);
+        let inParty = false, isLeader = false;
+        const eParty = W.Engine?.party;
+        if (eParty) {
+            if (typeof eParty.getLeaderId === 'function') {
+                const lid = parseInt(eParty.getLeaderId(), 10);
+                if (!isNaN(lid) && lid > 0) { inParty = true; if (lid === myId) isLeader = true; }
+            }
+            if (typeof eParty.getMembers === 'function') {
+                try {
+                    const m = eParty.getMembers();
+                    if (m instanceof Map && m.size > 0) {
+                        inParty = true;
+                        if (m.has(myId)) { const me = m.get(myId); if (me?.r == 1 || me?.leader) isLeader = true; }
+                    } else if (Array.isArray(m) && m.length > 0) {
+                        inParty = true;
+                        const me = m.find(x => (x.id || x.d?.id) === myId);
+                        if (me?.r == 1 || me?.leader) isLeader = true;
+                    }
+                } catch (e) {}
+            }
+        }
+        return { inParty, isLeader, myId };
+    };
+
+    const isHeInParty = (targetId) => {
+        if (isNI && W.Engine?.party) {
+            try {
+                if (typeof W.Engine.party.getMembers === 'function') {
+                    const m = W.Engine.party.getMembers();
+                    if (m instanceof Map && m.has(targetId)) return true;
+                    if (Array.isArray(m) && m.some(x => parseInt(x?.id || x?.d?.id, 10) === targetId)) return true;
+                }
+            } catch (e) {}
+        }
+        return false;
+    };
+
+    const handlePartyAction = () => {
+        if (!ls.modules.autoParty) return;
+        const { isLeader, myId } = getPartyInfo();
+        sendCmd(isLeader ? 'party&a=disband' : 'party&a=rm&id=' + myId);
+    };
+
+    let lastPartyActionTime = 0;
+    const triggerAutoPartyAction = () => {
+        if (!ls.modules.autoParty || !ls.party.autoMob) return;
+        const now = Date.now();
+        if (now - lastPartyActionTime < 1800) return;
+        lastPartyActionTime = now;
+        handlePartyAction();
+        setTimeout(handlePartyAction, 350);
+    };
+
+    const isClanMember = (p) => {
+        const rel = String(p.relation || '').toLowerCase();
+        return Boolean((typeof C.isSameClan === 'function' && C.isSameClan(p)) || ['clan-members', 'cl', 'clan', '2'].includes(rel));
+    };
+
+    const inviteAllOnMap = () => {
+        if (!ls.modules.autoParty) return;
+        const { myId } = getPartyInfo();
+        let players = [];
+        if (isNI && W.Engine?.others?.getDrawableList) {
+            players = W.Engine.others.getDrawableList().filter(o => o?.d).map(o => o.d);
+        }
+
+        const targets = players.filter(p => {
+            const pId = parseInt(p.id, 10);
+            if (!pId || pId === myId || isHeInParty(pId)) return false;
+            // Jeśli opcja "TYLKO KLAN" jest włączona, sprawdzaj przynależność klanową
+            if (ls.party.onlyClan && !isClanMember(p)) return false;
+            return true;
+        });
+
+        targets.forEach((t, idx) => setTimeout(() => sendCmd(`party&a=inv&id=${t.id}`), idx * 110));
+    };
+
+    const closePartyPrompt = () => {
+        try {
+            document.querySelectorAll('.m-prompt, .alert-box, .ask-box, .mAlert, .alert-interface').forEach(p => {
+                if (p.closest('.border-window, .config-window')) return;
+                const txt = (p.innerText || '').toLowerCase();
+                if ((txt.includes('drużyn') || txt.includes('grup')) && (txt.includes('zaprasza') || txt.includes('dołącz'))) {
+                    p.style.display = 'none';
+                    p.querySelector('.button.green, .btn-accept, .btn.green, .ok, .accept, [data-answer="1"]')?.click();
+                    p.remove();
+                }
+            });
+        } catch (e) {}
+    };
+
+    try {
+        const partyObserver = new MutationObserver(() => {
+            if (ls.modules.autoParty && ls.party.autoAccept) closePartyPrompt();
+        });
+        partyObserver.observe(document.body, { childList: true, subtree: true });
+    } catch (e) {}
+
+    // Skróty klawiszowe
+    document.addEventListener('keydown', (e) => {
+        if (bindingTarget) {
+            e.preventDefault(); e.stopPropagation();
+            if (['Control', 'Shift', 'Alt', 'Meta', 'Tab'].includes(e.key)) return;
+            const newKey = e.key === ' ' ? 'Spacja' : e.key.toUpperCase();
+            if (bindingTarget === 'disband') {
+                ls.party.hotkey = newKey; inputKey.value = newKey; inputKey.style.borderColor = 'rgba(255, 255, 255, 0.55)'; inputKey.blur();
+            } else if (bindingTarget === 'invite') {
+                ls.party.invHotkey = newKey; inputInvKey.value = newKey; inputInvKey.style.borderColor = 'rgba(255, 255, 255, 0.55)'; inputInvKey.blur();
+            }
+            bindingTarget = null; saveLS(); return;
+        }
+
+        // Ignoruj, gdy gracz pisze na czacie, w polu tekstowym lub edytuje treść
+        const active = document.activeElement;
+        const tag = active ? active.tagName : '';
+        const isEditable = active && (
+            ['INPUT', 'TEXTAREA'].includes(tag) ||
+            active.isContentEditable ||
+            active.getAttribute('contenteditable') === 'true' ||
+            active.closest?.('[contenteditable="true"], .chat-input, .chat-controller')
+        );
+        const isChatFocused = Boolean(W.Engine?.chat?.isFocus?.() || W.Engine?.chat?.isInputActive?.());
+
+        if (isEditable || isChatFocused || e.ctrlKey || e.altKey || e.metaKey) return;
+
+        const pressed = e.key.toLowerCase();
+        const configuredDisband = (ls.party.hotkey || 'b').toLowerCase();
+        const configuredInv = (ls.party.invHotkey || 'v').toLowerCase();
+
+        if (ls.modules.autoParty) {
+            if (ls.party.enabled && (pressed === configuredDisband || ((configuredDisband === 'spacja' || configuredDisband === 'space') && e.code === 'Space'))) {
+                e.preventDefault(); handlePartyAction(); return;
+            }
+            if (ls.party.invEnabled && (pressed === configuredInv || ((configuredInv === 'spacja' || configuredInv === 'space') && e.code === 'Space'))) {
+                e.preventDefault(); inviteAllOnMap(); return;
+            }
+        }
+    });
+
+    C.onPacket((d) => {
+        if (ls.modules.autoParty && ls.party.autoAccept && d.ask) {
+            try {
+                const askRe = typeof d.ask === 'object' ? (d.ask.re || '') : String(d.ask);
+                if (askRe.includes('party&a=accept')) {
+                    sendCmd(askRe.includes('answer=') ? `${askRe}1` : `${askRe}&answer=1`);
+                    closePartyPrompt();
+                }
+            } catch (e) {}
+        }
+        const isEnd = (d.loot || (d.battle && d.battle.endBattle) || (d.f && d.f.endBattle));
+        if (isEnd && ls.modules.autoParty) triggerAutoPartyAction();
+    });
+
+    setInterval(() => {
+        if (ls.modules.autoParty && ls.party.autoAccept) closePartyPrompt();
+    }, 100);
+})();
