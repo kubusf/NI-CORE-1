@@ -1,1 +1,620 @@
-(function(_0x47432f,_0x3f6c30){const _0x4043f8=_0x47432f();while(!![]){try{const _0x2ead29=parseInt(_0x46fa(0x19))/0x1+parseInt(_0x46fa(0x32))/0x2*(parseInt(_0x46fa(0x54))/0x3)+parseInt(_0x46fa(0x44))/0x4+parseInt(_0x46fa(0xa7))/0x5+parseInt(_0x46fa(0x76))/0x6+-parseInt(_0x46fa(0x53))/0x7+-parseInt(_0x46fa(0xa5))/0x8;if(_0x2ead29===_0x3f6c30){break;}else{_0x4043f8['push'](_0x4043f8['shift']());}}catch(_0x19447d){_0x4043f8['push'](_0x4043f8['shift']());}}}(_0x3ba3,0x978aa));function _0x3ba3(){const _0x5be3e1=['y2XHBI1HBgXPzxm','C3rYyw5Nzxi','B2jQzwn0','jtWVC3bHBJ4kicaGicaGicaGicaGpc9KAxy+cIaGicaGicaGicaGidXPBNb1DcbJBgfZCZ0IywmTCMfUz2uTC2XPzgvYihnVDw5KlxzVBc1ZBgLKzxiIihr5Cgu9iNjHBMDLiIbTAw49iJaIig1HEd0ImtaWiIbZDgvWpsiXiIb2ywX1zt0I','zM9YrwfJAa','pc9ZCgfUpGOGicaGicaGicaGicaGicaGicaGidWVzgL2pGOGicaGicaGicaGicaGicaGicaGidXIDxr0B24Gy2XHC3m9iMfJlwzPBhrLCI1IDg4GyNrUlxrLC3qGqumTt0zgiIbZDhLSzt0IzMXLEdOGBM9UztSGD2LKDgG6idqYChG7igHLAwDODdOGmtzWEdSGzM9UDc1ZAxPLoIa3ChG7iIb0AxrSzt0Iuhj6zxrLC3r1AIbKXBP3ACszAYi+vevtvdWVyNv0Dg9UpGOGicaGicaGicaGicaGicaGpc9KAxy+cIaGicaGicaGicaGicaGica8Aw5WDxqGy2XHC3m9iMfJlwLUChv0ihnVDw5KlwLUChv0iIb0ExbLpsj0zxH0iIbZDhLSzt0IDgv4Dc1HBgLNBJOGBgvMDdSGCgfKzgLUzZOGmca0ChG7igzVBNqTC2L6ztOGohb4oYbMB250lxDLAwDODdOGBM9YBwfSoYiGCgXHy2vOB2XKzxi9iKXPBMSGzg8Gzmw6D2NeMwT1icGUBxaZlcaUB2DNks4UlIiGDMfSDwu9iG','DhL0yw4','Dg9mB3DLCKnHC2u','B3rOzxi','r3jHy3O','CMvSyxrPB24','s09mt1m','zMLSDgvY','oduWnZq0zhbHBNLU','iIb0AxrSzt0Iv8wcXivJEIaVifD5XyleHwn6ihbVD2LHzg9TAwvUAwuIpGOGicaGicaGicaGicaGicaGicaGicaGicaGicaG','vfLuqu4','zw5LBwLLCW','y2XHBKvUzw15','BNbJ','lNnVDw5KlwLUChv0','DgvZDa','lNnVDw5KlxzVBc12ywW','iJ4kicaGicaGicaGicaGpc9KAxy+cIaGicaGicaG','BM93','AgvYB3m','vevtva','zNjPzw5KCW','v1jpr09xsuu','nJG1odqWnfDlAvv1Ba','ntCXodeYALveqLLw','lMj0BI10B2DNBgu','DMfSDwvZ','cIaGicaGicaGicaGicaGicaGicaGicaGidWVyNv0Dg9UpGOGicaGicaGicaGicaGicaGicaGicaGica8C3bHBIbJBgfZCZ0IywmTDg9Nz2XLlwXHyMvSiJ4','AgfZ','y2XHBKLK','ywmTD2LUzg93','Ahr0Chm6lY9JCM9UDxmUBwfYz29Uzw0Uy29Tl3nVDw5KCY9LBgL0ztjFAgvYzs5TCdm','Bg9HzgvKzgf0yq','DMfSDwu','B25qywnRzxq','Bw9KDwXLCW','tKLfwK5bsK9nsq','y2XHBI1MCMLLBMrZ','cIaGicaGicaGpc9KAxy+cIaGica','C2v0qxr0CMLIDxrL','sevst1m','mJe1ChG','y2XHBI1LBMvTEq','C3r5Bgu','qSwbXire','y2XHBI1Tzw1IzxjZ','lMj0BI10zxn0','y2XLyxi','ywXSEq','y2WTzNi','lMfJlwnSB3nLlwj0BG','Aw5JBhvKzxm','y2XPy2S','y2HLy2TTyxjRu3zN','AxnbCNjHEq','ywmTzMLSDgvYlwj0BIbIDg4TDgvZDcbbqY1prKy','Cgf1C2u','z2v0qxr0CMLIDxrL','ntGXnZi0mhjvtuL0sq','D2fYBG','y2XHC3noyw1L','zxjYB3i','y2XHBK5HBwu','BwLU','lMfJlxn0yxr1CY1IDg4','y2WTzw4','y3vYCMvUDfrPBwu','u1rpua','zgvSzxrL','Axntyw1Lq2XHBG','y2XHBI1LBMvTAwvZ','zgL2','BgvMDa','CgXHEq','BNvTyMvY','C3jJ','cIaGicaGicaGicaGidXKAxyGy2XHC3m9iMfJlxnVDw5KlwjSB2nRiIbKyxrHlwTLEt0I','Ahr0Chm6lY9JCM9UDxmUBwfYz29Uzw0Uy29Tl3nVDw5KCY9LBMvTEv9OzxjLlM1WmW','CM91BMq','Dg9vChbLCKnHC2u','Cg9Zu291BMroB3rPzMLLCG','y2XHBKzYAwvUzhm','Aw5UzxjuzxH0','z2v0rhjHD2fIBgvmAxn0','zw50CMLLCW','y2f0y2G','y3jLyxrLrwXLBwvUDa','z2v0vMfSAwrqB3m','y2fUCgXHEq','Dw5KzwzPBMvK','yxbWzw5Kq2HPBgq','Dg93BG','Dg9W','u09vtKrFtK9usuzjrvjFr1vj','BwfW','zNvUy3rPB24','B3rOzxjZ','B25LBMrLza','DxjS','zw5LBxK','Bw9Kzq','qumTt0zg','C3rVCfbYB3bHz2f0Aw9U','z2v0uMvSyxrPB24','CxvLCNLtzwXLy3rVCG','nZa5ndm2mfPOuLbUEq','z2v0vgLW','mJC0otmWnxvbv21LBq','qumTt04','zNjPzw5K','y2WTywXSAwvZ','Bg9N','y2HLy2S','y29SB3i6icnMzJmZndq7igzVBNqTD2vPz2H0oIbIB2XKoW','jwnBu291BMqGtM90AwzPzxjDifD5A3j5Dg86ia','cIaGicaGicaGpgrPDIbJBgfZCZ0IywmTAgvHzgvYiJ4kicaGicaGicaGicaGpgj1DhrVBIbJBgfZCZ0IywmTC3rHDhvZlwj0BIa','ywXSAwvZ','yM9KEq','ywrKrxzLBNrmAxn0zw5LCG','cIaGicaGicaGicaGia','DhjPBq','lMfJlwHLywrLCG','lNnVDw5KlxzVBc1ZBgLKzxi','z2v0rwXLBwvUDej5swq','DM9SDw1L','lMfJlxnVDw5KlwjSB2nR','y2XHBG','D2LKDgG','BNbJCW','ywrK','Cg9Z','y2WTzw5LBxK','zgf0ys1RzxK','Ahr0Chm6lY9RywT0DxnKzxyUz2L0BgfIlMLVl25PlwvZC2vUDgLHBhmVC2z4l2rLDgvJDg9YlM1WmW','Bg9HzgvKBwv0ywrHDge','ug90D8oZCG','cGOGicaGicaGicaGica8is0Tifnfs0nkqsbhuKfdwLKGls0+cIaGicaGicaGicaGidXKAxyGC3r5Bgu9iMzVBNqTC2L6ztOGohb4oYbMB250lxDLAwDODdOGodaWoYbJB2XVCJOGi2zMngq0zdSGBgv0DgvYlxnWywnPBMC6idaUnNb4oYbTyxjNAw4TDg9WoIa0ChG7iJ5huKfdwKuGkfbwucK8l2rPDJ4kicaGicaGicaGicaG','mtGZmZGYyNH6ugPw','z2v0uMvSyxrPB25xAxrOq2XHBG','ruXjveeGsuK','ywmTzMLSDgvYlwj0BIbIDg4TDgvZDcbbqY1ptG','iJ48l2j1DhrVBJ4kicaGicaGicaGicaGphnWyw4Gy2XHC3m9iMfJlxrPDgXLiIbZDhLSzt0IBgvMDdOGmJbWEdSGCMLNAhq6idiWChG7iJ5tt1vorcbervrfq1q8l3nWyw4+cIaGicaGicaGicaGidXIDxr0B24Gy2XHC3m9iMfJlwnSB3nLlwj0BIiGDgL0Bgu9iLnJAg93ywOGB2TUBYi+jImYmtu7pc9IDxr0B24+cIaGicaGicaGpc9KAxy+cIaGicaGicaGpgrPDIbJBgfZCZ0IywmTyM9KEsiGC3r5Bgu9iMDHCdOGnxb4oYbTyxGTAgvPz2H0oIa3nxzOoYbVDMvYzMXVDY15oIbHDxrVoYbVDMvYzMXVDY14oIbOAwrKzw47ihbHzgrPBMCTCMLNAhq6idrWEdSIpGOGicaGicaGicaGica8is0TieFfGu/fMK5pXzReHIaTlt4kicaGicaGicaGicaGpgrPDIbJBgfZCZ0IywmTCMfUz2uTAgvHzgvYiJ4kicaGicaGicaGicaGicaGidXZCgfUpKFfGu/fMK5pXzReHJWVC3bHBJ4kicaGicaGicaGicaGicaGidXZCgfUignSyxnZpsjHyY1Yyw5Nzs12ywWGC291BMqTDM9SlxzHBci+','B25LCNjVCG','v1jpr0LfieTmqu5z','ksb8ieFfGM/fM25VXzVeHZOG','C3zN','ywmTC3f1yxjLlwj0BIbIDg4TDg9Nz2XLia','rw5NAw5L','BMLJAW','w1nVDw5Kie5VDgLMAwvYxsbbDwrPBYbfCNjVCJO','Bwf4','iIbZDhLSzt0IzgLZCgXHEtOGzMXLEdSGzMXLEc1KAxjLy3rPB246ignVBhvTBJSGz2fWoIaZChG7igjHy2TNCM91BMq6icmWyZbJmgm7ihbHzgrPBMC6idrWEdSGyM9YzgvYlxjHzgL1CZOGnhb4oYbIB3jKzxi6idfWEcbZB2XPzcbYz2jHkdi1nsWGmJu1lcaYntuSidaUmtiPoYi+cIaGicaGicaGicaGicaGica8zgL2ignSyxnZpsjHyY1YB3CIihn0EwXLpsjQDxn0Awz5lwnVBNrLBNq6ihnWywnLlwjLDhDLzw47iJ4kicaGicaGicaGicaGicaGicaGica8zgL2ihn0EwXLpsjKAxnWBgf5oIbMBgv4oYbHBgLNBI1PDgvTCZOGy2vUDgvYoYbNyxa6idvWEdSIpGOGicaGicaGicaGicaGicaGicaGicaGica8yNv0Dg9UignSyxnZpsjHyY1ZCxvHCMuTyNrUigj0BI10B2DNBguG','C291BMroB3rPzMLLCG','y2XHBKLUzM8','Aw5WDxq','A29SB3m','zw5HyMXLza','tKLdB3jL','w1nVDw5Kie5VDgLMAwvYxsbcXyleHwqGyxvKAw86','BMfTzq','iJ4kcIaGicaGicaGicaGidWHls0Gu0vlq0PbifbpvfDpuSotvYaTlt4kicaGicaGicaGicaGpgrPDIbZDhLSzt0IzM9UDc1ZAxPLoIa4ChG7igzVBNqTD2vPz2H0oIa4mda7ignVBg9YoIaJngrLnJrKoYbSzxr0zxiTC3bHy2LUzZOGmc42ChG7ig1HCMDPBI10B3a6idjWEdSIpLbpvfDpuLK8l2rPDJ4kicaGicaGicaGicaG','y2WTzw5LBwLLCW','nNHUEeTNua','CxvLCNLtzwXLy3rVCKfSBa','z3vPvMLZAwjSzq','CgXHEwLUzW','Aw5Uzxjive1m'];_0x3ba3=function(){return _0x5be3e1;};return _0x3ba3();}function _0x46fa(_0x4d3cd1,_0x3ba36a){_0x4d3cd1=_0x4d3cd1-0x0;const _0x46faa8=_0x3ba3();let _0x462a40=_0x46faa8[_0x4d3cd1];if(_0x46fa['AQgBeW']===undefined){var _0x2fcdf7=function(_0x55bf59){const _0x1dcf55='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=';let _0xdf3738='';let _0x1eca31='';for(let _0x1126d4=0x0,_0xb63994,_0x365647,_0x3f543a=0x0;_0x365647=_0x55bf59['charAt'](_0x3f543a++);~_0x365647&&(_0xb63994=_0x1126d4%0x4?_0xb63994*0x40+_0x365647:_0x365647,_0x1126d4++%0x4)?_0xdf3738+=String['fromCharCode'](0xff&_0xb63994>>(-0x2*_0x1126d4&0x6)):0x0){_0x365647=_0x1dcf55['indexOf'](_0x365647);}for(let _0x444994=0x0,_0x53384b=_0xdf3738['length'];_0x444994<_0x53384b;_0x444994++){_0x1eca31+='%'+('00'+_0xdf3738['charCodeAt'](_0x444994)['toString'](0x10))['slice'](-0x2);}return decodeURIComponent(_0x1eca31);};_0x46fa['bsRRHm']=_0x2fcdf7;_0x46fa['vreJIK']={};_0x46fa['AQgBeW']=!![];}const _0x2c0dee=_0x46faa8[0x0];if(_0x46fa['jZcKOF']!==_0x2c0dee){_0x46fa['vreJIK']={};_0x46fa['jZcKOF']=_0x2c0dee;}const _0x57c2c9=_0x46fa['vreJIK'][_0x4d3cd1];if(_0x57c2c9===undefined){_0x462a40=_0x46fa['bsRRHm'](_0x462a40);_0x46fa['vreJIK'][_0x4d3cd1]=_0x462a40;}else{_0x462a40=_0x57c2c9;}return _0x462a40;}(function(){'use strict';const _0xdf3738=(typeof unsafeWindow!==_0x46fa(0x95)?unsafeWindow:window)[_0x46fa(0x2d)];if(!_0xdf3738||document[_0x46fa(0xb)](_0x46fa(0x99)))return;const {W:_0x1eca31,isNI:_0x1126d4,ls:_0xb63994,getHero:_0x365647,saveLS:_0x3f543a,makeDraggable:_0x444994,updateAllVisibilities:_0x53384b,registerWindow:_0x366d5d}=_0xdf3738;const _0x48ce2a=_0x46fa(0x5b);const _0x2cf645=_0x46fa(0x15);const _0x54c80c=_0x46fa(0x89);if(!_0xb63994[_0x46fa(0x28)]){_0xb63994[_0x46fa(0x28)]={'volume':0x50,'e2':{'enabled':!![],'url':_0x48ce2a},'heros':{'enabled':!![],'url':_0x2cf645},'tytan':{'enabled':!![],'url':_0x2cf645},'kolos':{'enabled':!![],'url':_0x2cf645},'enemy':{'enabled':!![],'url':_0x54c80c},'clanEnemy':{'enabled':!![],'url':_0x54c80c},'stranger':{'enabled':![],'url':_0x54c80c}};}const _0x45f80c=_0xb63994[_0x46fa(0x28)];_0x45f80c[_0x46fa(0xc)]=typeof _0x45f80c[_0x46fa(0xc)]===_0x46fa(0x86)?_0x45f80c[_0x46fa(0xc)]:0x50;const _0x1aa425=()=>{const _0xc2fd3d=parseFloat(_0x45f80c[_0x46fa(0xc)]);const _0x1bf17a=!isNaN(_0xc2fd3d)&&_0xc2fd3d>=0x0&&_0xc2fd3d<=0x64?_0xc2fd3d:0x50;return Math[_0x46fa(0x26)](0x0,Math[_0x46fa(0x7b)](0x1,_0x1bf17a/0x64));};const _0x9d716f=parseInt(_0xb63994[_0x46fa(0x12)]?.['x'],0xa)||0x78;const _0x5d7501=parseInt(_0xb63994[_0x46fa(0x12)]?.['y'],0xa)||0x78;_0xb63994[_0x46fa(0x8c)]=_0xdf3738[_0x46fa(0x93)](_0xb63994[_0x46fa(0x8c)],_0x9d716f,_0x5d7501+0x168,0xd7);let _0x1b5613=null;let _0x4ee787=null;let _0x4c37ca=null;let _0x1b6fb6=0x0;let _0x46bea9='';const _0x52c25d=document[_0x46fa(0x92)](_0x46fa(0x83));_0x52c25d[_0x46fa(0x63)]('id',_0x46fa(0x99));_0x52c25d[_0x46fa(0x78)]=_0x46fa(0x5a);_0x52c25d[_0x46fa(0x67)][_0x46fa(0xf)]=_0x46fa(0x65);_0x52c25d[_0x46fa(0x67)][_0x46fa(0x84)]=_0xb63994[_0x46fa(0x8c)]['x']+'px';_0x52c25d[_0x46fa(0x67)][_0x46fa(0x98)]=_0xb63994[_0x46fa(0x8c)]['y']+'px';_0x52c25d[_0x46fa(0x36)]=_0x46fa(0x3)+(_0xb63994[_0x46fa(0x5f)][_0x46fa(0x28)]?_0x46fa(0xa8):_0x46fa(0xa1))+_0x46fa(0x1d)+_0x45f80c[_0x46fa(0xc)]+_0x46fa(0x3a)+_0x45f80c[_0x46fa(0xc)]+_0x46fa(0x30)+_0x1f7379('e2',_0x46fa(0x1b),_0x45f80c['e2'])+_0x46fa(0x7)+_0x1f7379(_0x46fa(0x4f),_0x46fa(0x64),_0x45f80c[_0x46fa(0x4f)])+_0x46fa(0x7)+_0x1f7379(_0x46fa(0x3d),_0x46fa(0x46),_0x45f80c[_0x46fa(0x3d)])+_0x46fa(0x7)+_0x1f7379(_0x46fa(0x2b),_0x46fa(0x42),_0x45f80c[_0x46fa(0x2b)])+_0x46fa(0x18)+_0x1f7379(_0x46fa(0x9f),_0x46fa(0x52),_0x45f80c[_0x46fa(0x9f)])+_0x46fa(0x7)+_0x1f7379(_0x46fa(0x48),_0x46fa(0x1f),_0x45f80c[_0x46fa(0x48)])+_0x46fa(0x7)+_0x1f7379(_0x46fa(0x38),_0x46fa(0x60),_0x45f80c[_0x46fa(0x38)])+_0x46fa(0x62);function _0x1f7379(_0x3e89e7,_0x801133,_0x109e2e){return _0x46fa(0x88)+_0x3e89e7+_0x46fa(0x27)+(_0x109e2e[_0x46fa(0x2c)]?_0x46fa(0xa8):_0x46fa(0xa1))+_0x46fa(0x45)+(_0x109e2e[_0x46fa(0x2c)]?_0xdf3738[_0x46fa(0x21)][_0x46fa(0x71)]:'')+_0x46fa(0x57)+_0x801133+_0x46fa(0x3c)+(_0x109e2e[_0x46fa(0x9e)]||'')+_0x46fa(0x4d);}document[_0x46fa(0x5)][_0x46fa(0x96)](_0x52c25d);const _0x5e02bc=_0x52c25d[_0x46fa(0xa4)](_0x46fa(0x7c));_0x5e02bc[_0x46fa(0x6)](_0x46fa(0x70),_0x51b9b6=>{_0x51b9b6[_0x46fa(0xa2)]();_0xb63994[_0x46fa(0x5f)][_0x46fa(0x28)]=!_0xb63994[_0x46fa(0x5f)][_0x46fa(0x28)];_0x3f543a();_0x53384b();});_0x52c25d[_0x46fa(0xa4)](_0x46fa(0x6e))[_0x46fa(0x6)](_0x46fa(0x70),_0x19e49f=>{_0x19e49f[_0x46fa(0xa2)]();_0xb63994[_0x46fa(0x34)][_0x46fa(0x28)]=![];_0x3f543a();_0x53384b();});const _0x365edb=_0x52c25d[_0x46fa(0xa4)](_0x46fa(0xa));const _0x1a9bf4=_0x52c25d[_0x46fa(0xa4)](_0x46fa(0x4c));_0x365edb[_0x46fa(0x6)](_0x46fa(0x2a),()=>{const _0x3e3f95=parseInt(_0x365edb[_0x46fa(0x5d)],0xa);_0x45f80c[_0x46fa(0xc)]=isNaN(_0x3e3f95)?0x50:Math[_0x46fa(0x26)](0x0,Math[_0x46fa(0x7b)](0x64,_0x3e3f95));_0x1a9bf4[_0x46fa(0x8e)]=_0x45f80c[_0x46fa(0xc)]+'%';const _0x213792=_0x1aa425();if(_0x1b5613)_0x1b5613[_0x46fa(0xc)]=_0x213792;if(_0x4c37ca)_0x4c37ca[_0x46fa(0xc)]=_0x213792;_0x3f543a();});const _0x40f7d5=_0x31640d=>{const _0x134aea=()=>{try{_0x31640d[_0x46fa(0xc)]=_0x1aa425();}catch(_0x4fa4b2){}};_0x134aea();_0x31640d[_0x46fa(0x6)](_0x46fa(0x16),_0x134aea);_0x31640d[_0x46fa(0x6)](_0x46fa(0x5c),_0x134aea);_0x31640d[_0x46fa(0x6)](_0x46fa(0x94),_0x134aea);_0x31640d[_0x46fa(0x6)](_0x46fa(0x85),_0x134aea);_0x31640d[_0x46fa(0x6)](_0x46fa(0x35),_0x134aea);};_0x52c25d[_0x46fa(0x33)](_0x46fa(0xd))[_0x46fa(0x3b)](_0x5e5a37=>{const _0x534c26=_0x5e5a37[_0x46fa(0x75)](_0x46fa(0x14));const _0x32caa3=_0x5e5a37[_0x46fa(0xa4)](_0x46fa(0x55));const _0xf76418=_0x5e5a37[_0x46fa(0xa4)](_0x46fa(0x6a));const _0x58e257=_0x5e5a37[_0x46fa(0xa4)](_0x46fa(0x4a));_0x32caa3[_0x46fa(0x6)](_0x46fa(0x70),()=>{_0x45f80c[_0x534c26][_0x46fa(0x2c)]=!_0x45f80c[_0x534c26][_0x46fa(0x2c)];_0x32caa3[_0x46fa(0x78)]=_0x46fa(0x22)+(_0x45f80c[_0x534c26][_0x46fa(0x2c)]?_0x46fa(0xa8):_0x46fa(0xa1));_0x32caa3[_0x46fa(0x36)]=_0x45f80c[_0x534c26][_0x46fa(0x2c)]?_0xdf3738[_0x46fa(0x21)][_0x46fa(0x71)]:'';_0x3f543a();});_0x58e257[_0x46fa(0x6)](_0x46fa(0x2a),()=>{_0x45f80c[_0x534c26][_0x46fa(0x9e)]=_0x58e257[_0x46fa(0x5d)][_0x46fa(0x8)]();_0x3f543a();});_0xf76418[_0x46fa(0x6)](_0x46fa(0x70),_0x318efc=>{_0x318efc[_0x46fa(0xa2)]();const _0x10f7d2=()=>{if(_0x1b5613){_0x1b5613[_0x46fa(0x74)]();_0x1b5613[_0x46fa(0x7e)]=0x0;_0x1b5613=null;}if(_0x4ee787){_0x4ee787[_0x46fa(0x8e)]=_0x46fa(0x50);_0x4ee787[_0x46fa(0x78)]=_0x46fa(0x73);_0x4ee787=null;}};if(_0x1b5613){const _0x3b1bbe=_0x4ee787===_0xf76418;_0x10f7d2();if(_0x3b1bbe)return;}const _0x394156=_0x45f80c[_0x534c26][_0x46fa(0x9e)];if(!_0x394156)return;const _0x2a536f=_0x1aa425();if(_0x2a536f<=0x0)return;_0x1b5613=new Audio();_0x40f7d5(_0x1b5613);_0x1b5613[_0x46fa(0x87)]=_0x394156;_0xf76418[_0x46fa(0x8e)]=_0x46fa(0x7f);_0xf76418[_0x46fa(0x78)]=_0x46fa(0x1c);_0x4ee787=_0xf76418;_0x1b5613[_0x46fa(0x9d)]=_0x10f7d2;_0x1b5613[_0x46fa(0x1e)]=()=>{_0x10f7d2();_0xf76418[_0x46fa(0x8e)]=_0x46fa(0x68);setTimeout(()=>{_0xf76418[_0x46fa(0x8e)]=_0x46fa(0x50);},0x7d0);};_0x1b5613[_0x46fa(0x85)]()[_0x46fa(0x91)](()=>{_0x10f7d2();_0xf76418[_0x46fa(0x8e)]=_0x46fa(0x68);setTimeout(()=>{_0xf76418[_0x46fa(0x8e)]=_0x46fa(0x50);},0x7d0);});});});_0x444994(_0x52c25d,_0x52c25d[_0x46fa(0xa4)](_0x46fa(0x9)),_0x46fa(0x8c),[_0x46fa(0x6e),_0x46fa(0x7c)]);_0x366d5d(_0x46fa(0x28),{'mainEl':_0x52c25d,'statusBtn':_0x5e02bc});const _0x5b0b2d=(_0x24ac00,_0x472246)=>{const _0x4135a8=_0x45f80c[_0x24ac00];if(!_0x4135a8||!_0x4135a8[_0x46fa(0x2c)]||!_0x4135a8[_0x46fa(0x9e)])return;const _0x2566d9=_0x1aa425();if(_0x2566d9<=0x0)return;const _0x473930=Date[_0x46fa(0x4e)]();if(_0x473930-_0x1b6fb6<0x320&&_0x46bea9===_0x24ac00)return;_0x1b6fb6=_0x473930;_0x46bea9=_0x24ac00;try{if(_0x4c37ca){_0x4c37ca[_0x46fa(0x74)]();_0x4c37ca[_0x46fa(0x7e)]=0x0;_0x4c37ca=null;}const _0x53e757=new Audio();_0x4c37ca=_0x53e757;_0x40f7d5(_0x53e757);_0x53e757[_0x46fa(0x87)]=_0x4135a8[_0x46fa(0x9e)];_0x53e757[_0x46fa(0x85)]()[_0x46fa(0x91)](_0x1ce8ed=>console[_0x46fa(0x77)](_0x46fa(0x2e),_0x1ce8ed));console[_0x46fa(0xab)](_0x46fa(0x2)+_0x24ac00[_0x46fa(0x8b)]()+'\x20('+_0x472246+_0x46fa(0x20)+Math[_0x46fa(0x8a)](_0x2566d9*0x64)+'%',_0x46fa(0x1));}catch(_0x59d5da){console[_0x46fa(0x79)](_0x46fa(0x25),_0x59d5da);}};const _0x3883f7=_0x52bb2d=>{if(!_0x52bb2d)return null;const _0x2b66f2=_0x52bb2d['d']||_0x52bb2d;const _0x259a73=parseInt(_0x2b66f2['wt'],0xa);const _0x4d264e=(_0x2b66f2[_0x46fa(0x24)]||'')[_0x46fa(0x3e)]();let _0x41d1af='';if(typeof _0x52bb2d[_0x46fa(0xa6)]===_0x46fa(0x9b)){try{_0x41d1af=(_0x52bb2d[_0x46fa(0xa6)]()||'')[_0x46fa(0x3e)]();}catch(_0x3a817f){}}const _0x27db00=_0x1eca31[_0x46fa(0x23)]?.[_0x46fa(0x9a)]?.['d']?.[_0x46fa(0xa0)]||_0x1eca31[_0x46fa(0x9a)]?.[_0x46fa(0xa0)];if(/kolos/i[_0x46fa(0x4b)](_0x41d1af)||/kolos/i[_0x46fa(0x4b)](_0x4d264e)||_0x259a73>0x63&&_0x27db00==0x5)return _0x46fa(0x2b);if(/tytan/i[_0x46fa(0x4b)](_0x41d1af)||/tytan/i[_0x46fa(0x4b)](_0x4d264e)||_0x259a73>0x63&&_0x27db00!=0x5)return _0x46fa(0x3d);if(/heros/i[_0x46fa(0x4b)](_0x41d1af)||/heros/i[_0x46fa(0x4b)](_0x4d264e)||_0x259a73>0x4f&&_0x259a73<=0x63||_0x259a73>=0x1e&&_0x259a73<=0x27)return _0x46fa(0x4f);if(/elita\s*ii/i[_0x46fa(0x4b)](_0x41d1af)||/elita\s*ii/i[_0x46fa(0x4b)](_0x4d264e)||_0x259a73>=0x14&&_0x259a73<=0x1d)return'e2';return null;};const _0x581cfd=new Set();const _0x370c79=()=>{if(!_0xb63994[_0x46fa(0x5f)][_0x46fa(0x28)]||!_0x1126d4||!_0x1eca31[_0x46fa(0x23)]?.[_0x46fa(0x10)]?.[_0x46fa(0x0)])return;const _0xa11847=_0x1eca31[_0x46fa(0x23)][_0x46fa(0x10)][_0x46fa(0x0)]();if(!_0xa11847)return;const _0x281565=new Set();for(const _0x525e65 in _0xa11847){const _0x46b826=_0xa11847[_0x525e65];const _0x24d2c2=parseInt(_0x525e65,0xa);_0x281565[_0x46fa(0x11)](_0x24d2c2);const _0x5bddc6=_0x3883f7(_0x46b826);if(_0x5bddc6&&!_0x581cfd[_0x46fa(0x58)](_0x24d2c2)){_0x581cfd[_0x46fa(0x11)](_0x24d2c2);_0x5b0b2d(_0x5bddc6,_0x46b826['d']?.[_0x46fa(0x24)]||_0x46b826[_0x46fa(0x24)]||_0x46fa(0x17));}}for(const _0x1b0c44 of _0x581cfd){if(!_0x281565[_0x46fa(0x58)](_0x1b0c44))_0x581cfd[_0x46fa(0x80)](_0x1b0c44);}};const _0x29630e=(_0x197f5b,_0x2377ec)=>{if(_0xdf3738[_0x46fa(0x81)](_0x2377ec))return!![];let _0x2cf96b=_0x2377ec[_0x46fa(0x41)]||_0x197f5b[_0x46fa(0x41)]||'';if(!_0x2cf96b&&typeof _0x197f5b[_0x46fa(0xa3)]===_0x46fa(0x9b)){try{_0x2cf96b=_0x197f5b[_0x46fa(0xa3)]();}catch(_0x2b6bab){}}_0x2cf96b=String(_0x2cf96b)[_0x46fa(0x3e)]()[_0x46fa(0x8)]();const _0x193b09=[_0x46fa(0x69),_0x46fa(0x61),_0x46fa(0x51),_0x46fa(0xa9),_0x46fa(0x6d),'cl',_0x46fa(0xe),'fr','2','4','5',_0x46fa(0x6c),_0x46fa(0x4),_0x46fa(0x37),_0x46fa(0xaa)];if(_0x193b09[_0x46fa(0x6f)](_0x2cf96b))return!![];const _0x5cbe4f=String(_0x2377ec[_0x46fa(0xe)]?.['id']||_0x2377ec[_0x46fa(0x29)]?.['id']||_0x2377ec[_0x46fa(0x59)]||_0x2377ec[_0x46fa(0xe)]||'');const _0x2508fe=String(_0x2377ec[_0x46fa(0xe)]?.[_0x46fa(0x2f)]||_0x2377ec[_0x46fa(0x29)]?.[_0x46fa(0x2f)]||_0x2377ec[_0x46fa(0x7a)]||'')[_0x46fa(0x3e)]()[_0x46fa(0x8)]();const _0x14acb6=_0x1126d4?_0x1eca31[_0x46fa(0x23)]?.[_0x46fa(0xe)]:_0x1eca31['g']?.[_0x46fa(0xe)];if(_0x14acb6&&typeof _0x14acb6===_0x46fa(0x39)){const _0x533987=_0x14acb6[_0x46fa(0x4)]||_0x14acb6[_0x46fa(0x51)]||_0x14acb6[_0x46fa(0x8d)];if(Array[_0x46fa(0x72)](_0x533987)){for(const _0x1237da of _0x533987){const _0x55d956=String(_0x1237da['id']||_0x1237da);const _0x362429=String(_0x1237da[_0x46fa(0x2f)]||'')[_0x46fa(0x3e)]()[_0x46fa(0x8)]();if(_0x5cbe4f&&_0x55d956&&_0x5cbe4f===_0x55d956)return!![];if(_0x2508fe&&_0x362429&&_0x2508fe===_0x362429)return!![];}}else if(_0x533987&&typeof _0x533987===_0x46fa(0x39)){for(const [_0x316e84,_0x255a1d]of Object[_0x46fa(0x90)](_0x533987)){const _0x3b1756=String(_0x255a1d?.['id']||_0x316e84);const _0x2673e0=String(_0x255a1d?.[_0x46fa(0x2f)]||'')[_0x46fa(0x3e)]()[_0x46fa(0x8)]();if(_0x5cbe4f&&_0x3b1756&&_0x5cbe4f===_0x3b1756)return!![];if(_0x2508fe&&_0x2673e0&&_0x2508fe===_0x2673e0)return!![];}}if(typeof _0x14acb6[_0x46fa(0x1a)]===_0x46fa(0x9b)&&_0x5cbe4f){try{const _0x37270d=String(_0x14acb6[_0x46fa(0x1a)](_0x5cbe4f))[_0x46fa(0x3e)]();if([_0x46fa(0x6c),_0x46fa(0x4),_0x46fa(0xa9),_0x46fa(0x51),_0x46fa(0x6d),'4','5'][_0x46fa(0x6f)](_0x37270d))return!![];}catch(_0x585774){}}}return![];};const _0x290343=_0xa4d1b0=>{const _0x1b6108=_0xa4d1b0?.['d']||_0xa4d1b0;if(!_0x1b6108||!_0x1b6108['id'])return null;const _0x45825e=_0x365647();const _0xb13b2c=parseInt(_0x45825e?.['id'],0xa);const _0x30ad96=parseInt(_0x1b6108['id'],0xa);if(_0xb13b2c&&_0x30ad96===_0xb13b2c)return null;if(_0x29630e(_0xa4d1b0,_0x1b6108))return null;let _0xb55a91=_0x1b6108[_0x46fa(0x41)]||_0xa4d1b0[_0x46fa(0x41)]||'';if(!_0xb55a91&&typeof _0xa4d1b0[_0x46fa(0xa3)]===_0x46fa(0x9b)){try{_0xb55a91=_0xa4d1b0[_0x46fa(0xa3)]();}catch(_0x49aeae){}}_0xb55a91=String(_0xb55a91)[_0x46fa(0x3e)]()[_0x46fa(0x8)]();if(['3',_0x46fa(0x82),_0x46fa(0x66),_0x46fa(0x31),_0x46fa(0x13),_0x46fa(0x7d)][_0x46fa(0x6f)](_0xb55a91)){return _0x46fa(0x48);}if(['1','6',_0x46fa(0x9f),_0x46fa(0x47),'en'][_0x46fa(0x6f)](_0xb55a91)){return _0x46fa(0x9f);}if(['','0',_0x46fa(0x3f)][_0x46fa(0x6f)](_0xb55a91)||!_0xb55a91){return _0x46fa(0x38);}return null;};const _0x34b89d=new Set();const _0x12f5f0=()=>{if(!_0xb63994[_0x46fa(0x5f)][_0x46fa(0x28)])return;let _0x1df74a=[];if(_0x1126d4&&_0x1eca31[_0x46fa(0x23)]?.[_0x46fa(0x9c)]?.[_0x46fa(0x8f)]){_0x1df74a=_0x1eca31[_0x46fa(0x23)][_0x46fa(0x9c)][_0x46fa(0x8f)]()[_0x46fa(0x43)](_0x15500c=>_0x15500c&&(_0x15500c['d']||_0x15500c['id']));}else if(_0x1eca31['g']&&_0x1eca31['g'][_0x46fa(0x3f)]){_0x1df74a=Object[_0x46fa(0x56)](_0x1eca31['g'][_0x46fa(0x3f)]);}const _0x3241c0=new Set();for(const _0x5cb334 of _0x1df74a){const _0x9417eb=_0x5cb334['d']||_0x5cb334;const _0x3d4505=parseInt(_0x9417eb?.['id'],0xa);if(!_0x3d4505)continue;_0x3241c0[_0x46fa(0x11)](_0x3d4505);const _0x35c92d=_0x290343(_0x5cb334);if(_0x35c92d&&!_0x34b89d[_0x46fa(0x58)](_0x3d4505)){_0x34b89d[_0x46fa(0x11)](_0x3d4505);_0x5b0b2d(_0x35c92d,_0x9417eb[_0x46fa(0x24)]||_0x46fa(0x40));}}for(const _0x2ecde2 of _0x34b89d){if(!_0x3241c0[_0x46fa(0x58)](_0x2ecde2))_0x34b89d[_0x46fa(0x80)](_0x2ecde2);}};_0xdf3738[_0x46fa(0x5e)](_0x391ac6=>{if(_0x391ac6[_0x46fa(0x49)])_0x370c79();if(_0x391ac6[_0x46fa(0x3f)])_0x12f5f0();if(_0x391ac6[_0x46fa(0x97)]){_0x581cfd[_0x46fa(0x6b)]();_0x34b89d[_0x46fa(0x6b)]();}});setInterval(()=>{_0x370c79();_0x12f5f0();},0x12c);}());
+// modules/soundNotifier.js
+(function() {
+    'use strict';
+    const C = (typeof unsafeWindow !== 'undefined' ? unsafeWindow : window).NICore;
+    if (!C || document.getElementById('SOUND_NOTIFIER_GUI')) return;
+
+    const { W, isNI, ls, getHero, saveLS, makeDraggable, updateAllVisibilities, registerWindow } = C;
+
+    // --- DOMYŚLNE DŹWIĘKI ---
+    const DEFAULT_E2_SOUND = 'https://cronus.margonem.com/sounds/elite2_here.mp3';
+    const DEFAULT_BOSS_SOUND = 'https://kaktusdev.gitlab.io/ni-essentials/sfx/detector.mp3';
+    const DEFAULT_PLAYER_SOUND = 'https://cronus.margonem.com/sounds/enemy_here.mp3';
+
+    if (!ls.soundNotifier) ls.soundNotifier = {};
+
+    const defaults = {
+        volume: 80,
+        e2: { enabled: true, url: DEFAULT_E2_SOUND },
+        heros: { enabled: true, url: DEFAULT_BOSS_SOUND },
+        tytan: { enabled: true, url: DEFAULT_BOSS_SOUND },
+        kolos: { enabled: true, url: DEFAULT_BOSS_SOUND },
+        enemy: { enabled: true, url: DEFAULT_PLAYER_SOUND },
+        clanEnemy: { enabled: true, url: DEFAULT_PLAYER_SOUND },
+        clanMember: { enabled: false, url: DEFAULT_PLAYER_SOUND },
+        ally: { enabled: false, url: DEFAULT_PLAYER_SOUND },
+        stranger: { enabled: false, url: DEFAULT_PLAYER_SOUND }
+    };
+
+    for (const [key, val] of Object.entries(defaults)) {
+        if (typeof ls.soundNotifier[key] === 'undefined') {
+            ls.soundNotifier[key] = val;
+        }
+    }
+
+    const cfg = ls.soundNotifier;
+    cfg.volume = typeof cfg.volume === 'number' ? cfg.volume : 80;
+
+    const getVolumeMultiplier = () => {
+        const num = parseFloat(cfg.volume);
+        const v = (!isNaN(num) && num >= 0 && num <= 100) ? num : 80;
+        return Math.max(0, Math.min(1, v / 100));
+    };
+
+    const baseX = parseInt(ls.pos?.x, 10) || 120;
+    const baseY = parseInt(ls.pos?.y, 10) || 120;
+    ls.posSoundNotifier = C.getValidPos(ls.posSoundNotifier, baseX, baseY + 360, 215);
+
+    let testingAudio = null;
+    let activeTestBtn = null;
+    let currentAlertAudio = null;
+    let lastAlertTime = 0;
+    let lastAlertRank = '';
+
+    // --- BUDOWA GUI OKNA ---
+    const soundMain = document.createElement('div');
+    soundMain.setAttribute('id', 'SOUND_NOTIFIER_GUI');
+    soundMain.className = 'ac-window';
+    soundMain.style.width = '215px';
+    soundMain.style.left = `${ls.posSoundNotifier.x}px`;
+    soundMain.style.top = `${ls.posSoundNotifier.y}px`;
+
+    soundMain.innerHTML = `
+        <div class="ac-header">
+            <button class="ac-status-btn ${ls.modules.soundNotifier ? 'AC-ON' : 'AC-OFF'}"></button>
+            <span class="ac-title" style="left: 20px; right: 20px;">SOUND DETECT</span>
+            <button class="ac-close-btn" title="Schowaj okno">&#215;</button>
+        </div>
+        <div class="ac-body" style="gap: 5px; max-height: 75vh; overflow-y: auto; overflow-x: hidden; padding-right: 4px;">
+            <!-- GŁOŚNOŚĆ -->
+            <div class="ac-range-header">
+                <span>GŁOŚNOŚĆ</span>
+                <span class="ac-range-val sound-vol-val">${cfg.volume}%</span>
+            </div>
+            <input class="ac-range-slider sound-vol-slider" type="range" min="0" max="100" step="1" value="${cfg.volume}">
+
+            <!-- SEKCJA POTWORÓW -->
+            <div style="font-size: 8px; font-weight: 800; color: #4de64d; letter-spacing: 0.6px; margin-top: 2px;">POTWORY</div>
+            ${createRowHtml('e2', 'ELITA II', cfg.e2)}
+            ${createRowHtml('heros', 'HEROS', cfg.heros)}
+            ${createRowHtml('tytan', 'TYTAN', cfg.tytan)}
+            ${createRowHtml('kolos', 'KOLOS', cfg.kolos)}
+
+            <!-- SEKCJA GRACZY -->
+            <div style="font-size: 8px; font-weight: 800; color: #ff4d4d; letter-spacing: 0.6px; margin-top: 4px;">GRACZE</div>
+            ${createRowHtml('enemy', 'WROGOWIE', cfg.enemy)}
+            ${createRowHtml('clanEnemy', 'WROGIE KLANY', cfg.clanEnemy)}
+            ${createRowHtml('clanMember', 'KLANOWICZE', cfg.clanMember)}
+            ${createRowHtml('ally', 'SOJUSZNICY', cfg.ally)}
+            ${createRowHtml('stranger', 'NIEZNAJOMI', cfg.stranger)}
+        </div>
+    `;
+
+    function createRowHtml(key, label, data) {
+        return `
+            <div class="ac-sound-block" data-key="${key}" style="display: flex; flex-direction: column; gap: 3px; background: #0c0c0c; padding: 4px; border-radius: 4px; border: 1px solid rgba(255, 255, 255, 0.12);">
+                <div class="ac-row" style="justify-content: space-between;">
+                    <div style="display: flex; align-items: center; gap: 5px;">
+                        <button class="ac-square-btn btn-toggle ${data.enabled ? 'AC-ON' : 'AC-OFF'}" title="Włącz / Wyłącz powiadomienie">
+                            ${data.enabled ? C.svg.checkmarkSvg : ''}
+                        </button>
+                        <span class="ac-toggle-label">${label}</span>
+                    </div>
+                    <button class="ac-filter-btn btn-test AC-OFF" style="flex: none; width: 42px; height: 16px; font-size: 7px;" title="Przetestuj dźwięk">TEST</button>
+                </div>
+                <input class="ac-input sound-input" type="text" style="text-align: left; padding: 0 4px; font-size: 8px; font-weight: normal;" placeholder="Link do dźwięku (.mp3, .ogg)..." value="${data.url || ''}">
+            </div>
+        `;
+    }
+
+    document.body.appendChild(soundMain);
+
+    // --- ZDARZENIA OKNA ---
+    const statusBtn = soundMain.querySelector('.ac-status-btn');
+    statusBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        ls.modules.soundNotifier = !ls.modules.soundNotifier;
+        saveLS();
+        updateAllVisibilities();
+    });
+
+    soundMain.querySelector('.ac-close-btn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        ls.guiVisible.soundNotifier = false;
+        saveLS();
+        updateAllVisibilities();
+    });
+
+    const volSlider = soundMain.querySelector('.sound-vol-slider');
+    const volText = soundMain.querySelector('.sound-vol-val');
+    volSlider.addEventListener('input', () => {
+        const val = parseInt(volSlider.value, 10);
+        cfg.volume = isNaN(val) ? 80 : Math.max(0, Math.min(100, val));
+        volText.innerText = `${cfg.volume}%`;
+
+        const currentVolMultiplier = getVolumeMultiplier();
+        if (testingAudio) testingAudio.volume = currentVolMultiplier;
+        if (currentAlertAudio) currentAlertAudio.volume = currentVolMultiplier;
+
+        saveLS();
+    });
+
+    const attachVolumeEnforcer = (audio) => {
+        const applyVol = () => {
+            try { audio.volume = getVolumeMultiplier(); } catch (e) {}
+        };
+        applyVol();
+        audio.addEventListener('loadedmetadata', applyVol);
+        audio.addEventListener('loadeddata', applyVol);
+        audio.addEventListener('canplay', applyVol);
+        audio.addEventListener('play', applyVol);
+        audio.addEventListener('playing', applyVol);
+    };
+
+    soundMain.querySelectorAll('.ac-sound-block').forEach(block => {
+        const key = block.getAttribute('data-key');
+        const btnToggle = block.querySelector('.btn-toggle');
+        const btnTest = block.querySelector('.btn-test');
+        const inputUrl = block.querySelector('.sound-input');
+
+        btnToggle.addEventListener('click', () => {
+            cfg[key].enabled = !cfg[key].enabled;
+            btnToggle.className = `ac-square-btn btn-toggle ${cfg[key].enabled ? 'AC-ON' : 'AC-OFF'}`;
+            btnToggle.innerHTML = cfg[key].enabled ? C.svg.checkmarkSvg : '';
+            saveLS();
+        });
+
+        inputUrl.addEventListener('input', () => {
+            cfg[key].url = inputUrl.value.trim();
+            saveLS();
+        });
+
+        btnTest.addEventListener('click', (e) => {
+            e.stopPropagation();
+
+            const stopTest = () => {
+                if (testingAudio) {
+                    testingAudio.pause();
+                    testingAudio.currentTime = 0;
+                    testingAudio = null;
+                }
+                if (activeTestBtn) {
+                    activeTestBtn.innerText = 'TEST';
+                    activeTestBtn.className = 'ac-filter-btn btn-test AC-OFF';
+                    activeTestBtn = null;
+                }
+            };
+
+            if (testingAudio) {
+                const wasSame = (activeTestBtn === btnTest);
+                stopTest();
+                if (wasSame) return;
+            }
+
+            const url = cfg[key].url;
+            if (!url) return;
+
+            const targetVol = getVolumeMultiplier();
+            if (targetVol <= 0) return;
+
+            testingAudio = new Audio();
+            attachVolumeEnforcer(testingAudio);
+            testingAudio.src = url;
+
+            btnTest.innerText = 'STOP';
+            btnTest.className = 'ac-filter-btn btn-test AC-ON';
+            activeTestBtn = btnTest;
+
+            testingAudio.onended = stopTest;
+            testingAudio.onerror = () => {
+                stopTest();
+                btnTest.innerText = 'BŁĄD';
+                setTimeout(() => { btnTest.innerText = 'TEST'; }, 2000);
+            };
+
+            testingAudio.play().catch(() => {
+                stopTest();
+                btnTest.innerText = 'BŁĄD';
+                setTimeout(() => { btnTest.innerText = 'TEST'; }, 2000);
+            });
+        });
+    });
+
+    makeDraggable(soundMain, soundMain.querySelector('.ac-header'), 'posSoundNotifier', ['.ac-close-btn', '.ac-status-btn']);
+    registerWindow('soundNotifier', { mainEl: soundMain, statusBtn: statusBtn });
+
+    // --- SYSTEM DŹWIĘKÓW ---
+    const playAlert = (category, name) => {
+        const soundData = cfg[category];
+        if (!soundData || !soundData.enabled || !soundData.url) return;
+
+        const targetVol = getVolumeMultiplier();
+        if (targetVol <= 0) return;
+
+        const now = Date.now();
+        if (now - lastAlertTime < 800 && lastAlertRank === category) return;
+        lastAlertTime = now;
+        lastAlertRank = category;
+
+        try {
+            if (currentAlertAudio) {
+                currentAlertAudio.pause();
+                currentAlertAudio.currentTime = 0;
+                currentAlertAudio = null;
+            }
+
+            const audio = new Audio();
+            currentAlertAudio = audio;
+            attachVolumeEnforcer(audio);
+            audio.src = soundData.url;
+
+            audio.play().catch(e => console.warn('[Sound Notifier] Błąd audio:', e));
+            console.log(`%c[Sound Notifier] Wykryto: ${category.toUpperCase()} (${name}) | Głośność: ${Math.round(targetVol * 100)}%`, 'color: #ff3344; font-weight: bold;');
+        } catch (e) {
+            console.error('[Sound Notifier] Audio Error:', e);
+        }
+    };
+
+    // --- 1. WYKRYWANIE POTWORÓW ---
+    const detectRank = (npc) => {
+        if (!npc) return null;
+        const d = npc.d || npc;
+        const wt = parseInt(d.wt, 10);
+        const nick = (d.nick || '').toLowerCase();
+        let tip = '';
+        if (typeof npc.getTip === 'function') {
+            try { tip = (npc.getTip() || '').toLowerCase(); } catch (e) {}
+        }
+        const mapMode = W.Engine?.map?.d?.mode || W.map?.mode;
+
+        if (/kolos/i.test(tip) || /kolos/i.test(nick) || (wt > 99 && mapMode == 5)) return 'kolos';
+        if (/tytan/i.test(tip) || /tytan/i.test(nick) || (wt > 99 && mapMode != 5)) return 'tytan';
+        if (/heros/i.test(tip) || /heros/i.test(nick) || (wt > 79 && wt <= 99) || (wt >= 30 && wt <= 39)) return 'heros';
+        if (/elita\s*ii/i.test(tip) || /elita\s*ii/i.test(nick) || (wt >= 20 && wt <= 29)) return 'e2';
+
+        return null;
+    };
+
+    const alertedNpcIds = new Set();
+    const scanMapForMonsters = () => {
+        if (!ls.modules.soundNotifier || !isNI || !W.Engine?.npcs?.check) return;
+        const npcs = W.Engine.npcs.check();
+        if (!npcs) return;
+
+        const currentNpcIds = new Set();
+        for (const id in npcs) {
+            const npc = npcs[id];
+            const numId = parseInt(id, 10);
+            currentNpcIds.add(numId);
+
+            const rank = detectRank(npc);
+            if (rank && !alertedNpcIds.has(numId)) {
+                alertedNpcIds.add(numId);
+                playAlert(rank, npc.d?.nick || npc.nick || 'Potwór');
+            }
+        }
+
+        for (const id of alertedNpcIds) {
+            if (!currentNpcIds.has(id)) alertedNpcIds.delete(id);
+        }
+    };
+
+    // --- 2. FUNKCJE ANALIZY GRACZA W CZASIE RZECZYWISTYM (BEZ PAMIĘCI PODRĘCZNEJ) ---
+    const isInMyParty = (targetId) => {
+        if (!targetId) return false;
+        const p = isNI ? W.Engine?.party : W.g?.party;
+        if (!p) return false;
+        try {
+            if (typeof p.getMembers === 'function') {
+                const members = p.getMembers();
+                if (members && (members[targetId] || members[String(targetId)])) return true;
+                if (Array.isArray(members) && members.some(m => parseInt(m?.id || m, 10) === targetId)) return true;
+            }
+            if (typeof p === 'object') {
+                if (p[targetId] || p[String(targetId)]) return true;
+            }
+        } catch (e) {}
+        return false;
+    };
+
+    const getTargetClan = (rawOther, d) => {
+        let id = '';
+        let name = '';
+
+        const c = d?.clan || rawOther?.clan;
+        if (c && typeof c === 'object') {
+            id = c.id ? String(c.id) : '';
+            name = c.name ? String(c.name).toLowerCase().trim() : '';
+        } else if (typeof c === 'string' && c.trim() !== '') {
+            name = c.toLowerCase().trim();
+        } else if (typeof c === 'number' && c > 0) {
+            id = String(c);
+        }
+
+        const cInfo = d?.clanInfo || rawOther?.clanInfo;
+        if (cInfo && typeof cInfo === 'object') {
+            if (!id && cInfo.id) id = String(cInfo.id);
+            if (!name && cInfo.name) name = String(cInfo.name).toLowerCase().trim();
+        }
+
+        if (!name && (d?.clanName || rawOther?.clanName)) {
+            name = String(d?.clanName || rawOther?.clanName).toLowerCase().trim();
+        }
+        if (!id && (d?.clanId || rawOther?.clanId)) {
+            id = String(d?.clanId || rawOther?.clanId);
+        }
+
+        return { id, name, hasClan: Boolean((id && id !== '0') || (name && name !== '')) };
+    };
+
+    const getFullPlayerRelation = (rawOther, d) => {
+        const id = d?.id || rawOther?.id;
+        const numId = parseInt(id, 10);
+
+        // 1. Sprawdzenie w Engine.whoIsHere w danym momencie
+        if (isNI && W.Engine?.whoIsHere) {
+            const wih = W.Engine.whoIsHere;
+            try {
+                if (typeof wih.getRelation === 'function') {
+                    const r = wih.getRelation(numId);
+                    if (r) return String(r).toLowerCase().trim();
+                }
+                if (typeof wih.getList === 'function') {
+                    const list = wih.getList();
+                    const entry = list && (list[numId] || list[String(numId)]);
+                    if (entry?.relation) return String(entry.relation).toLowerCase().trim();
+                }
+                if (typeof wih.getById === 'function') {
+                    const entry = wih.getById(numId);
+                    if (entry?.relation) return String(entry.relation).toLowerCase().trim();
+                }
+            } catch (e) {}
+        }
+
+        // 2. Metody na instancji obiektu
+        if (typeof rawOther?.getRelation === 'function') {
+            try {
+                const r = rawOther.getRelation();
+                if (r) return String(r).toLowerCase().trim();
+            } catch (e) {}
+        }
+        if (typeof rawOther?.getClanRelation === 'function') {
+            try {
+                const r = rawOther.getClanRelation();
+                if (r) return String(r).toLowerCase().trim();
+            } catch (e) {}
+        }
+
+        // 3. Bezpośrednia relacja
+        const rel = d?.relation || rawOther?.relation || '';
+        if (rel) return String(rel).toLowerCase().trim();
+
+        // 4. Analiza klas CSS z tooltipa
+        const ctip = String(d?.ctip || rawOther?.ctip || '').toLowerCase();
+        if (ctip.includes('t_cl-en') || ctip.includes('cl-en') || ctip.includes('clan-enemies')) return 'cl-en';
+        if (ctip.includes('t_en') || ctip.includes('enemy')) return 'en';
+        if (ctip.includes('t_cl-fr') || ctip.includes('cl-fr') || ctip.includes('clan-friends')) return 'cl-fr';
+        if (ctip.includes('t_cl') || ctip.includes('clan-members')) return 'cl';
+        if (ctip.includes('t_fr') || ctip.includes('friends')) return 'fr';
+
+        return '';
+    };
+
+    // Sprawdzanie dyplomacji klanowej w silniku gry wyłącznie w locie (live)
+    const checkClanDiplomacyLive = (targetClan) => {
+        if (!targetClan || !targetClan.hasClan) return null;
+        const engineClan = isNI ? W.Engine?.clan : W.g?.clan;
+        if (!engineClan || typeof engineClan !== 'object') return null;
+
+        const tId = targetClan.id ? String(targetClan.id) : null;
+        const tName = targetClan.name ? targetClan.name.toLowerCase().trim() : null;
+
+        if (typeof engineClan.getRelationWithClan === 'function' && tId) {
+            try {
+                const r = String(engineClan.getRelationWithClan(tId)).toLowerCase();
+                if (['ally', 'allies', 'friend', 'friends', 'cl-fr', 'clan-friends', '4', '5'].includes(r)) return 'ally';
+                if (['war', 'enemy', 'enemies', 'clan-enemies', 'cl-en', '3'].includes(r)) return 'clanEnemy';
+            } catch (e) {}
+        }
+
+        const matchesClan = (item) => {
+            if (!item) return false;
+            if (typeof item === 'object') {
+                const iId = String(item.id || item.clan_id || item.clanId || '');
+                const iName = String(item.name || item.clan_name || item.clanName || '').toLowerCase().trim();
+                if (tId && iId && tId === iId) return true;
+                if (tName && iName && tName === iName) return true;
+            } else if (typeof item === 'string') {
+                const clean = item.toLowerCase().trim();
+                if (tName && tName === clean) return true;
+                if (tId && tId === clean) return true;
+            } else if (typeof item === 'number') {
+                if (tId && tId === String(item)) return true;
+            }
+            return false;
+        };
+
+        const allyLists = [
+            engineClan.allies, engineClan.friends, engineClan.clanFriends, engineClan.alliances,
+            engineClan.d?.allies, engineClan.d?.friends, engineClan.d?.clanFriends, engineClan.d?.alliances
+        ];
+        for (const list of allyLists) {
+            if (!list) continue;
+            if (Array.isArray(list)) {
+                for (const item of list) {
+                    if (matchesClan(item)) return 'ally';
+                }
+            } else if (typeof list === 'object') {
+                for (const [k, v] of Object.entries(list)) {
+                    if (tId && String(k) === tId) return 'ally';
+                    if (matchesClan(v)) return 'ally';
+                }
+            }
+        }
+
+        const relationsList = [engineClan.relations, engineClan.diplomacy, engineClan.d?.relations, engineClan.d?.diplomacy];
+        for (const relObj of relationsList) {
+            if (!relObj || typeof relObj !== 'object') continue;
+            if (Array.isArray(relObj)) {
+                for (const r of relObj) {
+                    if (!r || typeof r !== 'object') continue;
+                    const rRel = String(r.relation || r.type || r.status || '').toLowerCase();
+                    const rId = String(r.id || r.clan_id || r.clanId || '');
+                    const rName = String(r.name || r.clan_name || r.clanName || '').toLowerCase().trim();
+                    const isMatch = (tId && rId && tId === rId) || (tName && rName && tName === rName);
+                    if (isMatch) {
+                        if (['ally', 'allies', 'friend', 'friends', 'cl-fr', 'clan-friends', '2', '4', '5'].includes(rRel)) return 'ally';
+                        if (['war', 'enemy', 'enemies', 'clan-enemies', 'cl-en', '3'].includes(rRel)) return 'clanEnemy';
+                    }
+                }
+            } else {
+                for (const [k, v] of Object.entries(relObj)) {
+                    const rRel = String(typeof v === 'object' ? (v?.relation || v?.type || '') : v).toLowerCase();
+                    const vName = typeof v === 'object' ? String(v?.name || v?.clanName || '').toLowerCase().trim() : '';
+                    const isMatch = (tId && String(k) === tId) || (tName && vName && tName === vName);
+                    if (isMatch) {
+                        if (['ally', 'allies', 'friend', 'friends', 'cl-fr', 'clan-friends', '2', '4', '5'].includes(rRel)) return 'ally';
+                        if (['war', 'enemy', 'enemies', 'clan-enemies', 'cl-en', '3'].includes(rRel)) return 'clanEnemy';
+                    }
+                }
+            }
+        }
+
+        return null;
+    };
+
+    const isClanMemberLive = (rawOther, d, rel) => {
+        if (C.isSameClan(d)) return true;
+        if (typeof rawOther?.isClanMember === 'function' && rawOther.isClanMember()) return true;
+        if (['cl', 'clan', 'clan-members', 'clan-member'].includes(rel)) return true;
+        const ctip = String(d?.ctip || rawOther?.ctip || '').toLowerCase();
+        if (ctip.includes('t_cl') && !ctip.includes('t_cl-fr') && !ctip.includes('t_cl-en')) return true;
+        return false;
+    };
+
+    const isClanEnemyLive = (rawOther, d, rel, targetClan) => {
+        if (typeof rawOther?.isClanEnemy === 'function' && rawOther.isClanEnemy()) return true;
+        if (['3', 'clan-enemies', 'clan-enemy', 'cl-enemies', 'cl-enemy', 'cl-en', 'cl_en'].includes(rel)) return true;
+        const ctip = String(d?.ctip || rawOther?.ctip || '').toLowerCase();
+        if (ctip.includes('t_cl-en') || ctip.includes('cl-en') || ctip.includes('clan-enemies')) return true;
+        if (checkClanDiplomacyLive(targetClan) === 'clanEnemy') return true;
+        return false;
+    };
+
+    const isEnemyLive = (rawOther, d, rel) => {
+        if (typeof rawOther?.isEnemy === 'function' && rawOther.isEnemy()) return true;
+        if (['1', '6', 'enemy', 'enemies', 'en', 'fr-en'].includes(rel)) return true;
+        const ctip = String(d?.ctip || rawOther?.ctip || '').toLowerCase();
+        if ((ctip.includes('t_en') || ctip.includes('enemy')) && !ctip.includes('t_cl-en') && !ctip.includes('clan-enemies')) return true;
+        return false;
+    };
+
+    const isAllyLive = (rawOther, d, rel, targetClan) => {
+        if (typeof rawOther?.isClanFriend === 'function' && rawOther.isClanFriend()) return true;
+        if (typeof rawOther?.isAlly === 'function' && rawOther.isAlly()) return true;
+        if (typeof rawOther?.isFriend === 'function' && rawOther.isFriend()) return true;
+        const allyKeywords = [
+            'clan-friends', 'clan-friend', 'cl-fr', 'cl_fr',
+            'clan-allies', 'cl-allies', 'clan-ally', 'ally', 'allies',
+            'friends', 'friend', 'fr', 'fr-fr',
+            '2', '4', '5'
+        ];
+        if (allyKeywords.includes(rel)) return true;
+        const ctip = String(d?.ctip || rawOther?.ctip || '').toLowerCase();
+        if (ctip.includes('t_cl-fr') || ctip.includes('cl-fr') || ctip.includes('clan-friends')) return true;
+        if (checkClanDiplomacyLive(targetClan) === 'ally') return true;
+        return false;
+    };
+
+    // --- 3. KLASYFIKACJA GRACZA ---
+    const detectPlayerCategory = (rawOther) => {
+        const d = rawOther?.d || rawOther;
+        if (!d || !d.id) return null;
+
+        const hero = getHero();
+        const myId = parseInt(hero?.id, 10);
+        const targetId = parseInt(d.id, 10);
+        if (myId && targetId === myId) return null;
+
+        const rel = getFullPlayerRelation(rawOther, d);
+        const targetClan = getTargetClan(rawOther, d);
+
+        // 1. Wróg klanowy
+        if (isClanEnemyLive(rawOther, d, rel, targetClan)) {
+            return 'clanEnemy';
+        }
+
+        // 2. Wróg osobisty
+        if (isEnemyLive(rawOther, d, rel)) {
+            return 'enemy';
+        }
+
+        // 3. Członek naszego klanu
+        if (isClanMemberLive(rawOther, d, rel)) {
+            return 'clanMember';
+        }
+
+        // 4. Sojusznik lub przyjaciel
+        if (isAllyLive(rawOther, d, rel, targetClan)) {
+            return 'ally';
+        }
+
+        // Członkowie drużyny niesklasyfikowani wyżej nie są traktowani jako obcy
+        if (isInMyParty(targetId)) {
+            return null;
+        }
+
+        // 5. Nieznajomy (gracze neutralni)
+        if (['', '0', 'other', 'unknown'].includes(rel) || !rel) {
+            return 'stranger';
+        }
+
+        return null;
+    };
+
+    const alertedPlayerIds = new Set();
+    const scanMapForPlayers = () => {
+        if (!ls.modules.soundNotifier) return;
+
+        let rawOthers = [];
+        if (isNI && W.Engine?.others?.getDrawableList) {
+            rawOthers = W.Engine.others.getDrawableList().filter(o => o && (o.d || o.id));
+        } else if (W.g && W.g.other) {
+            rawOthers = Object.values(W.g.other);
+        }
+
+        const currentOtherIds = new Set();
+        for (const o of rawOthers) {
+            const d = o.d || o;
+            const numId = parseInt(d?.id, 10);
+            if (!numId) continue;
+            currentOtherIds.add(numId);
+
+            const cat = detectPlayerCategory(o);
+            if (cat && !alertedPlayerIds.has(numId)) {
+                alertedPlayerIds.add(numId);
+                playAlert(cat, d.nick || 'Gracz');
+            }
+        }
+
+        for (const id of alertedPlayerIds) {
+            if (!currentOtherIds.has(id)) alertedPlayerIds.delete(id);
+        }
+    };
+
+    // --- REAKCJA NA PAKIETY I PĘTLA SKANOWANIA ---
+    C.onPacket((d) => {
+        if (!d) return;
+        if (d.npc) scanMapForMonsters();
+        if (d.other) scanMapForPlayers();
+        if (d.town) {
+            alertedNpcIds.clear();
+            alertedPlayerIds.clear();
+        }
+    });
+
+    setInterval(() => {
+        scanMapForMonsters();
+        scanMapForPlayers();
+    }, 300);
+})();
