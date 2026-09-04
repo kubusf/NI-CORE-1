@@ -1,4 +1,4 @@
-// modules/showCollisions.js - Wizualizacja siatki kolizji na Nowym Interfejsie
+// modules/showCollisions.js - Wizualizacja kolizji z wyborem koloru
 (function() {
     'use strict';
     const C = (typeof unsafeWindow !== 'undefined' ? unsafeWindow : window).NICore;
@@ -11,7 +11,7 @@
         ls.showCollisions = {
             alpha: 35,
             showBorders: true,
-            showNpc: true
+            color: '#ff2828'
         };
     }
     if (typeof ls.modules.showCollisions === 'undefined') ls.modules.showCollisions = true;
@@ -20,7 +20,18 @@
     const cfg = ls.showCollisions;
     cfg.alpha = Math.min(Math.max(parseInt(cfg.alpha, 10) || 35, 10), 80);
     if (typeof cfg.showBorders === 'undefined') cfg.showBorders = true;
-    if (typeof cfg.showNpc === 'undefined') cfg.showNpc = true;
+    if (!cfg.color) cfg.color = '#ff2828';
+
+    const hexToRgb = (hex) => {
+        let c = String(hex || '#ff2828').replace('#', '');
+        if (c.length === 3) c = c.split('').map(x => x + x).join('');
+        const num = parseInt(c, 16);
+        return {
+            r: (num >> 16) & 255,
+            g: (num >> 8) & 255,
+            b: num & 255
+        };
+    };
 
     const baseX = parseInt(ls.pos?.x, 10) || 120;
     const baseY = parseInt(ls.pos?.y, 10) || 120;
@@ -40,7 +51,7 @@
             <button class="ac-close-btn" title="Schowaj okno">&#215;</button>
         </div>
         <div class="ac-body">
-            <!-- OPCJA: KONTURY -->
+            <!-- KONTURY -->
             <div class="ac-row">
                 <button class="ac-square-btn btn-borders ${cfg.showBorders ? 'AC-ON' : 'AC-OFF'}" title="Włącz / Wyłącz obramowanie kratek">
                     ${cfg.showBorders ? C.svg.checkmarkSvg : ''}
@@ -48,16 +59,24 @@
                 <span class="ac-toggle-label lbl-borders">KONTURY</span>
             </div>
 
-            <!-- OPCJA: KOLIZJE NPC -->
-            <div class="ac-row">
-                <button class="ac-square-btn btn-npc ${cfg.showNpc ? 'AC-ON' : 'AC-OFF'}" title="Włącz / Wyłącz podświetlenie kolizji potworów/NPC">
-                    ${cfg.showNpc ? C.svg.checkmarkSvg : ''}
-                </button>
-                <span class="ac-toggle-label lbl-npc">NPC / MOBY</span>
+            <!-- WYBÓR KOLORU -->
+            <div class="ac-range-header" style="margin-top: 3px;">
+                <span>KOLOR</span>
+            </div>
+            <div class="ac-filter-row col-palette" style="gap: 3px; align-items: center;">
+                <button class="ac-color-dot" data-col="#ff2828" style="background:#ff2828;" title="Czerwony"></button>
+                <button class="ac-color-dot" data-col="#ffe600" style="background:#ffe600;" title="Żółty"></button>
+                <button class="ac-color-dot" data-col="#00e5ff" style="background:#00e5ff;" title="Błękitny"></button>
+                <button class="ac-color-dot" data-col="#00e676" style="background:#00e676;" title="Zielony"></button>
+                <button class="ac-color-dot" data-col="#d500f9" style="background:#d500f9;" title="Fioletowy"></button>
+                <label style="margin:0; padding:0; display:flex; cursor:pointer;" title="Własny kolor">
+                    <input type="color" class="col-picker-input" value="${cfg.color}" style="opacity:0; width:0; height:0; position:absolute;">
+                    <div class="ac-color-custom-btn" style="background:${cfg.color}; width:16px; height:16px; border-radius:3px; border:1px solid #fff; box-sizing:border-box;"></div>
+                </label>
             </div>
 
-            <!-- SUWAK PRZEŹROCZYSTOŚCI -->
-            <div class="ac-range-header" style="margin-top: 2px;">
+            <!-- SUWAK WIDOCZNOŚCI -->
+            <div class="ac-range-header" style="margin-top: 3px;">
                 <span>WIDOCZNOŚĆ</span>
                 <span class="ac-range-val col-val">${cfg.alpha}%</span>
             </div>
@@ -73,6 +92,32 @@
     `;
 
     document.body.appendChild(colMain);
+
+    // Style dla palety kolorów
+    const palStyle = document.createElement('style');
+    palStyle.innerHTML = `
+        .ac-color-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+            border: 1px solid rgba(255,255,255,0.3);
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+            outline: none;
+            flex: 1;
+            transition: transform 0.12s, border-color 0.15s;
+        }
+        .ac-color-dot:hover {
+            transform: scale(1.18);
+            border-color: #ffffff;
+        }
+        .ac-color-dot.active {
+            border: 1.5px solid #ffffff !important;
+            box-shadow: 0 0 5px #ffffff;
+        }
+    `;
+    document.head.appendChild(palStyle);
 
     // --- OBSŁUGA ZDARZEŃ GUI ---
     const statusBtn = colMain.querySelector('.ac-status-btn');
@@ -90,6 +135,7 @@
         updateAllVisibilities();
     });
 
+    // Kontury
     const btnBorders = colMain.querySelector('.btn-borders');
     const toggleBorders = () => {
         cfg.showBorders = !cfg.showBorders;
@@ -100,16 +146,37 @@
     btnBorders.addEventListener('click', toggleBorders);
     colMain.querySelector('.lbl-borders').addEventListener('click', toggleBorders);
 
-    const btnNpc = colMain.querySelector('.btn-npc');
-    const toggleNpc = () => {
-        cfg.showNpc = !cfg.showNpc;
-        btnNpc.className = `ac-square-btn btn-npc ${cfg.showNpc ? 'AC-ON' : 'AC-OFF'}`;
-        btnNpc.innerHTML = cfg.showNpc ? C.svg.checkmarkSvg : '';
+    // Wybór koloru
+    const colorDots = colMain.querySelectorAll('.ac-color-dot');
+    const customColorBtn = colMain.querySelector('.ac-color-custom-btn');
+    const customColorInput = colMain.querySelector('.col-picker-input');
+
+    const updateColorVisuals = (chosenCol) => {
+        colorDots.forEach(b => b.classList.toggle('active', b.getAttribute('data-col') === chosenCol));
+        customColorBtn.style.background = chosenCol;
+        customColorInput.value = chosenCol;
+    };
+
+    const setColor = (newCol) => {
+        cfg.color = newCol;
+        updateColorVisuals(newCol);
         saveLS();
     };
-    btnNpc.addEventListener('click', toggleNpc);
-    colMain.querySelector('.lbl-npc').addEventListener('click', toggleNpc);
 
+    colorDots.forEach(dot => {
+        dot.addEventListener('click', (e) => {
+            e.stopPropagation();
+            setColor(dot.getAttribute('data-col'));
+        });
+    });
+
+    customColorInput.addEventListener('input', () => {
+        setColor(customColorInput.value);
+    });
+
+    updateColorVisuals(cfg.color);
+
+    // Suwak przezroczystości
     const colSlider = colMain.querySelector('.col-slider');
     const colValText = colMain.querySelector('.col-val');
     colSlider.addEventListener('input', () => {
@@ -131,13 +198,11 @@
     makeDraggable(colMain, colMain.querySelector('.ac-header'), 'posShowCollisions', ['.ac-close-btn', '.ac-status-btn']);
     registerWindow('showCollisions', { mainEl: colMain, statusBtn: statusBtn });
 
-    // --- LOGIKA SPRAWDZANIA KOLIZJI ---
+    // --- SPRAWDZANIE ŚCIAN I PRZESZKÓD MAPY ---
     const isMapTileBlocked = (x, y) => {
-        // 1. Sprawdzenie przez silnik NI
         if (W.Engine?.map?.col?.check) {
             return Boolean(W.Engine.map.col.check(x, y));
         }
-        // 2. Fallback na ciąg znaków mapy
         const mapD = W.Engine?.map?.d || W.map;
         if (mapD && mapD.col && mapD.x) {
             return mapD.col.charAt(x + y * mapD.x) === '1';
@@ -161,52 +226,24 @@
             ? W.Engine.getCanvasViewSize()
             : { width: ctx.canvas?.width || window.innerWidth, height: ctx.canvas?.height || window.innerHeight };
 
-        // Obliczamy kafelki widoczne w oknie gry (optymalizacja wydajności)
         const startX = Math.max(0, Math.floor(totalOffsetX / 32));
         const endX = Math.min(mapD.x - 1, Math.ceil((totalOffsetX + size.width) / 32));
-
         const startY = Math.max(0, Math.floor(totalOffsetY / 32));
         const endY = Math.min(mapD.y - 1, Math.ceil((totalOffsetY + size.height) / 32));
 
-        // Zbieramy pozycje NPC z kolizją
-        const npcTiles = new Set();
-        if (cfg.showNpc && W.Engine?.npcs?.check) {
-            const npcs = W.Engine.npcs.check();
-            if (npcs) {
-                for (const id in npcs) {
-                    const d = npcs[id]?.d || npcs[id];
-                    if (d && typeof d.x === 'number' && typeof d.y === 'number') {
-                        // Ignorujemy przejścia/dialogowce bez kolizji fizycznej jeśli typ = 4
-                        if (d.type !== 4) {
-                            npcTiles.add(`${d.x},${d.y}`);
-                        }
-                    }
-                }
-            }
-        }
-
         const alpha = Math.min(Math.max((cfg.alpha || 35) / 100, 0.05), 0.95);
-        const borderAlpha = Math.min(alpha + 0.25, 1);
+        const borderAlpha = Math.min(alpha + 0.3, 1);
+        const rgb = hexToRgb(cfg.color);
 
         ctx.save();
+        ctx.fillStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alpha})`;
+        ctx.strokeStyle = `rgba(${Math.min(255, rgb.r + 35)}, ${Math.min(255, rgb.g + 35)}, ${Math.min(255, rgb.b + 35)}, ${borderAlpha})`;
 
         for (let y = startY; y <= endY; y++) {
             for (let x = startX; x <= endX; x++) {
-                const isBlocked = isMapTileBlocked(x, y);
-                const isNpc = npcTiles.has(`${x},${y}`);
-
-                if (isBlocked || isNpc) {
+                if (isMapTileBlocked(x, y)) {
                     const screenX = Math.round(x * 32 - totalOffsetX);
                     const screenY = Math.round(y * 32 - totalOffsetY);
-
-                    // Pomarańczowy dla NPC, czerwony dla zwykłych ścian/wody
-                    if (isNpc && !isBlocked) {
-                        ctx.fillStyle = `rgba(255, 140, 0, ${alpha})`;
-                        ctx.strokeStyle = `rgba(255, 160, 0, ${borderAlpha})`;
-                    } else {
-                        ctx.fillStyle = `rgba(255, 30, 30, ${alpha})`;
-                        ctx.strokeStyle = `rgba(255, 60, 60, ${borderAlpha})`;
-                    }
 
                     ctx.fillRect(screenX, screenY, 32, 32);
 
