@@ -193,7 +193,7 @@
     const plusMinusSvg = `<svg class="ac-plus-minus-svg" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="1" y1="5" x2="9" y2="5"></line><line class="ac-vertical-bar" x1="5" y1="1" x2="5" y2="9"></line></svg>`;
     const guiWindowSvg = `<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2.5" width="12" height="11" rx="2"/><line x1="2" y1="6.5" x2="14" y2="6.5"/><circle cx="4.5" cy="4.5" r="0.75" fill="currentColor"/></svg>`;
 
-    // Dedykowane ikony dla kafelków w Hubie
+    // Dedykowane ikony dla kafelków w Hubie i na mapie
     const iconAutoX = `<svg class="ac-item-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="13" y1="3" x2="5.5" y2="10.5"/><polyline points="10 3 13 3 13 6"/><line x1="4.5" y1="9.5" x2="6.5" y2="11.5"/><line x1="3" y1="13" x2="4.5" y2="11.5"/><line x1="3" y1="13" x2="1.5" y2="14.5"/><line x1="3" y1="3" x2="10.5" y2="10.5"/><polyline points="6 3 3 3 3 6"/><line x1="9.5" y1="11.5" x2="11.5" y2="9.5"/><line x1="13" y1="13" x2="11.5" y2="11.5"/><line x1="13" y1="13" x2="14.5" y2="14.5"/></svg>`;
     const iconAutoParty = `<svg class="ac-item-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 13.5v-1a2.5 2.5 0 0 0-2.5-2.5h-4A2.5 2.5 0 0 0 2 12.5v1"/><circle cx="6.5" cy="5" r="2.2"/><path d="M13.5 13.5v-1a2.3 2.3 0 0 0-1.7-2.2"/><path d="M10 2.8a2.2 2.2 0 0 1 0 4.4"/></svg>`;
     const iconDarkMap = `<svg class="ac-item-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 9.2A5.5 5.5 0 1 1 6.8 2.5 4.5 4.5 0 0 0 13.5 9.2Z"/></svg>`;
@@ -233,6 +233,39 @@
     const onPacket = (cb) => packetListeners.push(cb);
 
     // ==========================================
+    // DOCK IKON NA MAPIE (PRAWY DOLNY RÓG)
+    // ==========================================
+    const activeDock = document.createElement('div');
+    activeDock.setAttribute('id', 'AUTO_COMBO_ACTIVE_DOCK');
+    activeDock.className = 'ac-active-dock';
+    document.body.appendChild(activeDock);
+
+    const modulesDefinition = [
+        { key: 'autoX', title: 'AUTO X', desc: 'Automatyczne atakowanie przeciwników z szybką walką.', icon: iconAutoX },
+        { key: 'autoParty', title: 'AUTO PARTY', desc: 'Zapraszanie, auto-akceptacja oraz rozwiązywanie grupy.', icon: iconAutoParty },
+        { key: 'darkMap', title: 'DARK MAP', desc: 'Przyciemnianie okna mapy i gry.', icon: iconDarkMap },
+        { key: 'mobHighlight', title: 'MOB HIGHLIGHT', desc: 'Podświetlanie grup potworów i ramki Elit II.', icon: iconMobHighlight },
+        { key: 'soundNotifier', title: 'SOUND DETECT', desc: 'Powiadomienia dźwiękowe o E2, Herosach, Tytanach i graczach.', icon: iconSound },
+        { key: 'showCollisions', title: 'KOLIZJE', desc: 'Podświetlanie zablokowanych pól mapy.', icon: iconCollisions }
+    ];
+
+    const dockButtons = {};
+    modulesDefinition.forEach(mod => {
+        const btn = document.createElement('button');
+        btn.className = 'ac-dock-btn';
+        btn.setAttribute('title', `${mod.title} - Kliknij, aby otworzyć okno`);
+        btn.innerHTML = mod.icon;
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            ls.guiVisible[mod.key] = !ls.guiVisible[mod.key];
+            saveLS();
+            updateAllVisibilities();
+        });
+        activeDock.appendChild(btn);
+        dockButtons[mod.key] = btn;
+    });
+
+    // ==========================================
     // BUDOWA GŁÓWNEGO HUB-A (6 KAFELKÓW)
     // ==========================================
     const hubMain = document.createElement('div');
@@ -270,7 +303,7 @@
     const hubBody = document.createElement('div');
     hubBody.className = 'ac-body';
 
-    // Obsługa płynnego scrollowania kółkiem myszy bez blokowania przez silnik Margonem
+    // Obsługa płynnego scrollowania kółkiem myszy
     hubBody.addEventListener('wheel', (e) => {
         e.stopPropagation();
         e.preventDefault();
@@ -291,12 +324,8 @@
         row.className = 'ac-hub-row';
         const titleGroup = document.createElement('div');
         titleGroup.className = 'ac-hub-title-group';
-        
-        const dot = document.createElement('span');
-        dot.className = `ac-hub-dot ${ls.modules[modKey] ? 'AC-ON' : 'AC-OFF'}`;
-        titleGroup.appendChild(dot);
 
-        // Dodanie ikony przed nazwą dodatku
+        // Ikona dodatku bezpośrednio przed nazwą (bez zielonego kółka)
         if (iconSvg) {
             const iconWrapper = document.createElement('span');
             iconWrapper.className = 'ac-hub-item-icon-wrapper';
@@ -328,27 +357,16 @@
         desc.innerText = descText;
         item.appendChild(desc);
 
-        return { item, dot, guiBtn };
+        return { item, guiBtn };
     }
 
-    // Kafelki w Hubie z przypisanymi ikonami
-    const hAutoX = createHubItem('autoX', 'AUTO X', 'Automatyczne atakowanie przeciwników z szybką walką.', iconAutoX);
-    hubBody.appendChild(hAutoX.item);
-
-    const hAutoParty = createHubItem('autoParty', 'AUTO PARTY', 'Zapraszanie, auto-akceptacja oraz rozwiązywanie grupy.', iconAutoParty);
-    hubBody.appendChild(hAutoParty.item);
-
-    const hDarkMap = createHubItem('darkMap', 'DARK MAP', 'Przyciemnianie okna mapy i gry.', iconDarkMap);
-    hubBody.appendChild(hDarkMap.item);
-
-    const hMobHighlight = createHubItem('mobHighlight', 'MOB HIGHLIGHT', 'Podświetlanie grup potworów i ramki Elit II.', iconMobHighlight);
-    hubBody.appendChild(hMobHighlight.item);
-
-    const hSound = createHubItem('soundNotifier', 'SOUND DETECT', 'Powiadomienia dźwiękowe o E2, Herosach, Tytanach i graczach.', iconSound);
-    hubBody.appendChild(hSound.item);
-
-    const hCollisions = createHubItem('showCollisions', 'KOLIZJE', 'Podświetlanie zablokowanych pól mapy.', iconCollisions);
-    hubBody.appendChild(hCollisions.item);
+    // Generowanie kafelków w Hubie
+    const hubItems = {};
+    modulesDefinition.forEach(mod => {
+        const hItem = createHubItem(mod.key, mod.title, mod.desc, mod.icon);
+        hubBody.appendChild(hItem.item);
+        hubItems[mod.key] = hItem;
+    });
 
     hubMain.appendChild(hubBody);
 
@@ -391,18 +409,23 @@
     const updateAllVisibilities = () => {
         hubMain.style.display = ls.hubVisible ? 'block' : 'none';
 
-        const syncHub = (hObj, modKey) => {
-            hObj.item.className = `ac-hub-item ${ls.modules[modKey] ? 'AC-ON' : 'AC-OFF'}`;
-            hObj.dot.className = `ac-hub-dot ${ls.modules[modKey] ? 'AC-ON' : 'AC-OFF'}`;
-            hObj.guiBtn.className = `ac-hub-gui-btn ${ls.guiVisible[modKey] ? 'AC-ON' : 'AC-OFF'}`;
-        };
+        // Synchronizacja stanu Hub-a oraz docka na mapie
+        modulesDefinition.forEach(mod => {
+            const isModActive = Boolean(ls.modules[mod.key]);
+            const isGuiOpen = Boolean(ls.guiVisible[mod.key]);
 
-        syncHub(hAutoX, 'autoX');
-        syncHub(hAutoParty, 'autoParty');
-        syncHub(hDarkMap, 'darkMap');
-        syncHub(hMobHighlight, 'mobHighlight');
-        syncHub(hSound, 'soundNotifier');
-        syncHub(hCollisions, 'showCollisions');
+            const hObj = hubItems[mod.key];
+            if (hObj) {
+                hObj.item.className = `ac-hub-item ${isModActive ? 'AC-ON' : 'AC-OFF'}`;
+                hObj.guiBtn.className = `ac-hub-gui-btn ${isGuiOpen ? 'AC-ON' : 'AC-OFF'}`;
+            }
+
+            const dockBtn = dockButtons[mod.key];
+            if (dockBtn) {
+                dockBtn.style.display = isModActive ? 'flex' : 'none';
+                dockBtn.classList.toggle('is-open', isGuiOpen);
+            }
+        });
 
         for (const [key, win] of Object.entries(registeredWindows)) {
             if (win.mainEl) {
@@ -534,6 +557,69 @@
     transform: scale(1.05);
 }
 
+/* ==========================================
+   DOCK IKON W PRAWYM DOLNYM ROGU MAPY
+   ========================================== */
+.ac-active-dock {
+    position: fixed;
+    bottom: 60px;
+    right: 12px;
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 6px;
+    z-index: 9998;
+    pointer-events: auto;
+    user-select: none;
+}
+
+.ac-dock-btn {
+    width: 27px;
+    height: 27px;
+    border-radius: 5px;
+    background: linear-gradient(180deg, #1f2127 0%, #131418 100%);
+    border: 1px solid rgba(56, 194, 104, 0.45);
+    color: #38c268;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    outline: none;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7), 0 0 5px rgba(56, 194, 104, 0.25);
+    transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.ac-dock-btn svg {
+    width: 14px;
+    height: 14px;
+    display: block;
+    transition: transform 0.15s ease;
+}
+
+.ac-dock-btn:hover {
+    transform: translateY(-2px);
+    border-color: #52e385;
+    background: linear-gradient(180deg, #262932 0%, #181a20 100%);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.8), 0 0 8px rgba(56, 194, 104, 0.45);
+    color: #ffffff;
+}
+
+.ac-dock-btn:hover svg {
+    transform: scale(1.1);
+}
+
+.ac-dock-btn:active {
+    transform: translateY(0) scale(0.94);
+}
+
+.ac-dock-btn.is-open {
+    background: linear-gradient(180deg, #243b2b 0%, #16241a 100%);
+    border-color: #38c268;
+    box-shadow: 0 0 8px rgba(56, 194, 104, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
 /* Styl bazowy okien */
 .ac-window {
     position: absolute;
@@ -581,7 +667,7 @@
 #AUTO_COMBO_HUB .ac-body {
     padding: 6px 5px 6px 6px;
     gap: 4px;
-    max-height: 185px; /* Wysokość pod scroll */
+    max-height: 185px;
     overflow-y: auto !important;
     overflow-x: hidden !important;
     background: #121316;
@@ -590,7 +676,6 @@
     scrollbar-color: rgba(255, 255, 255, 0.2) rgba(0, 0, 0, 0.35);
 }
 
-/* Pasek przewijania NI Webkit */
 #AUTO_COMBO_HUB .ac-body::-webkit-scrollbar {
     width: 5px !important;
 }
@@ -691,43 +776,24 @@
 .ac-hub-title-group {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
     pointer-events: none;
 }
 
-.ac-hub-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    box-sizing: border-box;
-    flex-shrink: 0;
-    transition: all 0.15s ease;
-}
-
-.ac-hub-dot.AC-ON {
-    background: #38c268;
-    box-shadow: 0 0 6px rgba(56, 194, 104, 0.9);
-}
-
-.ac-hub-dot.AC-OFF {
-    background: #3a3f4a;
-    box-shadow: none;
-}
-
-/* Wrapper ikony dodatku */
+/* Wrapper ikony dodatku w Hubie */
 .ac-hub-item-icon-wrapper {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 13px;
-    height: 13px;
+    width: 14px;
+    height: 14px;
     flex-shrink: 0;
     transition: color 0.15s, filter 0.15s;
 }
 
 .ac-item-icon {
-    width: 12px;
-    height: 12px;
+    width: 13px;
+    height: 13px;
     display: block;
 }
 
