@@ -10,7 +10,6 @@
     const DEFAULT_E2_SOUND = 'https://cronus.margonem.com/sounds/elite2_here.mp3';
     const DEFAULT_BOSS_SOUND = 'https://kaktusdev.gitlab.io/ni-essentials/sfx/detector.mp3';
 
-    // Inicjalizacja przy pierwszym uruchomieniu
     if (!ls.soundNotifier) {
         ls.soundNotifier = {
             volume: 80,
@@ -21,7 +20,6 @@
         };
     }
 
-    // Automatyczna aktualizacja starych testowych linków Google (jeśli ktoś ich nie zmienił na własne)
     const isOldTestSound = (url) => !url || (typeof url === 'string' && url.includes('actions.google.com'));
     if (isOldTestSound(ls.soundNotifier.e2?.url)) ls.soundNotifier.e2.url = DEFAULT_E2_SOUND;
     if (isOldTestSound(ls.soundNotifier.heros?.url)) ls.soundNotifier.heros.url = DEFAULT_BOSS_SOUND;
@@ -31,9 +29,11 @@
     const cfg = ls.soundNotifier;
     cfg.volume = typeof cfg.volume === 'number' ? cfg.volume : 80;
 
+    // Bezpieczny przelicznik głośności 0.0 - 1.0
     const getVolumeMultiplier = () => {
-        const v = typeof cfg.volume === 'number' ? cfg.volume : 80;
-        return Math.max(0, Math.min(100, v)) / 100;
+        const num = parseFloat(cfg.volume);
+        const v = (!isNaN(num) && num >= 0 && num <= 100) ? num : 80;
+        return Math.max(0, Math.min(1, v / 100));
     };
 
     const baseX = parseInt(ls.pos?.x, 10) || 120;
@@ -43,6 +43,8 @@
     let testingAudio = null;
     let activeTestBtn = null;
     let currentAlertAudio = null;
+    let lastAlertTime = 0;
+    let lastAlertRank = '';
 
     // --- BUDOWA GUI OKNA ---
     const soundMain = document.createElement('div');
@@ -124,6 +126,21 @@
         saveLS();
     });
 
+    // Funkcja wymuszająca głośność na elemencie audio (odporna na resety przeglądarki)
+    const attachVolumeEnforcer = (audio) => {
+        const applyVol = () => {
+            try {
+                audio.volume = getVolumeMultiplier();
+            } catch (e) {}
+        };
+        applyVol();
+        audio.addEventListener('loadedmetadata', applyVol);
+        audio.addEventListener('loadeddata', applyVol);
+        audio.addEventListener('canplay', applyVol);
+        audio.addEventListener('play', applyVol);
+        audio.addEventListener('playing', applyVol);
+    };
+
     // Obsługa wierszy z linkami i przycisku TEST
     soundMain.querySelectorAll('.ac-sound-block').forEach(block => {
         const key = block.getAttribute('data-key');
@@ -168,8 +185,13 @@
             const url = cfg[key].url;
             if (!url) return;
 
-            testingAudio = new Audio(url);
-            testingAudio.volume = getVolumeMultiplier();
+            const targetVol = getVolumeMultiplier();
+            if (targetVol <= 0) return; // Przy 0% nie odtwarzaj
+
+            testingAudio = new Audio();
+            attachVolumeEnforcer(testingAudio);
+            testingAudio.src = url;
+
             btnTest.innerText = 'STOP';
             btnTest.className = 'ac-filter-btn btn-test AC-ON';
             activeTestBtn = btnTest;
@@ -219,17 +241,30 @@
         const soundData = cfg[rank];
         if (!soundData || !soundData.enabled || !soundData.url) return;
 
+        const targetVol = getVolumeMultiplier();
+        if (targetVol <= 0) return; // Przy 0% nie gramy nic
+
+        // Zabezpieczenie przed nałożeniem się dźwięków w tym samym ułamku sekundy
+        const now = Date.now();
+        if (now - lastAlertTime < 800 && lastAlertRank === rank) return;
+        lastAlertTime = now;
+        lastAlertRank = rank;
+
         try {
             if (currentAlertAudio) {
                 currentAlertAudio.pause();
                 currentAlertAudio.currentTime = 0;
+                currentAlertAudio = null;
             }
 
-            currentAlertAudio = new Audio(soundData.url);
-            currentAlertAudio.volume = getVolumeMultiplier();
-            currentAlertAudio.play().catch(e => console.warn('[Sound Notifier] Błąd audio:', e));
+            const audio = new Audio();
+            currentAlertAudio = audio;
+            attachVolumeEnforcer(audio);
+            audio.src = soundData.url;
 
-            console.log(`%c[Sound Notifier] Wykryto: ${rank.toUpperCase()} (${npcNick})`, 'color: #ff3344; font-weight: bold;');
+            audio.play().catch(e => console.warn('[Sound Notifier] Błąd audio:', e));
+
+            console.log(`%c[Sound Notifier] Wykryto: ${rank.toUpperCase()} (${npcNick}) | Głośność: ${Math.round(targetVol * 100)}%`, 'color: #ff3344; font-weight: bold;');
         } catch (e) {
             console.error('[Sound Notifier] Audio Error:', e);
         }
@@ -262,20 +297,6 @@
         if (d.npc) scanMapForMonsters();
         if (d.town) alertedNpcIds.clear();
     });
-
-    if (isNI && W.API?.addCallbackToEvent) {
-        try {
-            W.API.addCallbackToEvent('newNpc', (npc) => {
-                if (!ls.modules.soundNotifier) return;
-                const rank = detectRank(npc);
-                const numId = parseInt(npc.d?.id, 10);
-                if (rank && numId && !alertedNpcIds.has(numId)) {
-                    alertedNpcIds.add(numId);
-                    playAlert(rank, npc.d?.nick || 'Potwór');
-                }
-            });
-        } catch (e) {}
-    }
 
     setInterval(scanMapForMonsters, 300);
 })();
