@@ -1,4 +1,4 @@
-// modules/soundNotifier.js - Powiadomienia dźwiękowe o potworach i graczach
+// modules/soundNotifier.js - Powiadomienia dźwiękowe z poprawną filtracją sojuszników
 (function() {
     'use strict';
     const C = (typeof unsafeWindow !== 'undefined' ? unsafeWindow : window).NICore;
@@ -23,18 +23,6 @@
             stranger: { enabled: false, url: DEFAULT_PLAYER_SOUND }
         };
     }
-
-    // Automatyczna aktualizacja starych domyślnych linków (jeśli ktoś ich sam nie zmienił na własne)
-    const isOldTestSound = (url) => !url || (typeof url === 'string' && url.includes('actions.google.com'));
-    if (isOldTestSound(ls.soundNotifier.e2?.url)) ls.soundNotifier.e2.url = DEFAULT_E2_SOUND;
-    if (isOldTestSound(ls.soundNotifier.heros?.url)) ls.soundNotifier.heros.url = DEFAULT_BOSS_SOUND;
-    if (isOldTestSound(ls.soundNotifier.tytan?.url)) ls.soundNotifier.tytan.url = DEFAULT_BOSS_SOUND;
-    if (isOldTestSound(ls.soundNotifier.kolos?.url)) ls.soundNotifier.kolos.url = DEFAULT_BOSS_SOUND;
-
-    const isOldPlayerSound = (url) => !url || (typeof url === 'string' && (url.includes('kaktusdev.gitlab.io') || url.includes('actions.google.com')));
-    if (!ls.soundNotifier.enemy || isOldPlayerSound(ls.soundNotifier.enemy?.url)) ls.soundNotifier.enemy = { enabled: true, url: DEFAULT_PLAYER_SOUND };
-    if (!ls.soundNotifier.clanEnemy || isOldPlayerSound(ls.soundNotifier.clanEnemy?.url)) ls.soundNotifier.clanEnemy = { enabled: true, url: DEFAULT_PLAYER_SOUND };
-    if (!ls.soundNotifier.stranger || isOldPlayerSound(ls.soundNotifier.stranger?.url)) ls.soundNotifier.stranger = { enabled: false, url: DEFAULT_PLAYER_SOUND };
 
     const cfg = ls.soundNotifier;
     cfg.volume = typeof cfg.volume === 'number' ? cfg.volume : 80;
@@ -301,7 +289,61 @@
         }
     };
 
-    // --- 2. WYKRYWANIE GRACZY ---
+    // --- 2. DOKŁADNE SPRAWDZANIE SOJUSZNIKÓW I KLANU ---
+    const isPlayerAllyOrFriend = (rawOther, d) => {
+        // 1. Członek naszego własnego klanu
+        if (C.isSameClan(d)) return true;
+
+        // 2. Relacja bezpośrednia wpisana w postać
+        let rel = d.relation || rawOther.relation || '';
+        if (!rel && typeof rawOther.getRelation === 'function') {
+            try { rel = rawOther.getRelation(); } catch (e) {}
+        }
+        rel = String(rel).toLowerCase().trim();
+
+        const friendKeywords = [
+            'clan-members', 'clan-friends', 'friends', 'friend', 'cl-fr', 'cl',
+            'clan', 'fr', '2', '4', '5', 'ally', 'allies', 'clan-allies', 'cl-allies'
+        ];
+        if (friendKeywords.includes(rel)) return true;
+
+        // 3. Sprawdzanie klanu gracza w silniku klanowym NI (Engine.clan)
+        const targetClanId = String(d.clan?.id || d.clanInfo?.id || d.clanId || d.clan || '');
+        const targetClanName = String(d.clan?.name || d.clanInfo?.name || d.clanName || '').toLowerCase().trim();
+
+        const engineClan = isNI ? W.Engine?.clan : W.g?.clan;
+        if (engineClan && typeof engineClan === 'object') {
+            // Sprawdzanie listy sojuszy w obiekcie klanu
+            const allies = engineClan.allies || engineClan.friends || engineClan.clanFriends;
+            if (Array.isArray(allies)) {
+                for (const ally of allies) {
+                    const aId = String(ally.id || ally);
+                    const aName = String(ally.name || '').toLowerCase().trim();
+                    if (targetClanId && aId && targetClanId === aId) return true;
+                    if (targetClanName && aName && targetClanName === aName) return true;
+                }
+            } else if (allies && typeof allies === 'object') {
+                for (const [key, val] of Object.entries(allies)) {
+                    const aId = String(val?.id || key);
+                    const aName = String(val?.name || '').toLowerCase().trim();
+                    if (targetClanId && aId && targetClanId === aId) return true;
+                    if (targetClanName && aName && targetClanName === aName) return true;
+                }
+            }
+
+            // Metoda sprawdzająca relację klanu w NI jeśli istnieje
+            if (typeof engineClan.getRelationWithClan === 'function' && targetClanId) {
+                try {
+                    const cRel = String(engineClan.getRelationWithClan(targetClanId)).toLowerCase();
+                    if (['ally', 'allies', 'friend', 'friends', 'cl-fr', '4', '5'].includes(cRel)) return true;
+                } catch (e) {}
+            }
+        }
+
+        return false;
+    };
+
+    // --- 3. WYKRYWANIE GRACZY ---
     const detectPlayerCategory = (rawOther) => {
         const d = rawOther?.d || rawOther;
         if (!d || !d.id) return null;
@@ -311,7 +353,8 @@
         const targetId = parseInt(d.id, 10);
         if (myId && targetId === myId) return null;
 
-        if (C.isSameClan(d)) return null;
+        // Jeśli gracz jest z naszego klanu, sojuszu lub jest przyjacielem -> IGNORUJEMY
+        if (isPlayerAllyOrFriend(rawOther, d)) return null;
 
         let rel = d.relation || rawOther.relation || '';
         if (!rel && typeof rawOther.getRelation === 'function') {
@@ -319,21 +362,17 @@
         }
         rel = String(rel).toLowerCase().trim();
 
-        const isFriendOrAlly = [
-            'clan-members', 'clan-friends', 'friends', 'friend',
-            'cl-fr', 'cl', 'clan', 'fr', '2', '4', '5'
-        ].includes(rel);
-
-        if (isFriendOrAlly) return null;
-
+        // Wrogie klany
         if (['3', 'clan-enemies', 'clan-enemy', 'cl-enemies', 'cl-enemy', 'cl-en'].includes(rel)) {
             return 'clanEnemy';
         }
 
+        // Wrogowie osobiści
         if (['1', '6', 'enemy', 'enemies', 'en'].includes(rel)) {
             return 'enemy';
         }
 
+        // Nieznajomi (gracze neutralni)
         if (['', '0', 'other'].includes(rel) || !rel) {
             return 'stranger';
         }
