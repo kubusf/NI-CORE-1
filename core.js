@@ -200,6 +200,7 @@
     const iconMobHighlight = `<svg class="ac-item-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="5.5"/><line x1="8" y1="1" x2="8" y2="3.5"/><line x1="8" y1="12.5" x2="8" y2="15"/><line x1="1" y1="8" x2="3.5" y2="8"/><line x1="12.5" y1="8" x2="15" y2="8"/><circle cx="8" cy="8" r="1.5" fill="currentColor"/></svg>`;
     const iconSound = `<svg class="ac-item-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="2 5.5 5.5 5.5 9 2.5 9 13.5 5.5 10.5 2 10.5 2 5.5" stroke-linejoin="round"/><path d="M11.5 5.5a3.8 3.8 0 0 1 0 5"/><path d="M13.5 3.5a6.5 6.5 0 0 1 0 9"/></svg>`;
     const iconCollisions = `<svg class="ac-item-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2.5" width="12" height="11" rx="1.5"/><line x1="2" y1="8" x2="14" y2="8"/><line x1="8" y1="2.5" x2="8" y2="8"/><line x1="5" y1="8" x2="5" y2="13.5"/><line x1="11" y1="8" x2="11" y2="13.5"/></svg>`;
+    const iconHubDock = `<svg class="ac-item-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 2.8 L27 8.2 V18.8 C27 24.2 22 28.2 16 30 C10 28.2 5 24.2 5 18.8 V8.2 Z" fill="#18241b"/><circle cx="16" cy="16" r="6" stroke="currentColor" stroke-width="1.4" stroke-dasharray="3 2"/><path d="M16 10 L19.5 16 L16 22 L12.5 16 Z" fill="currentColor"/><circle cx="16" cy="16" r="2" fill="#ffffff"/></svg>`;
 
     let highestZ = 10000;
     const bringToFront = (el) => { if (!el) return; highestZ += 1; el.style.zIndex = String(highestZ); };
@@ -233,7 +234,7 @@
     const onPacket = (cb) => packetListeners.push(cb);
 
     // ==========================================
-    // DOCK IKON W PRAWYM DOLNYM ROGU OKNA MAPY (NI)
+    // DOCK IKON W PRAWYM DOLNYM ROGU MAPY GRY (NI)
     // ==========================================
     const activeDock = document.createElement('div');
     activeDock.setAttribute('id', 'AUTO_COMBO_ACTIVE_DOCK');
@@ -248,16 +249,13 @@
         if (canvas) {
             const rect = canvas.getBoundingClientRect();
             if (rect.width > 0 && rect.height > 0) {
-                // Odległość prawej krawędzi canvasu od prawej krawędzi ekranu + 6px marginesu w głąb mapy
                 const rightOffset = Math.round(window.innerWidth - rect.right + 6);
-                // Odległość dolnej krawędzi canvasu od dolnej krawędzi ekranu + 6px marginesu nad dolną belką
                 const bottomOffset = Math.round(window.innerHeight - rect.bottom + 6);
                 activeDock.style.right = `${rightOffset}px`;
                 activeDock.style.bottom = `${bottomOffset}px`;
                 return;
             }
         }
-        // Wartość awaryjna
         activeDock.style.right = '295px';
         activeDock.style.bottom = '52px';
     };
@@ -265,7 +263,6 @@
     window.addEventListener('resize', updateDockPosition);
     setInterval(updateDockPosition, 1000);
 
-    // Nasłuchiwanie na zmiany rozmiaru canvasu
     if (window.ResizeObserver) {
         const ro = new ResizeObserver(() => updateDockPosition());
         const observeCanvas = () => {
@@ -275,6 +272,17 @@
         };
         observeCanvas();
     }
+
+    // Stały przycisk Huba w docku na mapie (dostępny zawsze, nawet po wyrzuceniu widżetu z paska)
+    const hubDockBtn = document.createElement('button');
+    hubDockBtn.className = 'ac-dock-btn ac-dock-hub-btn';
+    hubDockBtn.setAttribute('aria-label', 'NI CORE HUB');
+    hubDockBtn.innerHTML = `${iconHubDock}<span class="ac-dock-tooltip">NI CORE (HUB)</span>`;
+    hubDockBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleHub();
+    });
+    activeDock.appendChild(hubDockBtn);
 
     const modulesDefinition = [
         { key: 'autoX', title: 'AUTO X', desc: 'Automatyczne atakowanie przeciwników z szybką walką.', icon: iconAutoX },
@@ -339,7 +347,6 @@
     const hubBody = document.createElement('div');
     hubBody.className = 'ac-body';
 
-    // Obsługa płynnego scrollowania kółkiem myszy
     hubBody.addEventListener('wheel', (e) => {
         e.stopPropagation();
         e.preventDefault();
@@ -405,15 +412,23 @@
     hubMain.appendChild(hubBody);
 
     // ==========================================
-    // DOLNY PASEK Z WERSJĄ PACZKI (FOOTER)
+    // DOLNY PASEK Z WERSJĄ ORAZ PRZYCISKIEM PRZYPINANIA WIDŻETU
     // ==========================================
     const hubFooter = document.createElement('div');
     hubFooter.className = 'ac-hub-footer';
 
-    const footerLabel = document.createElement('span');
-    footerLabel.className = 'ac-hub-footer-label';
-    footerLabel.innerText = 'WERSJA PACZKI';
-    hubFooter.appendChild(footerLabel);
+    // Przycisk natychmiastowego przywrócenia widżetu na pasek gry
+    const pinWidgetBtn = document.createElement('button');
+    pinWidgetBtn.className = 'ac-hub-pin-btn';
+    pinWidgetBtn.innerText = 'PRZYPNIJ WIDŻET';
+    pinWidgetBtn.setAttribute('title', 'Kliknij, aby przypiąć widżet NI CORE z powrotem do paska gry Margonem');
+    pinWidgetBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        forceCreateWidget();
+        pinWidgetBtn.innerText = 'PRZYPIĘTO!';
+        setTimeout(() => { pinWidgetBtn.innerText = 'PRZYPNIJ WIDŻET'; }, 1500);
+    });
+    hubFooter.appendChild(pinWidgetBtn);
 
     const footerVer = document.createElement('span');
     footerVer.className = 'ac-hub-footer-ver';
@@ -423,7 +438,7 @@
     hubMain.appendChild(hubFooter);
 
     document.body.appendChild(hubMain);
-    makeDraggable(hubMain, hubHeader, 'posHub', ['.ac-close-btn', '.ac-expand-btn']);
+    makeDraggable(hubMain, hubHeader, 'posHub', ['.ac-close-btn', '.ac-expand-btn', '.ac-hub-pin-btn']);
 
     const updateHubExpandState = () => {
         expandHubBtn.classList.toggle('is-expanded', ls.expandedHub);
@@ -443,6 +458,9 @@
     const updateAllVisibilities = () => {
         updateDockPosition();
         hubMain.style.display = ls.hubVisible ? 'block' : 'none';
+
+        // Aktualizacja stanu przycisku Huba w docku
+        hubDockBtn.classList.toggle('is-open', Boolean(ls.hubVisible));
 
         modulesDefinition.forEach(mod => {
             const isModActive = Boolean(ls.modules[mod.key]);
@@ -487,24 +505,70 @@
         updateAllVisibilities();
     };
 
-    // Widget NI
+    // Skrót klawiszowy Shift + H (nie koliduje z czatem)
+    window.addEventListener('keydown', (e) => {
+        if (['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName)) return;
+        if (document.activeElement?.isContentEditable) return;
+        if (e.shiftKey && (e.key === 'H' || e.key === 'h')) {
+            e.preventDefault();
+            toggleHub();
+        }
+    });
+
+    // ==========================================
+    // REJESTRACJA I PRZYWRACANIE WIDŻETU MARGONEM NI
+    // ==========================================
+    const widgetName = 'auto_combo';
+    const defaultPosition = [6, 'bottom-right-additional'];
+
+    const addWidgetToDefaultWidgetSet = () => {
+        try { W.Engine.widgetManager.addKeyToDefaultWidgetSet(widgetName, defaultPosition[0], defaultPosition[1], 'NI CORE', 'green', toggleHub); } catch (e) {}
+    };
+
+    // Funkcja wymuszająca ponowne stworzenie i przypięcie widżetu na pasku gry
+    const forceCreateWidget = () => {
+        if (!isNI || !W.Engine?.widgetManager) return;
+        try {
+            addWidgetToDefaultWidgetSet();
+            if (W.Engine.serverStorage && W.Engine.widgetManager.getPathToHotWidgetVersion) {
+                const path = W.Engine.widgetManager.getPathToHotWidgetVersion();
+                let sPos = W.Engine.serverStorage.get(path) || {};
+                sPos[widgetName] = defaultPosition;
+                try { W.Engine.serverStorage.set(path, sPos); } catch (err) {}
+            }
+
+            const existing = document.querySelector(`.widget-button[data-name="${widgetName}"], .widget-button .icon.${widgetName}`);
+            if (existing) existing.closest('.widget-button')?.remove();
+
+            W.Engine.widgetManager.createOneWidget(widgetName, { [widgetName]: defaultPosition }, true, []);
+            updateDockPosition();
+            updateAllVisibilities();
+        } catch (e) {
+            console.error('[NI CORE] Błąd przywracania widżetu:', e);
+        }
+    };
+
     const initNIWidget = () => {
         if (!isNI || !W.Engine?.widgetManager) return;
-        const widgetName = 'auto_combo';
-        const defaultPosition = [6, 'bottom-right-additional'];
-        const addWidgetToDefaultWidgetSet = () => {
-            try { W.Engine.widgetManager.addKeyToDefaultWidgetSet(widgetName, defaultPosition[0], defaultPosition[1], 'NI CORE', 'green', toggleHub); } catch (e) {}
-        };
+
         const createButtonNI = () => {
             try {
-                if (W.Engine.interfaceStart && Object.keys(W.Engine.widgetManager.getDefaultWidgetSet()).includes(widgetName)) {
+                if (W.Engine.interfaceStart) {
                     let widgetPos = defaultPosition;
                     try {
                         if (W.Engine.serverStorage && W.Engine.widgetManager.getPathToHotWidgetVersion) {
-                            const sPos = W.Engine.serverStorage.get(W.Engine.widgetManager.getPathToHotWidgetVersion());
-                            if (sPos && sPos[widgetName]) widgetPos = sPos[widgetName];
+                            const path = W.Engine.widgetManager.getPathToHotWidgetVersion();
+                            const sPos = W.Engine.serverStorage.get(path);
+                            // Jeśli widżet został wyrzucony z paska, automatycznie naprawiamy go w storage
+                            if (sPos && sPos[widgetName]) {
+                                widgetPos = sPos[widgetName];
+                            } else if (sPos && typeof W.Engine.serverStorage.set === 'function') {
+                                sPos[widgetName] = defaultPosition;
+                                W.Engine.serverStorage.set(path, sPos);
+                            }
                         }
                     } catch (e) {}
+
                     const existing = document.querySelector(`.widget-button[data-name="${widgetName}"], .widget-button .icon.${widgetName}`);
                     if (existing) existing.closest('.widget-button')?.remove();
                     W.Engine.widgetManager.createOneWidget(widgetName, { [widgetName]: widgetPos }, true, []);
@@ -601,7 +665,6 @@
 
 /* ==========================================
    DOCK IKON W PRAWYM DOLNYM ROGU MAPY GRY (NI)
-   PIONOWA KOLUMNA PRZY PRAWEJ KRAWĘDZI MAPY
    ========================================== */
 .ac-active-dock {
     position: fixed;
@@ -635,6 +698,16 @@
     transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
 }
 
+.ac-dock-hub-btn {
+    border-color: rgba(56, 194, 104, 0.75);
+    background: linear-gradient(180deg, #242a26 0%, #151a17 100%);
+}
+
+.ac-dock-hub-btn:hover {
+    border-color: #52e385;
+    background: linear-gradient(180deg, #2d3630 0%, #1b241e 100%);
+}
+
 .ac-dock-btn svg {
     width: 14px;
     height: 14px;
@@ -664,7 +737,7 @@
     box-shadow: 0 0 8px rgba(56, 194, 104, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
-/* Dymek wysuwany w lewo (w głąb mapy) aby nie nachodził na pionowe przyciski */
+/* Dymek wysuwany w lewo (w głąb mapy) */
 .ac-dock-tooltip {
     position: absolute;
     right: calc(100% + 8px);
@@ -725,7 +798,7 @@
 }
 
 /* ==========================================
-   NOWY STYL HUB-A ZGODNY Z MARGONEM NI
+   HUB
    ========================================== */
 #AUTO_COMBO_HUB {
     width: 234px;
@@ -782,9 +855,9 @@
     background: rgba(255, 255, 255, 0.4) !important;
 }
 
-/* Dolny pasek z wersją (Footer) */
+/* Dolny pasek (Footer) */
 .ac-hub-footer {
-    height: 22px;
+    height: 24px;
     padding: 0 8px;
     background: linear-gradient(180deg, #181a1f 0%, #121316 100%);
     border-top: 1px solid rgba(255, 255, 255, 0.08);
@@ -795,12 +868,30 @@
     user-select: none;
 }
 
-.ac-hub-footer-label {
+.ac-hub-pin-btn {
     font-size: 7.8px;
     font-weight: 800;
-    letter-spacing: 0.6px;
-    color: #6d7380;
-    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: #38c268;
+    background: rgba(56, 194, 104, 0.14);
+    border: 1px solid rgba(56, 194, 104, 0.4);
+    border-radius: 3px;
+    padding: 2px 6px;
+    cursor: pointer;
+    line-height: 1;
+    transition: all 0.15s ease;
+    outline: none;
+}
+
+.ac-hub-pin-btn:hover {
+    background: rgba(56, 194, 104, 0.28);
+    border-color: #52e385;
+    color: #ffffff;
+    box-shadow: 0 0 6px rgba(56, 194, 104, 0.45);
+}
+
+.ac-hub-pin-btn:active {
+    transform: scale(0.95);
 }
 
 .ac-hub-footer-ver {
@@ -1374,7 +1465,7 @@
         W, isNI, ls, getHero, getCharId, saveLS, sendCmd, getValidPos, getCenterPos,
         isSameClan, fetchClanMembers, parseClanData,
         makeDraggable, bringToFront, updateAllVisibilities, registerWindow,
-        onPacket,
+        onPacket, forceCreateWidget,
         version: CORE_VERSION,
         svg: { checkmarkSvg, plusMinusSvg, guiWindowSvg }
     };
