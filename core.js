@@ -30,6 +30,10 @@
     if (typeof ls.modules.soundNotifier === 'undefined') ls.modules.soundNotifier = false;
     if (typeof ls.modules.showCollisions === 'undefined') ls.modules.showCollisions = false;
 
+    // Pozycja doka zapamiętana w localStorage (domyślnie przy prawej krawędzi mapy)
+    if (typeof ls.dockRightOffset === 'undefined') ls.dockRightOffset = 270;
+    if (typeof ls.dockBottomOffset === 'undefined') ls.dockBottomOffset = 52;
+
     // Tylko Hub jest widoczny przy 1. instalacji
     if (typeof ls.hubVisible === 'undefined') ls.hubVisible = true;
     if (typeof ls.expandedHub === 'undefined') ls.expandedHub = true;
@@ -254,98 +258,91 @@
     const onPacket = (cb) => packetListeners.push(cb);
 
     // ==========================================
-    // DETEKCJA WALKI I ZAPOBIEGANIE PRZESUWANIU DOCKA
-    // ==========================================
-    const isBattle = () => {
-        if (isNI && W.Engine?.battle) {
-            if (typeof W.Engine.battle.endBattle !== 'undefined') {
-                return !W.Engine.battle.endBattle;
-            }
-            if (typeof W.Engine.battle.show !== 'undefined') {
-                return Boolean(W.Engine.battle.show);
-            }
-            return true;
-        }
-        if (W.g?.battle) return true;
-        if (document.querySelector('.battle-window, #battle, .battle-container, [data-panel="battle"]')) return true;
-        return false;
-    };
-
-    // ==========================================
     // DOCK IKON W PRAWYM DOLNYM ROGU MAPY GRY (NI)
     // ==========================================
     const activeDock = document.createElement('div');
     activeDock.setAttribute('id', 'AUTO_COMBO_ACTIVE_DOCK');
     activeDock.className = 'ac-active-dock';
+    // Natychmiastowe ustawienie pozycji z localStorage (zapobiega skokom pozycji po F5)
+    activeDock.style.right = `${ls.dockRightOffset || 270}px`;
+    activeDock.style.bottom = `${ls.dockBottomOffset || 52}px`;
     document.body.appendChild(activeDock);
 
-    // Zapamiętana stabilna pozycja spoczynkowa (poza walką)
-    let lastStableRight = null;
-    let lastStableBottom = null;
-
-    // Dynamiczne pozycjonowanie docka dokładnie przy prawej i dolnej krawędzi mapy gry (GAME_CANVAS)
+    // Dynamiczne pozycjonowanie docka dokładnie na krawędzi mapy (zarówno w walce, jak i poza nią)
     const updateDockPosition = () => {
-        // Jeśli gracz jest w walce – dock ma pozostać w swojej stabilnej pozycji, nie uciekając w lewo
-        if (isBattle()) {
-            if (lastStableRight !== null && lastStableBottom !== null) {
-                activeDock.style.right = `${lastStableRight}px`;
-                activeDock.style.bottom = `${lastStableBottom}px`;
-            }
-            return;
-        }
+        let detectedRight = null;
+        let detectedBottom = null;
 
+        // 1. Sprawdzamy, czy canvas ma rzeczywistą krawędź mapy (np. podczas walki)
         const canvas = document.getElementById('GAME_CANVAS') 
                     || document.querySelector('.game-window-positioner canvas')
                     || document.querySelector('.game-window-positioner');
         if (canvas) {
-            const rect = canvas.getBoundingClientRect();
-            if (rect.width > 0 && rect.height > 0) {
-                const rightOffset = Math.round(window.innerWidth - rect.right + 6);
-                const bottomOffset = Math.round(window.innerHeight - rect.bottom + 6);
-
-                // Zabezpieczenie przed gwałtownym zwężeniem canvasu przez animację walki zanim silnik zgłosi stan walki
-                if (lastStableRight !== null && rightOffset > lastStableRight + 40) {
-                    return;
-                }
-
-                lastStableRight = rightOffset;
-                lastStableBottom = bottomOffset;
-
-                activeDock.style.right = `${rightOffset}px`;
-                activeDock.style.bottom = `${bottomOffset}px`;
-                return;
+            const r = canvas.getBoundingClientRect();
+            // Jeśli prawa krawędź canvasu nie sięga do samego końca okna przeglądarki, to wyznacza prawą granicę mapy
+            if (r.width > 0 && r.right < window.innerWidth - 100) {
+                detectedRight = Math.round(window.innerWidth - r.right + 6);
+            }
+            if (r.height > 0 && r.bottom <= window.innerHeight) {
+                detectedBottom = Math.round(window.innerHeight - r.bottom + 6);
             }
         }
 
-        if (lastStableRight !== null && lastStableBottom !== null) {
-            activeDock.style.right = `${lastStableRight}px`;
-            activeDock.style.bottom = `${lastStableBottom}px`;
-        } else {
-            activeDock.style.right = '295px';
-            activeDock.style.bottom = '52px';
+        // 2. Poza walką canvas rozciąga się pod prawym panelem (1920px), więc pobieramy granicę z lewej krawędzi prawego panelu
+        if (detectedRight === null) {
+            const rightSidebarSelectors = [
+                '.interface-layer .right-column',
+                '.main-column.right-column',
+                '.right-column',
+                '.hud-container',
+                '.main-buttons-container',
+                '[data-position="bottom-right"]',
+                '[data-position="bottom-right-additional"]'
+            ];
+            for (const sel of rightSidebarSelectors) {
+                const el = document.querySelector(sel);
+                if (el) {
+                    const r = el.getBoundingClientRect();
+                    // Sprawdzamy czy element jest widoczny po prawej stronie ekranu
+                    if (r.width > 30 && r.left > window.innerWidth / 2 && r.left < window.innerWidth - 50) {
+                        detectedRight = Math.round(window.innerWidth - r.left + 6);
+                        break;
+                    }
+                }
+            }
         }
+
+        // 3. Sprawdzamy dolny pasek (jeśli canvas nie dał prawidłowej dolnej krawędzi)
+        if (detectedBottom === null || detectedBottom < 30) {
+            const bottomBar = document.querySelector('.bottom-panel, .main-buttons-container, [data-position="bottom-right"], .positioner.bottom');
+            if (bottomBar) {
+                const r = bottomBar.getBoundingClientRect();
+                if (r.top > window.innerHeight / 2) {
+                    detectedBottom = Math.round(window.innerHeight - r.top + 6);
+                }
+            }
+        }
+
+        // Jeśli wykryto stabilną pozycję krawędzi mapy, zapisujemy ją i stosujemy
+        if (detectedRight !== null && detectedRight >= 120 && detectedRight <= window.innerWidth / 2) {
+            ls.dockRightOffset = detectedRight;
+            activeDock.style.right = `${detectedRight}px`;
+        } else if (ls.dockRightOffset) {
+            activeDock.style.right = `${ls.dockRightOffset}px`;
+        }
+
+        if (detectedBottom !== null && detectedBottom >= 30 && detectedBottom <= 150) {
+            ls.dockBottomOffset = detectedBottom;
+            activeDock.style.bottom = `${detectedBottom}px`;
+        } else if (ls.dockBottomOffset) {
+            activeDock.style.bottom = `${ls.dockBottomOffset}px`;
+        }
+
+        saveLS();
     };
 
-    // Przy zmianie rozmiaru okna przeglądarki resetujemy pozycję (o ile nie trwa walka)
-    window.addEventListener('resize', () => {
-        if (!isBattle()) {
-            lastStableRight = null;
-            lastStableBottom = null;
-            updateDockPosition();
-        }
-    });
-
+    window.addEventListener('resize', updateDockPosition);
     setInterval(updateDockPosition, 600);
-
-    if (window.ResizeObserver) {
-        const ro = new ResizeObserver(() => updateDockPosition());
-        const observeCanvas = () => {
-            const c = document.getElementById('GAME_CANVAS') || document.querySelector('.game-window-positioner');
-            if (c) ro.observe(c);
-            else setTimeout(observeCanvas, 250);
-        };
-        observeCanvas();
-    }
 
     // Główny złoty przycisk HUB-a (58px) bez napisu, tylko z logo
     const hubDockBtn = document.createElement('button');
@@ -623,7 +620,7 @@
 .ac-active-dock {
     position: fixed;
     bottom: 52px;
-    right: 295px;
+    right: 270px;
     display: flex;
     flex-direction: column-reverse;
     gap: 4px;
