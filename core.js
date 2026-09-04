@@ -62,7 +62,7 @@
     };
 
     // Wyśrodkowanie okien przy pierwszym uruchomieniu
-    const centerHub = getCenterPos(234, 320);
+    const centerHub = getCenterPos(234, 300);
     ls.posHub = getValidPos(ls.posHub, centerHub.x, centerHub.y, 234);
 
     const centerDefault = getCenterPos(126, 130);
@@ -258,6 +258,13 @@
 
     const hubBody = document.createElement('div');
     hubBody.className = 'ac-body';
+
+    // Obsługa płynnego scrollowania kółkiem myszy bez blokowania przez silnik Margonem
+    hubBody.addEventListener('wheel', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        hubBody.scrollTop += e.deltaY;
+    }, { passive: false });
 
     function createHubItem(modKey, titleText, descText) {
         const item = document.createElement('div');
@@ -532,31 +539,34 @@
 
 #AUTO_COMBO_HUB .ac-body {
     padding: 6px 5px 6px 6px;
-    gap: 4.5px;
-    max-height: 285px;
-    overflow-y: auto;
-    overflow-x: hidden;
+    gap: 4px;
+    max-height: 185px; /* Wysokość mieszcząca ok. 3.5 kafelka, natychmiast wywołująca scroll */
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
     background: #121316;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) rgba(0, 0, 0, 0.35);
 }
 
-/* Nowoczesny pasek przewijania NI */
+/* Pasek przewijania NI Webkit */
 #AUTO_COMBO_HUB .ac-body::-webkit-scrollbar {
-    width: 4px;
+    width: 5px !important;
 }
 
 #AUTO_COMBO_HUB .ac-body::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.28);
-    border-radius: 2px;
+    background: rgba(0, 0, 0, 0.35) !important;
+    border-radius: 3px;
 }
 
 #AUTO_COMBO_HUB .ac-body::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.18);
-    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.22) !important;
+    border-radius: 3px;
     transition: background 0.15s;
 }
 
 #AUTO_COMBO_HUB .ac-body::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.35);
+    background: rgba(255, 255, 255, 0.4) !important;
 }
 
 /* Kafelki w Hubie */
@@ -569,6 +579,7 @@
     box-sizing: border-box;
     cursor: pointer;
     user-select: none;
+    flex-shrink: 0 !important; /* ZAPOBIEGA ŚCISKANIU KAFELKÓW - WYMUSZA PRZEWIJANIE */
     transition: all 0.15s ease;
 }
 
