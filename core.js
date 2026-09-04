@@ -201,7 +201,7 @@
     const iconSound = `<svg class="ac-item-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="2 5.5 5.5 5.5 9 2.5 9 13.5 5.5 10.5 2 10.5 2 5.5" stroke-linejoin="round"/><path d="M11.5 5.5a3.8 3.8 0 0 1 0 5"/><path d="M13.5 3.5a6.5 6.5 0 0 1 0 9"/></svg>`;
     const iconCollisions = `<svg class="ac-item-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2.5" width="12" height="11" rx="1.5"/><line x1="2" y1="8" x2="14" y2="8"/><line x1="8" y1="2.5" x2="8" y2="8"/><line x1="5" y1="8" x2="5" y2="13.5"/><line x1="11" y1="8" x2="11" y2="13.5"/></svg>`;
 
-    // Nowe, panoramiczne złote logo dla przycisku HUB-a (symetryczny herb z kryształem i skrzydłami)
+    // Panoramiczne złote logo dla przycisku HUB-a
     const iconHubDock = `<svg class="ac-hub-dock-icon" viewBox="0 0 40 22" fill="none" xmlns="http://www.w3.org/2000/svg">
         <defs>
             <linearGradient id="acHubGold" x1="0" y1="0" x2="0" y2="1">
@@ -213,15 +213,11 @@
                 <stop offset="100%" stop-color="#e69519"/>
             </linearGradient>
         </defs>
-        <!-- Lewe skrzydło / klamra -->
         <path d="M4 11 L11 4 L13 6 L8 11 L13 16 L11 18 Z" fill="url(#acHubGold)" opacity="0.85"/>
         <line x1="2" y1="11" x2="6" y2="11" stroke="#ffd56b" stroke-width="1.8" stroke-linecap="round"/>
-        <!-- Prawe skrzydło / klamra -->
         <path d="M36 11 L29 4 L27 6 L32 11 L27 16 L29 18 Z" fill="url(#acHubGold)" opacity="0.85"/>
         <line x1="38" y1="11" x2="34" y2="11" stroke="#ffd56b" stroke-width="1.8" stroke-linecap="round"/>
-        <!-- Centralny herb -->
         <path d="M20 2.5 L26 6.5 V14.5 L20 19 L14 14.5 V6.5 Z" fill="#1b140a" stroke="url(#acHubGold)" stroke-width="1.6" stroke-linejoin="round"/>
-        <!-- Kryształ wewnątrz -->
         <path d="M20 6.5 L23.5 11 L20 15.5 L16.5 11 Z" fill="url(#acHubInner)"/>
         <circle cx="20" cy="11" r="1.8" fill="#ffffff"/>
     </svg>`;
@@ -591,14 +587,15 @@
     width: 58px;
 }
 
+/* Kafelki modułów w docku - neutralna ramka, białe ikony */
 .ac-dock-btn {
     position: relative;
     width: 27px;
     height: 27px;
     border-radius: 5px;
     background: linear-gradient(180deg, #1f2127 0%, #131418 100%);
-    border: 1px solid rgba(56, 194, 104, 0.45);
-    color: #38c268;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    color: #ffffff;
     cursor: pointer;
     padding: 0;
     margin: 0;
@@ -607,22 +604,22 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7), 0 0 5px rgba(56, 194, 104, 0.25);
-    transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
+    transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, color 0.15s ease;
 }
 
 .ac-dock-btn svg {
     width: 14px;
     height: 14px;
     display: block;
-    transition: transform 0.15s ease;
+    transition: transform 0.15s ease, filter 0.15s ease, color 0.15s ease;
 }
 
 .ac-dock-btn:hover {
     transform: translateY(-2px);
-    border-color: #52e385;
+    border-color: rgba(255, 255, 255, 0.35);
     background: linear-gradient(180deg, #262932 0%, #181a20 100%);
-    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.8), 0 0 8px rgba(56, 194, 104, 0.45);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.8);
     color: #ffffff;
 }
 
@@ -634,14 +631,24 @@
     transform: translateY(0) scale(0.94);
 }
 
+/* Aktywny stan: po otwarciu GUI modułu ikona staje się zielona */
 .ac-dock-btn.is-open {
-    background: linear-gradient(180deg, #243b2b 0%, #16241a 100%);
-    border-color: #38c268;
-    box-shadow: 0 0 8px rgba(56, 194, 104, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    background: linear-gradient(180deg, #22262e 0%, #15171c 100%);
+    border-color: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    color: #38c268;
+}
+
+.ac-dock-btn.is-open svg {
+    filter: drop-shadow(0 0 3px rgba(56, 194, 104, 0.75));
+}
+
+.ac-dock-btn.is-open:hover {
+    color: #52e385;
 }
 
 /* ==========================================
-   NOWY WYGLĄD PRZYCISKU HUB-A (ZŁOTO / BURSZTYN)
+   WYRÓŻNIONY PRZYCISK HUB-A (ZŁOTO / BURSZTYN)
    ========================================== */
 .ac-dock-hub-btn {
     width: 58px;
@@ -654,6 +661,7 @@
     align-items: center;
     justify-content: center;
     padding: 0;
+    color: #ffd56b;
 }
 
 .ac-hub-dock-icon {
@@ -669,6 +677,7 @@
     border-color: #ffd066;
     background: linear-gradient(180deg, #332819 0%, #1a140b 100%);
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.9), 0 0 14px rgba(255, 195, 75, 0.65);
+    color: #ffd066;
 }
 
 .ac-dock-hub-btn:hover .ac-hub-dock-icon {
@@ -680,6 +689,7 @@
     background: linear-gradient(180deg, #3d301c 0%, #21190d 100%);
     border-color: #ffd56b;
     box-shadow: 0 0 12px rgba(255, 205, 80, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    color: #ffd56b;
 }
 
 .ac-dock-hub-btn .ac-dock-tooltip {
@@ -1130,7 +1140,7 @@
     justify-content: center;
     transition: color 0.15s, transform 0.12s;
     outline: none;
-    box-sizing: border-box;
+    box-sizing: content-box;
     z-index: 2;
 }
 
