@@ -1,4 +1,4 @@
-// modules/showCollisions.js - Precyzyjna siatka kolizji mapy (bez potworów)
+// modules/showCollisions.js - Wizualizacja fizycznych kolizji mapy
 (function() {
     'use strict';
     const C = (typeof unsafeWindow !== 'undefined' ? unsafeWindow : window).NICore;
@@ -14,18 +14,22 @@
             color: '#ff2828'
         };
     }
-    if (typeof ls.modules.showCollisions === 'undefined') ls.modules.showCollisions = true;
-    if (typeof ls.guiVisible.showCollisions === 'undefined') ls.guiVisible.showCollisions = false;
 
     const cfg = ls.showCollisions;
     cfg.alpha = Math.min(Math.max(parseInt(cfg.alpha, 10) || 35, 10), 80);
     if (typeof cfg.showBorders === 'undefined') cfg.showBorders = true;
-    if (!cfg.color) cfg.color = '#ff2828';
+    if (!cfg.color || typeof cfg.color !== 'string' || !cfg.color.startsWith('#') || cfg.color.length !== 7) {
+        cfg.color = '#ff2828';
+    }
+
+    if (typeof ls.modules.showCollisions === 'undefined') ls.modules.showCollisions = true;
+    if (typeof ls.guiVisible.showCollisions === 'undefined') ls.guiVisible.showCollisions = true;
 
     const hexToRgb = (hex) => {
         let c = String(hex || '#ff2828').replace('#', '');
         if (c.length === 3) c = c.split('').map(x => x + x).join('');
         const num = parseInt(c, 16);
+        if (isNaN(num)) return { r: 255, g: 40, b: 40 };
         return {
             r: (num >> 16) & 255,
             g: (num >> 8) & 255,
@@ -93,7 +97,7 @@
 
     document.body.appendChild(colMain);
 
-    // Style palety kolorów
+    // Style palety
     const palStyle = document.createElement('style');
     palStyle.innerHTML = `
         .ac-color-dot {
@@ -123,6 +127,7 @@
         updateAllVisibilities();
     });
 
+    // Kontury
     const btnBorders = colMain.querySelector('.btn-borders');
     const toggleBorders = () => {
         cfg.showBorders = !cfg.showBorders;
@@ -133,14 +138,18 @@
     btnBorders.addEventListener('click', toggleBorders);
     colMain.querySelector('.lbl-borders').addEventListener('click', toggleBorders);
 
+    // Wybór koloru
     const colorDots = colMain.querySelectorAll('.ac-color-dot');
     const customColorBtn = colMain.querySelector('.ac-color-custom-btn');
     const customColorInput = colMain.querySelector('.col-picker-input');
 
     const updateColorVisuals = (chosenCol) => {
-        colorDots.forEach(b => b.classList.toggle('active', b.getAttribute('data-col') === chosenCol));
-        customColorBtn.style.background = chosenCol;
-        customColorInput.value = chosenCol;
+        const safeCol = (chosenCol && chosenCol.startsWith('#') && chosenCol.length === 7) ? chosenCol : '#ff2828';
+        colorDots.forEach(b => b.classList.toggle('active', b.getAttribute('data-col') === safeCol));
+        if (customColorBtn) customColorBtn.style.background = safeCol;
+        try {
+            if (customColorInput) customColorInput.value = safeCol;
+        } catch (err) {}
     };
 
     const setColor = (newCol) => {
@@ -162,6 +171,7 @@
 
     updateColorVisuals(cfg.color);
 
+    // Suwak widoczności
     const colSlider = colMain.querySelector('.col-slider');
     const colValText = colMain.querySelector('.col-val');
     colSlider.addEventListener('input', () => {
@@ -183,18 +193,93 @@
     makeDraggable(colMain, colMain.querySelector('.ac-header'), 'posShowCollisions', ['.ac-close-btn', '.ac-status-btn']);
     registerWindow('showCollisions', { mainEl: colMain, statusBtn: statusBtn });
 
-    // --- SPRAWDZANIE CZY POLE JEST ZABLOKOWANE ---
-    const checkCollision = (x, y) => {
-        // 1. Podstawowa metoda silnika NI
+    // --- INTEGRACJA Z HUBEM (GŁÓWNYM MENU) ---
+    const attachToHub = () => {
+        const hubBody = document.querySelector('#AUTO_COMBO_HUB .ac-body');
+        if (!hubBody || document.getElementById('AC_HUB_ITEM_COLLISIONS')) return;
+
+        const hubItem = document.createElement('div');
+        hubItem.setAttribute('id', 'AC_HUB_ITEM_COLLISIONS');
+        hubItem.className = `ac-hub-item ${ls.modules.showCollisions ? 'AC-ON' : 'AC-OFF'}`;
+        hubItem.setAttribute('title', 'Kliknij kafelek, aby włączyć lub wyłączyć Kolizje');
+        hubItem.addEventListener('click', () => {
+            ls.modules.showCollisions = !ls.modules.showCollisions;
+            saveLS();
+            updateAllVisibilities();
+        });
+
+        const hubRow = document.createElement('div');
+        hubRow.className = 'ac-hub-row';
+        const titleGroup = document.createElement('div');
+        titleGroup.className = 'ac-hub-title-group';
+        const dot = document.createElement('span');
+        dot.className = `ac-hub-dot ${ls.modules.showCollisions ? 'AC-ON' : 'AC-OFF'}`;
+        titleGroup.appendChild(dot);
+        const title = document.createElement('span');
+        title.className = 'ac-hub-item-title';
+        title.innerText = 'KOLIZJE';
+        titleGroup.appendChild(title);
+        hubRow.appendChild(titleGroup);
+
+        const guiBtn = document.createElement('button');
+        guiBtn.className = `ac-hub-gui-btn ${ls.guiVisible.showCollisions ? 'AC-ON' : 'AC-OFF'}`;
+        guiBtn.setAttribute('title', 'Otwórz / Ukryj okno Kolizje');
+        guiBtn.innerHTML = C.svg.guiWindowSvg;
+        guiBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            ls.guiVisible.showCollisions = !ls.guiVisible.showCollisions;
+            saveLS();
+            updateAllVisibilities();
+        });
+        rowAppend(hubRow, guiBtn);
+        hubItem.appendChild(hubRow);
+
+        const desc = document.createElement('div');
+        desc.className = 'ac-hub-desc';
+        desc.innerText = 'Podświetlanie zablokowanych pól mapy (ścian, wody i przeszkód).';
+        hubItem.appendChild(desc);
+
+        hubBody.appendChild(hubItem);
+
+        function rowAppend(p, c) { p.appendChild(c); }
+
+        const updateTile = () => {
+            const isModOn = Boolean(ls.modules.showCollisions);
+            const isGuiOn = Boolean(ls.guiVisible.showCollisions);
+            hubItem.className = `ac-hub-item ${isModOn ? 'AC-ON' : 'AC-OFF'}`;
+            dot.className = `ac-hub-dot ${isModOn ? 'AC-ON' : 'AC-OFF'}`;
+            guiBtn.className = `ac-hub-gui-btn ${isGuiOn ? 'AC-ON' : 'AC-OFF'}`;
+        };
+
+        const origUpdate = C.updateAllVisibilities;
+        C.updateAllVisibilities = () => {
+            origUpdate();
+            updateTile();
+        };
+        updateTile();
+    };
+
+    setTimeout(attachToHub, 200);
+
+    // --- PRECYZYJNE SPRAWDZANIE ŚCIAN (BEZ POTWORÓW) ---
+    const isWallOnly = (x, y, monsterTiles) => {
+        // 1. Jeśli na polu stoi potwór/NPC -> BEZWZGLĘDNIE BRAK KOLIZJI
+        if (monsterTiles.has(`${x},${y}`)) return false;
+
+        // 2. Sprawdzenie bitu ściany w silniku Margonem NI
         if (W.Engine?.map?.col?.check) {
-            return Boolean(W.Engine.map.col.check(x, y));
+            const c = W.Engine.map.col.check(x, y);
+            // c === 1 lub (c & 1) oznacza fizyczną ścianę mapy. Inne wartości (np. 4) to potwory.
+            return Boolean(c && ((c === 1) || (c & 1)));
         }
-        // 2. Metoda rezerwowa
+
+        // 3. Sprawdzenie zapasowe
         const mapD = W.Engine?.map?.d;
         if (mapD && mapD.col && mapD.x) {
             const idx = y * mapD.x + x;
             return mapD.col.charAt(idx) === '1';
         }
+
         return false;
     };
 
@@ -220,14 +305,15 @@
         const startY = Math.max(0, Math.floor(totalOffsetY / 32));
         const endY = Math.min(maxY, Math.ceil((totalOffsetY + size.height) / 32));
 
-        // Zbieramy pozycje potworów i NPC, aby je BEZWZGLĘDNIE wykluczyć z rysowania
+        // Zbieramy współrzędne wszystkich potworów i NPC
         const monsterTiles = new Set();
         if (W.Engine?.npcs?.check) {
             const npcs = W.Engine.npcs.check();
             if (npcs) {
                 for (const id in npcs) {
-                    const d = npcs[id]?.d || npcs[id];
-                    if (d && typeof d.x === 'number' && typeof d.y === 'number') {
+                    const n = npcs[id];
+                    const d = n.d || n;
+                    if (typeof d.x === 'number' && typeof d.y === 'number') {
                         monsterTiles.add(`${d.x},${d.y}`);
                     }
                 }
@@ -244,10 +330,7 @@
 
         for (let y = startY; y <= endY; y++) {
             for (let x = startX; x <= endX; x++) {
-                // JEŚLI NA POLU STOI POTWÓR -> POMIJAMY I NIE RYSUJEMY
-                if (monsterTiles.has(`${x},${y}`)) continue;
-
-                if (checkCollision(x, y)) {
+                if (isWallOnly(x, y, monsterTiles)) {
                     const screenX = Math.round(x * 32 - totalOffsetX);
                     const screenY = Math.round(y * 32 - totalOffsetY);
 
@@ -266,10 +349,11 @@
 
     // --- HOOK MAPY ---
     const hookMapDraw = () => {
-        if (!isNI || W._collisionDrawHooked) return;
+        if (!isNI) return;
 
         const tryHook = () => {
-            if (W.Engine?.map && typeof W.Engine.map.draw === 'function' && !W._collisionDrawHooked) {
+            if (W.Engine?.map && typeof W.Engine.map.draw === 'function') {
+                if (W._collisionDrawHooked) return true;
                 W._collisionDrawHooked = true;
                 const origDraw = W.Engine.map.draw;
 
@@ -279,9 +363,12 @@
                         if (ls.modules.showCollisions && ctx) {
                             drawCollisions(ctx);
                         }
-                    } catch (e) {}
+                    } catch (e) {
+                        console.error('[ShowCollisions Error]', e);
+                    }
                     return res;
                 };
+                console.log('%c[NI Core] Kolizje podpięte pomyślnie!', 'color: #4de64d; font-weight: bold;');
                 return true;
             }
             return false;
