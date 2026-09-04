@@ -161,13 +161,30 @@
     makeDraggable(colMain, colMain.querySelector('.ac-header'), 'posShowCollisions', ['.ac-close-btn', '.ac-status-btn']);
     registerWindow('showCollisions', { mainEl: colMain, statusBtn: statusBtn });
 
+    // --- PRECYZYJNE SPRAWDZANIE ŚCIAN (BEZ POTWORÓW I BEZ WPŁYWU MOTYLI) ---
+    const isWallOnly = (x, y) => {
+        // 1. Sprawdzenie w silniku Margonem NI
+        if (W.Engine?.map?.col?.check) {
+            const c = W.Engine.map.col.check(x, y);
+            // c === 1 lub (c & 1) to ściana. Potwory to 4 (nie spełniają warunku).
+            return Boolean(c && ((c === 1) || (c & 1)));
+        }
+
+        // 2. Sprawdzenie zapasowe
+        const mapD = W.Engine?.map?.d;
+        if (mapD && mapD.col && mapD.x) {
+            const idx = y * mapD.x + x;
+            return mapD.col.charAt(idx) === '1';
+        }
+
+        return false;
+    };
+
     // --- RYSOWANIE SIATKI NA CANVASIE ---
     const drawCollisions = (ctx) => {
         if (!ls.modules.showCollisions || !isNI || !W.Engine?.map) return;
 
         const mapD = W.Engine.map.d;
-        if (!mapD || !mapD.col || !mapD.x) return;
-
         const offset = W.Engine.map.offset || [0, 0];
         const shift = (W.Engine.mapShift?.getShift ? W.Engine.mapShift.getShift() : null) || [0, 0];
         const totalOffsetX = offset[0] + shift[0];
@@ -177,8 +194,8 @@
             ? W.Engine.getCanvasViewSize()
             : { width: ctx.canvas?.width || window.innerWidth, height: ctx.canvas?.height || window.innerHeight };
 
-        const maxX = mapD.x - 1;
-        const maxY = mapD.y ? mapD.y - 1 : 999;
+        const maxX = mapD?.x ? mapD.x - 1 : 999;
+        const maxY = mapD?.y ? mapD.y - 1 : 999;
 
         const startX = Math.max(0, Math.floor(totalOffsetX / 32));
         const endX = Math.min(maxX, Math.ceil((totalOffsetX + size.width) / 32));
@@ -193,14 +210,9 @@
         ctx.fillStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alpha})`;
         ctx.strokeStyle = `rgba(${Math.min(255, rgb.r + 35)}, ${Math.min(255, rgb.g + 35)}, ${Math.min(255, rgb.b + 35)}, ${borderAlpha})`;
 
-        const colStr = mapD.col;
-        const mapWidth = mapD.x;
-
         for (let y = startY; y <= endY; y++) {
-            const rowOffset = y * mapWidth;
             for (let x = startX; x <= endX; x++) {
-                // Bezpośrednie sprawdzenie fizycznej kolizji mapy
-                if (colStr.charAt(rowOffset + x) === '1') {
+                if (isWallOnly(x, y)) {
                     const screenX = Math.round(x * 32 - totalOffsetX);
                     const screenY = Math.round(y * 32 - totalOffsetY);
 
@@ -217,6 +229,9 @@
         ctx.restore();
     };
 
+    // Przechowujemy referencję w obiekcie okna, by hook wywoływał zawsze najnowszą funkcję
+    W._drawCollisionsFn = drawCollisions;
+
     // --- HOOK MAPY ---
     const hookMapDraw = () => {
         if (!isNI) return;
@@ -230,8 +245,8 @@
                 W.Engine.map.draw = function(ctx) {
                     const res = origDraw.apply(this, arguments);
                     try {
-                        if (ls.modules.showCollisions && ctx) {
-                            drawCollisions(ctx);
+                        if (ls.modules.showCollisions && ctx && typeof W._drawCollisionsFn === 'function') {
+                            W._drawCollisionsFn(ctx);
                         }
                     } catch (e) {
                         console.error('[ShowCollisions Error]', e);
