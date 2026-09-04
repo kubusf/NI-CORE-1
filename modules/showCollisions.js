@@ -67,15 +67,10 @@
             <div class="ac-range-header" style="margin-top: 3px;">
                 <span>KOLOR</span>
             </div>
-            <div class="ac-filter-row col-palette" style="gap: 3px; align-items: center;">
-                <button class="ac-color-dot" data-col="#ff2828" style="background:#ff2828;" title="Czerwony"></button>
-                <button class="ac-color-dot" data-col="#ffe600" style="background:#ffe600;" title="Żółty"></button>
-                <button class="ac-color-dot" data-col="#00e5ff" style="background:#00e5ff;" title="Błękitny"></button>
-                <button class="ac-color-dot" data-col="#00e676" style="background:#00e676;" title="Zielony"></button>
-                <button class="ac-color-dot" data-col="#d500f9" style="background:#d500f9;" title="Fioletowy"></button>
-                <label style="margin:0; padding:0; display:flex; cursor:pointer;" title="Własny kolor">
-                    <input type="color" class="col-picker-input" value="${cfg.color}" style="opacity:0; width:0; height:0; position:absolute;">
-                    <div class="ac-color-custom-btn" style="background:${cfg.color}; width:16px; height:16px; border-radius:3px; border:1px solid #fff; box-sizing:border-box;"></div>
+            <div class="ac-filter-row" style="align-items: center;">
+                <label style="margin: 0; padding: 0; display: flex; cursor: pointer; width: 100%;" title="Wybierz własny kolor">
+                    <input type="color" class="col-picker-input" value="${cfg.color}" style="opacity: 0; width: 0; height: 0; position: absolute;">
+                    <div class="ac-color-custom-btn" style="background: ${cfg.color}; width: 100%; height: 20px; border-radius: 3px; border: 1px solid rgba(255,255,255,0.4); box-sizing: border-box;"></div>
                 </label>
             </div>
 
@@ -85,29 +80,21 @@
                 <span class="ac-range-val col-val">${cfg.alpha}%</span>
             </div>
             <input class="ac-range-slider col-slider" type="range" min="10" max="80" step="5" value="${cfg.alpha}">
-
-            <!-- PRESETY -->
-            <div class="ac-filter-row">
-                <button class="ac-filter-btn btn-20">20%</button>
-                <button class="ac-filter-btn btn-35">35%</button>
-                <button class="ac-filter-btn btn-55">55%</button>
-            </div>
         </div>
     `;
 
     document.body.appendChild(colMain);
 
-    // Style palety
+    // Style kafelka wyboru koloru
     const palStyle = document.createElement('style');
     palStyle.innerHTML = `
-        .ac-color-dot {
-            width: 16px; height: 16px; border-radius: 3px;
-            border: 1px solid rgba(255,255,255,0.3); cursor: pointer;
-            padding: 0; margin: 0; outline: none; flex: 1;
-            transition: transform 0.12s, border-color 0.15s;
+        .ac-color-custom-btn {
+            transition: border-color 0.15s, box-shadow 0.15s;
         }
-        .ac-color-dot:hover { transform: scale(1.18); border-color: #ffffff; }
-        .ac-color-dot.active { border: 1.5px solid #ffffff !important; box-shadow: 0 0 5px #ffffff; }
+        .ac-color-custom-btn:hover {
+            border-color: #ffffff !important;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
     `;
     document.head.appendChild(palStyle);
 
@@ -139,13 +126,11 @@
     colMain.querySelector('.lbl-borders').addEventListener('click', toggleBorders);
 
     // Wybór koloru
-    const colorDots = colMain.querySelectorAll('.ac-color-dot');
     const customColorBtn = colMain.querySelector('.ac-color-custom-btn');
     const customColorInput = colMain.querySelector('.col-picker-input');
 
     const updateColorVisuals = (chosenCol) => {
         const safeCol = (chosenCol && chosenCol.startsWith('#') && chosenCol.length === 7) ? chosenCol : '#ff2828';
-        colorDots.forEach(b => b.classList.toggle('active', b.getAttribute('data-col') === safeCol));
         if (customColorBtn) customColorBtn.style.background = safeCol;
         try {
             if (customColorInput) customColorInput.value = safeCol;
@@ -157,13 +142,6 @@
         updateColorVisuals(newCol);
         saveLS();
     };
-
-    colorDots.forEach(dot => {
-        dot.addEventListener('click', (e) => {
-            e.stopPropagation();
-            setColor(dot.getAttribute('data-col'));
-        });
-    });
 
     customColorInput.addEventListener('input', () => {
         setColor(customColorInput.value);
@@ -179,16 +157,6 @@
         colValText.innerText = `${cfg.alpha}%`;
         saveLS();
     });
-
-    const setAlphaPreset = (val) => {
-        cfg.alpha = val;
-        colSlider.value = String(val);
-        colValText.innerText = `${val}%`;
-        saveLS();
-    };
-    colMain.querySelector('.btn-20').addEventListener('click', () => setAlphaPreset(20));
-    colMain.querySelector('.btn-35').addEventListener('click', () => setAlphaPreset(35));
-    colMain.querySelector('.btn-55').addEventListener('click', () => setAlphaPreset(55));
 
     makeDraggable(colMain, colMain.querySelector('.ac-header'), 'posShowCollisions', ['.ac-close-btn', '.ac-status-btn']);
     registerWindow('showCollisions', { mainEl: colMain, statusBtn: statusBtn });
@@ -263,17 +231,13 @@
 
     // --- PRECYZYJNE SPRAWDZANIE ŚCIAN (BEZ POTWORÓW) ---
     const isWallOnly = (x, y, monsterTiles) => {
-        // 1. Jeśli na polu stoi potwór/NPC -> BEZWZGLĘDNIE BRAK KOLIZJI
         if (monsterTiles.has(`${x},${y}`)) return false;
 
-        // 2. Sprawdzenie bitu ściany w silniku Margonem NI
         if (W.Engine?.map?.col?.check) {
             const c = W.Engine.map.col.check(x, y);
-            // c === 1 lub (c & 1) oznacza fizyczną ścianę mapy. Inne wartości (np. 4) to potwory.
             return Boolean(c && ((c === 1) || (c & 1)));
         }
 
-        // 3. Sprawdzenie zapasowe
         const mapD = W.Engine?.map?.d;
         if (mapD && mapD.col && mapD.x) {
             const idx = y * mapD.x + x;
@@ -305,7 +269,6 @@
         const startY = Math.max(0, Math.floor(totalOffsetY / 32));
         const endY = Math.min(maxY, Math.ceil((totalOffsetY + size.height) / 32));
 
-        // Zbieramy współrzędne wszystkich potworów i NPC
         const monsterTiles = new Set();
         if (W.Engine?.npcs?.check) {
             const npcs = W.Engine.npcs.check();
