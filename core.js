@@ -201,21 +201,29 @@
     const iconSound = `<svg class="ac-item-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="2 5.5 5.5 5.5 9 2.5 9 13.5 5.5 10.5 2 10.5 2 5.5" stroke-linejoin="round"/><path d="M11.5 5.5a3.8 3.8 0 0 1 0 5"/><path d="M13.5 3.5a6.5 6.5 0 0 1 0 9"/></svg>`;
     const iconCollisions = `<svg class="ac-item-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2.5" width="12" height="11" rx="1.5"/><line x1="2" y1="8" x2="14" y2="8"/><line x1="8" y1="2.5" x2="8" y2="8"/><line x1="5" y1="8" x2="5" y2="13.5"/><line x1="11" y1="8" x2="11" y2="13.5"/></svg>`;
 
-    // Nowa ikona herbu dla głównego przycisku
-    const iconHubDock = `<svg class="ac-hub-dock-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    // Nowe, panoramiczne złote logo dla przycisku HUB-a (symetryczny herb z kryształem i skrzydłami)
+    const iconHubDock = `<svg class="ac-hub-dock-icon" viewBox="0 0 40 22" fill="none" xmlns="http://www.w3.org/2000/svg">
         <defs>
-            <linearGradient id="acHubGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#4ae880"/>
-                <stop offset="100%" stop-color="#1b8544"/>
+            <linearGradient id="acHubGold" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#ffd56b"/>
+                <stop offset="100%" stop-color="#cc8818"/>
+            </linearGradient>
+            <linearGradient id="acHubInner" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#fff2b2"/>
+                <stop offset="100%" stop-color="#e69519"/>
             </linearGradient>
         </defs>
-        <path d="M16 3 L27 8 V18 C27 23.5 22 27.5 16 29.5 C10 27.5 5 23.5 5 18 V8 Z" fill="#142218" stroke="#38c268" stroke-width="1.8" stroke-linejoin="round"/>
-        <path d="M16 8.5 L21.5 16 L16 23.5 L10.5 16 Z" fill="url(#acHubGrad)"/>
-        <circle cx="16" cy="16" r="2.6" fill="#ffffff"/>
-        <line x1="16" y1="4.5" x2="16" y2="7.5" stroke="#52e385" stroke-width="1.8" stroke-linecap="round"/>
-        <line x1="16" y1="24.5" x2="16" y2="27.5" stroke="#52e385" stroke-width="1.8" stroke-linecap="round"/>
-        <circle cx="8" cy="16" r="1.3" fill="#52e385"/>
-        <circle cx="24" cy="16" r="1.3" fill="#52e385"/>
+        <!-- Lewe skrzydło / klamra -->
+        <path d="M4 11 L11 4 L13 6 L8 11 L13 16 L11 18 Z" fill="url(#acHubGold)" opacity="0.85"/>
+        <line x1="2" y1="11" x2="6" y2="11" stroke="#ffd56b" stroke-width="1.8" stroke-linecap="round"/>
+        <!-- Prawe skrzydło / klamra -->
+        <path d="M36 11 L29 4 L27 6 L32 11 L27 16 L29 18 Z" fill="url(#acHubGold)" opacity="0.85"/>
+        <line x1="38" y1="11" x2="34" y2="11" stroke="#ffd56b" stroke-width="1.8" stroke-linecap="round"/>
+        <!-- Centralny herb -->
+        <path d="M20 2.5 L26 6.5 V14.5 L20 19 L14 14.5 V6.5 Z" fill="#1b140a" stroke="url(#acHubGold)" stroke-width="1.6" stroke-linejoin="round"/>
+        <!-- Kryształ wewnątrz -->
+        <path d="M20 6.5 L23.5 11 L20 15.5 L16.5 11 Z" fill="url(#acHubInner)"/>
+        <circle cx="20" cy="11" r="1.8" fill="#ffffff"/>
     </svg>`;
 
     let highestZ = 10000;
@@ -289,11 +297,11 @@
         observeCanvas();
     }
 
-    // Główny przycisk HUB-a o szerokości obu kolumn (58px) na samym dole
+    // Główny złoty przycisk HUB-a (58px) bez napisu, tylko z logo
     const hubDockBtn = document.createElement('button');
     hubDockBtn.className = 'ac-dock-btn ac-dock-hub-btn';
     hubDockBtn.setAttribute('aria-label', 'NI CORE');
-    hubDockBtn.innerHTML = `${iconHubDock}<span class="ac-hub-dock-text">NI CORE</span><span class="ac-dock-tooltip">NI CORE</span>`;
+    hubDockBtn.innerHTML = `${iconHubDock}<span class="ac-dock-tooltip">NI CORE</span>`;
     hubDockBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         toggleHub();
@@ -633,65 +641,56 @@
 }
 
 /* ==========================================
-   SZEROKI GŁÓWNY PRZYCISK HUB-A (58px)
+   NOWY WYGLĄD PRZYCISKU HUB-A (ZŁOTO / BURSZTYN)
    ========================================== */
 .ac-dock-hub-btn {
     width: 58px;
     height: 26px;
     border-radius: 5px;
-    background: linear-gradient(180deg, #1e3626 0%, #101e15 100%);
-    border: 1.5px solid #38c268;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.85), 0 0 9px rgba(56, 194, 104, 0.45);
+    background: linear-gradient(180deg, #241d13 0%, #120e08 100%);
+    border: 1.5px solid #d49838;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.85), 0 0 9px rgba(212, 152, 56, 0.4);
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 4px;
-    padding: 0 4px;
+    padding: 0;
 }
 
 .ac-hub-dock-icon {
-    width: 14px !important;
-    height: 14px !important;
+    width: 36px !important;
+    height: 18px !important;
     display: block;
-    flex-shrink: 0;
-    filter: drop-shadow(0 0 3px rgba(56, 194, 104, 0.65));
+    filter: drop-shadow(0 0 3px rgba(212, 152, 56, 0.6));
     transition: transform 0.15s ease, filter 0.15s ease;
-}
-
-.ac-hub-dock-text {
-    font-size: 8px;
-    font-weight: 800;
-    letter-spacing: 0.5px;
-    color: #e5fbee;
-    line-height: 1;
-    pointer-events: none;
-    white-space: nowrap;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
 }
 
 .ac-dock-hub-btn:hover {
     transform: translateY(-2px);
-    border-color: #55f78b;
-    background: linear-gradient(180deg, #274832 0%, #14281c 100%);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.9), 0 0 14px rgba(85, 247, 139, 0.7);
+    border-color: #ffd066;
+    background: linear-gradient(180deg, #332819 0%, #1a140b 100%);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.9), 0 0 14px rgba(255, 195, 75, 0.65);
 }
 
 .ac-dock-hub-btn:hover .ac-hub-dock-icon {
-    transform: scale(1.1);
-    filter: drop-shadow(0 0 5px rgba(85, 247, 139, 0.9));
+    transform: scale(1.08);
+    filter: drop-shadow(0 0 5px rgba(255, 205, 80, 0.9));
 }
 
 .ac-dock-hub-btn.is-open {
-    background: linear-gradient(180deg, #2b5438 0%, #183321 100%);
-    border-color: #55f78b;
-    box-shadow: 0 0 12px rgba(85, 247, 139, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    background: linear-gradient(180deg, #3d301c 0%, #21190d 100%);
+    border-color: #ffd56b;
+    box-shadow: 0 0 12px rgba(255, 205, 80, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
 .ac-dock-hub-btn .ac-dock-tooltip {
-    color: #e5fbee;
-    border-color: #38c268;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.9), 0 0 8px rgba(56, 194, 104, 0.4);
+    color: #fff1c7;
+    border-color: #d49838;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.9), 0 0 8px rgba(212, 152, 56, 0.45);
     letter-spacing: 0.8px;
+}
+
+.ac-dock-hub-btn .ac-dock-tooltip::after {
+    border-color: transparent transparent transparent #d49838;
 }
 
 /* Dymek wysuwany w lewo (w głąb mapy) */
@@ -1131,7 +1130,7 @@
     justify-content: center;
     transition: color 0.15s, transform 0.12s;
     outline: none;
-    box-sizing: content-box;
+    box-sizing: border-box;
     z-index: 2;
 }
 
